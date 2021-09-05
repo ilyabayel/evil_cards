@@ -10,6 +10,5 @@
         font-size: 1.6rem;
         font-weight: 400;
         margin: 0;
-        text-shadow: 0 0 2px black;
     }
 </style>

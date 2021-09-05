@@ -1,12 +1,13 @@
 <script lang="ts">
+    export let color: string = "";
 </script>
 
-<h3><slot /></h3>
+<h6 style={color && `--color-font-primary: ${color}`}><slot /></h6>
 
 <style>
-    h3 {
+    h6 {
         color: var(--color-font-primary);
-        font-size: 2.6rem;
+        font-size: 1.6rem;
         font-weight: 500;
         margin: 0;
     }
