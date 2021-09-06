@@ -11,13 +11,43 @@
     argTypes={{
         onClose: { action: "onClose" },
         visible: { type: "boolean", defaultValue: true },
+        closeLabel: { type: "text", defaultValue: "Закрыть" },
     }}
 />
 
+<!-- In Project it works fine but in storybook animations sucks -->
 <Story name="Default" let:args>
     <H4>sdkfjalsdjfla;sdf</H4>
     <P>sadjkfl;asjdklasdf</P>
     <BottomModal {...args}>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
+        <H4>Heading</H4>
+        <P>Paragraph</P>
         <H4>Heading</H4>
         <P>Paragraph</P>
         <H4>Heading</H4>
