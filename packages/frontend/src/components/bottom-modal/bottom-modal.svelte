@@ -42,13 +42,28 @@
 
 <style>
     .bottom-modal-background {
+        pointer-events: none;
         top: 0;
         left: 0;
         position: fixed;
         width: 100vw;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(6px);
+        opacity: 0;
+        animation: fadeInFromNone 0.2s ease;
+    }
+
+    .bottom-modal-background.visible {
+        pointer-events: all;
+        background-color: rgba(0, 0, 0, 0.6);
+        animation: fadeInFromNone 0.2s ease;
+        opacity: 1;
+    }
+
+    .bottom-modal-background.hiding {
+        pointer-events: all;
+        background-color: rgba(0, 0, 0, 0.6);
+        animation: fadeOutToNone 0.2s ease;
+        opacity: 0;
     }
 
     .bottom-modal {
@@ -112,6 +127,40 @@
 
         to {
             transform: translateY(100%);
+        }
+    }
+
+    @keyframes fadeInFromNone {
+        0% {
+            display: none;
+            opacity: 0;
+        }
+
+        1% {
+            display: block;
+            opacity: 0;
+        }
+
+        100% {
+            display: block;
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeOutToNone {
+        0% {
+            display: block;
+            opacity: 1;
+        }
+
+        99% {
+            display: block;
+            opacity: 0;
+        }
+
+        100% {
+            display: none;
+            opacity: 0;
         }
     }
 </style>
