@@ -8,9 +8,9 @@
     title="QuestionCard"
     component={QuestionCard}
     argTypes={{
-        heading: { type: "text" },
-        roundLeader: { type: "text" },
-        body: { type: "text" },
+        heading: { control: "text" },
+        roundLeader: { control: "text" },
+        body: { control: "text" },
     }}
 />
 

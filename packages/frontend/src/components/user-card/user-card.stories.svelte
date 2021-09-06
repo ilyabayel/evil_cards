@@ -7,9 +7,9 @@
     title="UserCard"
     component={UserCard}
     argTypes={{
-        userName: { type: "text" },
-        score: { type: "number" },
-        avatar: { type: "text" },
+        userName: { control: "text" },
+        score: { control: "number" },
+        avatar: { control: "text" },
     }}
 />
 

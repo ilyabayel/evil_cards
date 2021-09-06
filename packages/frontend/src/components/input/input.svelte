@@ -10,11 +10,11 @@
     input {
         background: transparent;
         border: 2px solid rgba(255, 255, 255, 0.5);
-        padding: 1em;
+        padding: 0.8em;
         border-radius: 6px;
         font-size: 1.6em;
         color: white;
-        text-shadow: 0 0 2px black;
+        font-weight: 500;
     }
     input:focus {
         outline: none;

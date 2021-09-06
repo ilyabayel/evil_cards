@@ -14,6 +14,7 @@
             options: ["primary", "secondary"],
             defaultValue: "primary",
         },
+        width: { control: "text" },
     }}
 />
 
@@ -21,4 +22,4 @@
     <Button {...args} />
 </Template>
 
-<Story args={{ label: "label" }} name="Default" />
+<Story args={{ label: "label", width: "auto" }} name="Default" />

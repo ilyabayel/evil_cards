@@ -32,7 +32,7 @@
     .question-card {
         position: relative;
         background-color: #e0e0e0;
-        padding: 2em 2em 4em 2em;
+        padding: 2em 2em 3em 2em;
         border-radius: 1.4em;
     }
 
