@@ -3,73 +3,56 @@
     import type { Option } from "../../models/option";
 
     export let heading: string = "";
-    export let roundLeader: string = "";
     export let body: Array<string | Option> = [];
 </script>
 
-<div class="question-card">
+<div class="result-card">
     <H6 color="black">{heading}</H6>
     <br />
-    <p class="question-text-box">
+    <p class="result-text-box">
         {#if body.length === 1}
-            <span class="question-text">{body[0]}</span>
+            <span class="result-text">{body[0]}</span>
         {:else}
             {#each body as part, i}
                 {#if typeof part === "string"}
-                    <span class="question-text">
+                    <span class="result-text">
                         {part}
                     </span>
                 {:else}
-                    <span
-                        class="option-text"
-                        data-id={part.id ? part.id : `blank${i}`}
-                        on:dragenter={(e) => console.log(e)}
-                        on:dragend={(e) => console.log(e)}>{part.value}</span
-                    >
+                    <span class="result-option-part">
+                        {part.value}
+                    </span>
                 {/if}
             {/each}
         {/if}
     </p>
-    <span class="round-leader">{roundLeader}</span>
 </div>
 
 <style>
-    .question-card {
+    .result-card {
         position: relative;
         background-color: #e0e0e0;
-        padding: 2em 2em 3em 2em;
+        padding: 2em;
         border-radius: 1.4em;
     }
 
-    .question-text-box {
+    .result-text-box {
         word-wrap: break-word;
         line-height: 2.4em;
     }
 
-    .question-text {
+    .result-text {
         font-size: 1.6em;
         color: black;
     }
 
-    .option-text {
+    .result-option-part {
         display: inline-block;
         padding: 0 0.5em;
         background-color: rgba(255, 255, 255, 0.9);
-        color: black;
-        border-radius: 4px;
-        font-size: 1.6em;
-    }
-
-    .option-text[data-id*="blank"] {
         color: transparent;
-    }
-
-    .round-leader {
-        font-size: 12px;
+        border-radius: 4px;
+        font-size: 1.6rem;
         font-weight: 500;
-        color: var(--color-primary);
-        position: absolute;
-        bottom: 1em;
-        right: 2em;
     }
 </style>
