@@ -1,8 +1,11 @@
 <script lang="ts">
     export let color: string = "";
+    export let className = "";
 </script>
 
-<h6 style={color && `--color-font-primary: ${color}`}><slot /></h6>
+<h6 class={className} style={color && `--color-font-primary: ${color}`}>
+    <slot />
+</h6>
 
 <style>
     h6 {

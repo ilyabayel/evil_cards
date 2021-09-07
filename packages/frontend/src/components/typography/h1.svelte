@@ -1,12 +1,13 @@
 <script lang="ts">
+    export let className: string = "";
 </script>
 
-<h1><slot /></h1>
+<h1 class={className}><slot /></h1>
 
 <style>
     h1 {
         color: var(--color-font-primary);
-        font-size: 5.4rem;
+        font-size: 4.5rem;
         font-weight: 500;
         margin: 0;
     }

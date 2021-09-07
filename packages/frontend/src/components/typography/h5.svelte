@@ -1,7 +1,8 @@
 <script lang="ts">
+    export let className: string = "";
 </script>
 
-<h5><slot /></h5>
+<h5 class={className}><slot /></h5>
 
 <style>
     h5 {

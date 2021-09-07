@@ -23,14 +23,16 @@
     });
 </script>
 
-<div
-    class={cn(
-        "bottom-modal-background",
-        ["visible", visible],
-        ["hiding", hiding],
-        ["hidden", hidden]
-    )}
->
+<div class="wrapper">
+    <div
+        class={cn(
+            "bottom-modal-background",
+            ["visible", visible],
+            ["hiding", hiding],
+            ["hidden", hidden]
+        )}
+        on:click={onClose}
+    />
     <div
         class={cn(
             "bottom-modal",
@@ -76,6 +78,7 @@
     }
 
     .bottom-modal {
+        --local-max-height: 60vh;
         position: fixed;
         bottom: 0;
         transform: translateY(100%);
@@ -83,7 +86,7 @@
         width: 100%;
         height: min-content;
         min-height: 20vh;
-        max-height: 50vh;
+        max-height: var(--local-max-height);
         padding: 2em 2em 3em 2em;
         background-color: #727272;
         box-sizing: border-box;
@@ -92,6 +95,7 @@
     .bottom-modal.visible {
         animation: SlideIn ease 0.15s;
         transform: translateY(0);
+        opacity: 1;
     }
 
     .bottom-modal.hiding {
@@ -101,6 +105,7 @@
 
     .bottom-modal.hidden {
         transform: translateY(100%);
+        opacity: 0;
     }
 
     .close-btn {
@@ -127,7 +132,7 @@
     .body {
         width: 100%;
         height: min-content;
-        max-height: calc(50vh - 5em);
+        max-height: calc(var(--local-max-height) - 5em);
         overflow: auto;
     }
 
