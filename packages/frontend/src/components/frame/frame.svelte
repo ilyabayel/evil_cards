@@ -1,0 +1,43 @@
+<script lang="ts">
+</script>
+
+<div class="wrapper">
+    <div class="frame">
+        <slot />
+    </div>
+</div>
+
+<style>
+    .wrapper {
+        display: grid;
+        place-items: center;
+        width: 100vw;
+        height: 100vh;
+    }
+    .frame {
+        position: absolute;
+        margin: auto;
+        width: 100%;
+        height: 100%;
+    }
+    @media only screen and (min-width: 767px) {
+        .frame {
+            width: 767px;
+        }
+    }
+    @media only screen and (min-width: 1024px) {
+        .frame {
+            width: 800px;
+        }
+    }
+    @media only screen and (min-width: 1280px) {
+        .frame {
+            width: 1000px;
+        }
+    }
+    @media only screen and (min-width: 1414px) {
+        .frame {
+            width: 1000px;
+        }
+    }
+</style>
