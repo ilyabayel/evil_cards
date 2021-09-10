@@ -3,11 +3,17 @@
     export let onClick: (event: MouseEvent) => void;
     export let type: "primary" | "secondary" = "primary";
     export let width: string = "auto";
+    export let disabled = false;
 </script>
 
-<button style={`--local-width: ${width}`} on:click={onClick} class={type}
-    >{label}</button
+<button
+    style={`--local-width: ${width}`}
+    on:click={onClick}
+    class={type}
+    {disabled}
 >
+    {label}
+</button>
 
 <style>
     button {
@@ -30,5 +36,8 @@
     }
     button.secondary {
         background: var(--color-secondary);
+    }
+    button:disabled {
+        opacity: 0.5;
     }
 </style>

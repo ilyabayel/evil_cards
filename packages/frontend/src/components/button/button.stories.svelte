@@ -15,6 +15,9 @@
             defaultValue: "primary",
         },
         width: { control: "text" },
+        disabled: {
+            type: "boolean",
+        },
     }}
 />
 

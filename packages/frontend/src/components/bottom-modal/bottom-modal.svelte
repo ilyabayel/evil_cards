@@ -88,7 +88,7 @@
         min-height: 20vh;
         max-height: var(--local-max-height);
         padding: 2em 2em 3em 2em;
-        background-color: #727272;
+        background-color: var(--color-bg);
         box-sizing: border-box;
         border-radius: 2em 2em 0 0;
     }

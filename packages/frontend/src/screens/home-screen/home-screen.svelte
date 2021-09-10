@@ -1,9 +1,11 @@
 <script lang="ts">
-    import BottomModal from "../components/bottom-modal/bottom-modal.svelte";
-    import Button from "../components/button/button.svelte";
-    import H1 from "../components/typography/h1.svelte";
-    import H3 from "../components/typography/h3.svelte";
-    let isCreateFormVisible = false;
+    import BottomModal from "../../components/bottom-modal/bottom-modal.svelte";
+    import Button from "../../components/button/button.svelte";
+    import H1 from "../../components/typography/h1.svelte";
+    import H3 from "../../components/typography/h3.svelte";
+    import CreateForm from "./components/create-form.svelte";
+
+    let isCreateFormVisible = true;
     let isJoinFormVisible = false;
 
     function showCreateForm() {
@@ -30,7 +32,7 @@
         visible={isCreateFormVisible}
         onClose={() => (isCreateFormVisible = false)}
     >
-        <div>create form</div>
+        <CreateForm />
     </BottomModal>
     <BottomModal
         visible={isJoinFormVisible}

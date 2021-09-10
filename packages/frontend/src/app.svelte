@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Router, Route } from "svelte-navigator";
   import Frame from "./components/frame/frame.svelte";
-  import HomeScreen from "./screens/home-screen.svelte";
-  import PlayScreen from "./screens/play-screen.svelte";
+  import HomeScreen from "./screens/home-screen/home-screen.svelte";
+  import PlayScreen from "./screens/play-screen/play-screen.svelte";
   import "./global-styles.css";
 </script>
 
