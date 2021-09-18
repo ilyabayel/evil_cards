@@ -1,15 +1,20 @@
 version: "3.9"
 services: 
   centrifugo:
-  container_name: centrifugo
-  image: centrifugo/centrifugo:v3
-  volumes:
-    - ./config.json:/centrifugo/config.json
-  command: centrifugo -c config.json
-  ports:
-    - 8000:8000
-  ulimits:
-    nofile:
-      soft: 65535
-      hard: 65535
-  
+    container_name: centrifugo
+    image: centrifugo/centrifugo:v3
+    volumes:
+      - ./centirugo.conf.json:/centrifugo/config.json
+    command: centrifugo -c config.json
+    ports:
+      - "8000:8000"
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+  core:
+    depends_on: 
+      - centrifugo
+    build: "./packages/core"
+    ports:
+      - "8080:8080"

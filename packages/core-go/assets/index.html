@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript"
+        src="https://rawgit.com/centrifugal/centrifuge-js/master/dist/centrifuge.min.js"></script>
+    <title>Centrifuge library chat example</title>
+</head>
+
+<body>
+    <button onclick="createRoom()">Create Room</button>
+    <button onclick="joinRoom()">Join Room 0</button>
+    <button onclick="sendHello()">Send hello</button>
+    <script type="text/javascript">
+        // Create Centrifuge object with Websocket endpoint address set in main.go
+        const centrifuge = new Centrifuge('ws://localhost:8000/connection/websocket');
+        centrifuge.on('connect', function (ctx) {
+            console.log('Connected over ' + ctx.transport);
+        });
+        centrifuge.on('disconnect', function (ctx) {
+            console.log('Disconnected: ' + ctx.reason);
+        });
+        centrifuge.connect();
+
+
+        const subs = []
+
+        async function createRoom() {
+            const res = await fetch("http://localhost:8000/rooms/create", { method: "POST" })
+            const json = await res.json()
+            const sub = await centrifuge.subscribe(`room:${json.id}`, {
+                "publish": function (message) {
+                    // See below description of message format
+                    console.log(message);
+                },
+                "join": function (message) {
+                    // See below description of join message format
+                    console.log(message);
+                },
+                "leave": function (message) {
+                    // See below description of leave message format
+                    console.log(message);
+                },
+                "subscribe": function (context) {
+                    // See below description of subscribe callback context format
+                    console.log(context);
+                },
+                "error": function (errContext) {
+                    // See below description of subscribe error callback context format
+                    console.log(err);
+                },
+                "unsubscribe": function (context) {
+                    // See below description of unsubscribe event callback context format
+                    console.log(context);
+                }
+            })
+            console.log(sub)
+            subs.push(sub)
+        }
+        centrifuge.connect();
+
+        async function joinRoom() {
+            const sub = centrifuge.subscribe("room:0", {
+                "publish": function (message) {
+                    // See below description of message format
+                    console.log(message);
+                },
+                "join": function (message) {
+                    // See below description of join message format
+                    console.log(message);
+                },
+                "leave": function (message) {
+                    // See below description of leave message format
+                    console.log(message);
+                },
+                "subscribe": function (context) {
+                    // See below description of subscribe callback context format
+                    console.log(context);
+                },
+                "error": function (errContext) {
+                    // See below description of subscribe error callback context format
+                    console.log(errContext);
+                },
+                "unsubscribe": function (context) {
+                    // See below description of unsubscribe event callback context format
+                    console.log(context);
+                }
+            })
+            subs.push(sub)
+        }
+
+        async function sendHello() {
+            for (let i = 0; i < subs.length; i++) {
+                subs[i].publish("Hello")
+            }
+        }
+
+        async function joinByCode() {
+            for (let i = 0; i < subs.length; i++) {
+                subs[i].publish("Hello")
+            }
+        }
+    </script>
+</body>
+
+</html>
