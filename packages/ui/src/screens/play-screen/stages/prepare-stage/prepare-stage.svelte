@@ -1,3 +1,4 @@
 <script lang="ts">
-    export let roomInfo:
 </script>
+
+<div>prepare</div>

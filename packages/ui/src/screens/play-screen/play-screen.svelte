@@ -1,5 +1,5 @@
 <script lant="ts">
-    import 
+    import PrepareStage from "./stages/prepare-stage/prepare-stage.svelte";
     import { useParams } from "svelte-navigator";
 
     const params = useParams();
@@ -13,7 +13,7 @@
 
 <div class="play-screen">
     {#if roomInfo.currentSatage === "prepare"}
-        <PrepareStage {roomInfo} />
+        prepare
     {/if}
 </div>
 
