@@ -3,20 +3,20 @@ defmodule CoreWeb.RoomsState do
 
   # Client
 
-  def start_link(_default) do
-    GenServer.start_link({:global, "Rooms"}, %{})
+  def start_server() do
+    GenServer.start_link(CoreWeb.RoomsState, %{}, name: {:global, :Rooms})
   end
 
   def get_all() do
-    GenServer.call({:global, "Rooms"}, :get_all)
+    GenServer.call({:global, :Rooms}, :get_all)
   end
 
   def get(element) do
-    GenServer.call({:global, "Rooms"}, {:get, String.to_atom(element)})
+    GenServer.call({:global, :Rooms}, {:get, String.to_atom(element)})
   end
 
   def put(%CoreWeb.Room{} = room) do
-    GenServer.cast({:global, "Rooms"}, {:put, room})
+    GenServer.cast({:global, :Rooms}, {:put, room})
   end
 
   # Server

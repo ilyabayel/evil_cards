@@ -18,8 +18,7 @@ enum StagesEnum {
 }
 
 interface I_Answer {
-    id: ID;
-    text: string;
+    option: I_Option;
     player: I_Player;
 }
 

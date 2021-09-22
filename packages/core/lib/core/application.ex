@@ -19,7 +19,7 @@ defmodule Core.Application do
       # {Core.Worker, arg}
     ]
 
-    GenServer.start_link(CoreWeb.RoomsState, %{}, name: {:global, "Rooms"})
+    CoreWeb.RoomsState.start_server()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

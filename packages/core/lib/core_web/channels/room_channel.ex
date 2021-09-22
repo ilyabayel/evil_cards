@@ -29,18 +29,21 @@ defmodule CoreWeb.RoomChannel do
 
   @impl true
   def handle_in("create", %{"host" => host}, socket) do
-    %{"name" => name, "id" => id} = host
+    host = struct(CoreWeb.User, host)
 
     room = %CoreWeb.Room{
       id: UUID.uuid4(),
-      host_name: name,
-      players: []
+      host: host,
+      players: [],
+      round_duration: 60,
+      current_stage: "wait",
+      round: %CoreWeb.Round{},
+      questionnaire_id: "id"
     }
 
-    case CoreWeb.RoomsState.put(room) do
-      :ok -> {:reply, {:ok, room}, socket}
-      :error -> {:error, %{reason: "Cannot create room"}}
-    end
+    CoreWeb.RoomsState.put(room)
+
+    {:reply, {:ok, room}, socket}
   end
 
   @impl true
