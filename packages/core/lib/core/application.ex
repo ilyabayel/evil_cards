@@ -13,6 +13,7 @@ defmodule Core.Application do
       CoreWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: Core.PubSub},
+      {Task.Supervisor, name: Core.TaskSupervisor},
       # Start the Endpoint (http/https)
       CoreWeb.Endpoint
       # Start a worker by calling: Core.Worker.start_link(arg)
@@ -20,6 +21,7 @@ defmodule Core.Application do
     ]
 
     CoreWeb.RoomsState.start_server()
+    CoreWeb.Counter.start_server()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

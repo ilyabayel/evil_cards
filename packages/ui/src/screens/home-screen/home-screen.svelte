@@ -5,7 +5,7 @@
     import H3 from "../../components/typography/h3.svelte";
     import CreateForm from "./components/create-form.svelte";
 
-    let isCreateFormVisible = true;
+    let isCreateFormVisible = false;
     let isJoinFormVisible = false;
 
     function showCreateForm() {
@@ -14,8 +14,8 @@
     }
 
     function showJoinForm() {
-        isCreateFormVisible = false;
-        isJoinFormVisible = true;
+        // isCreateFormVisible = false;
+        // isJoinFormVisible = true;
     }
 </script>
 

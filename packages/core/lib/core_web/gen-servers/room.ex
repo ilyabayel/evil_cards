@@ -11,8 +11,12 @@ defmodule CoreWeb.RoomsState do
     GenServer.call({:global, :Rooms}, :get_all)
   end
 
-  def get(element) do
-    GenServer.call({:global, :Rooms}, {:get, String.to_atom(element)})
+  def get(room_id) do
+    GenServer.call({:global, :Rooms}, {:get, String.to_atom(room_id)})
+  end
+
+  def get_by_code(code) do
+    GenServer.call({:global, :Rooms}, {:get_by_code, code})
   end
 
   def put(%CoreWeb.Room{} = room) do
@@ -32,8 +36,18 @@ defmodule CoreWeb.RoomsState do
   end
 
   @impl true
-  def handle_call({:get, element}, _from, state) do
-    {:reply, state[element], state}
+  def handle_call({:get, room_id}, _from, state) do
+    {:reply, state[room_id], state}
+  end
+
+  @impl true
+  def handle_call({:get_by_code, code}, _from, state) do
+    {_id, room} =
+      state
+      |> Map.to_list()
+      |> Enum.find(nil, fn {_id, r} -> r.code == code end)
+
+    {:reply, room, state}
   end
 
   @impl true

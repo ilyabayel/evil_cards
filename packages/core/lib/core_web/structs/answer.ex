@@ -1,5 +1,6 @@
 defmodule CoreWeb.Answer do
   @derive Jason.Encoder
-  defstruct option: %CoreWeb.Option{},
+  defstruct question: %CoreWeb.Question{},
+            option: %CoreWeb.Option{},
             player: %CoreWeb.User{}
 end
