@@ -75,15 +75,7 @@ defmodule CoreWeb.RoomChannel do
     room
   end
 
-  defp add_answer(room, %{"question" => question, "option" => option}, socket) do
-    %{"id" => question_id, "text" => question_text} = question
-    %{"id" => option_id, "text" => option_text} = option
-
-    question = %CoreWeb.Question{
-      id: question_id,
-      text: question_text
-    }
-
+  defp add_answer(room, %{"id" => option_id, "text" => option_text}, socket) do
     option = %CoreWeb.Option{
       id: option_id,
       text: option_text
@@ -95,7 +87,7 @@ defmodule CoreWeb.RoomChannel do
     }
 
     answer = %CoreWeb.Answer{
-      question: question,
+      question: room.round.question,
       option: option,
       player: player
     }

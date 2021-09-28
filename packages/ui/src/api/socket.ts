@@ -41,12 +41,9 @@ export class RoomApi {
     return this
   }
 
-  public answer(question: I_Question, option: I_Option): Promise<void> {
+  public answer(option: I_Option): Promise<void> {
     return new Promise((res, rej) => {
-      this._room.push("answer", {
-        question,
-        option
-      })
+      this._room.push("answer", option)
         .receive("ok", () => res())
         .receive("error", (reply) => rej(reply))
         .receive("timeout", (reply) => rej(reply))

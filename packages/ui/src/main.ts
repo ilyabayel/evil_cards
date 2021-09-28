@@ -16,7 +16,7 @@ const room = new RoomApi("956e064c-cf0c-4006-a36c-6e5946b48d34").onRoomUpdate(co
 
 await room.join()
 
-room.answer({ id: "q1", text: "qtext" }, { id: "o1", text: "otext" })
+room.answer({ id: "o1", text: "otext" })
 
 const app = new App({
   target: document.getElementById('app')
