@@ -138,4 +138,68 @@ defmodule CoreWeb.Room do
 
     Map.put(room, :round, round)
   end
+
+  @doc """
+      Set winner
+
+      ## Examples
+
+        iex> room = %CoreWeb.Room{
+        ...> round: %CoreWeb.Round{
+        ...>  answers: [
+        ...>    %CoreWeb.Answer{
+        ...>      player: %CoreWeb.User{id: "test"},
+        ...>    }]
+        ...>  }
+        ...> }
+        iex> room = CoreWeb.Room.set_winner(room, "test")
+        iex> room.round.winner.player.id
+        iex> "test"
+  """
+  def set_winner(%CoreWeb.Room{} = room, player_id) do
+    round =
+      Map.put(
+        room.round,
+        :winner,
+        Enum.find(
+          room.round.answers,
+          fn answer ->
+            answer.player.id == player_id
+          end
+        )
+      )
+
+    Map.put(room, :round, round)
+  end
+
+  @doc """
+      Set winner
+
+      ## Examples
+
+        iex> room = %CoreWeb.Room{
+        ...> round: %CoreWeb.Round{
+        ...>  answers: [
+        ...>    %CoreWeb.Answer{
+        ...>      player: %CoreWeb.User{id: "test"},
+        ...>    }]
+        ...>  }
+        ...> }
+        iex> room = CoreWeb.Room.set_winner(room, "test")
+        iex> room.round.winner.player.id
+        iex> "test"
+  """
+  def finish_round(%CoreWeb.Room{} = room) do
+    round = %CoreWeb.Round{
+      number: room.round.number + 1,
+      leader: %CoreWeb.User{},
+      winner: %CoreWeb.Answer{},
+      question: %CoreWeb.Question{},
+      answers: []
+    }
+
+    Map.put(room, :round, round)
+  end
+
+
 end

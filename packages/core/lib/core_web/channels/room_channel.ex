@@ -48,15 +48,29 @@ defmodule CoreWeb.RoomChannel do
   end
 
   @impl true
-  def handle_in("choose_winner", payload, socket) do
-    # Add answer logic
-    {:reply, {:ok, %{}}, socket}
+  def handle_in("choose_winner", %{"playerId" => player_id}, socket) do
+    "room:" <> room_id = socket.topic
+
+    case CoreWeb.RoomsState.get(room_id) do
+      nil ->
+        {:reply, {:error, %{reason: "Room not found"}}, socket}
+
+      %CoreWeb.Room{} = room ->
+        choose_winner(room, player_id, socket)
+    end
   end
 
   @impl true
   def handle_in("finish_round", payload, socket) do
-    # Add answer logic
-    {:reply, {:ok, %{}}, socket}
+    "room:" <> room_id = socket.topic
+
+    case CoreWeb.RoomsState.get(room_id) do
+      nil ->
+        {:reply, {:error, %{reason: "Room not found"}}, socket}
+
+      %CoreWeb.Room{} = room ->
+        finish_round(room, socket)
+    end
   end
 
   defp handle_join(room, player) do
@@ -99,5 +113,27 @@ defmodule CoreWeb.RoomChannel do
     broadcast!(socket, "room_update", room)
 
     {:reply, {:ok, "ok"}, socket}
+  end
+
+  defp choose_winner(room, player_id, socket) do
+    room = CoreWeb.Room.set_winner(room, player_id)
+
+    broadcast!(socket, "room_update", room)
+
+    case room.round.winner do
+      nil -> {:reply, {:error, "Player not found"}, socket}
+      %CoreWeb.Room{} -> {:reply, {:ok, "ok"}, socket}
+    end
+  end
+
+  defp finish_round(room, socket) do
+    room = CoreWeb.Room.finish_round(room)
+
+    broadcast!(socket, "room_update", room)
+
+    case room.round.winner do
+      nil -> {:reply, {:error, "Player not found"}, socket}
+      %CoreWeb.Room{} -> {:reply, {:ok, "ok"}, socket}
+    end
   end
 end

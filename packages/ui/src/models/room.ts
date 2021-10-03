@@ -26,6 +26,7 @@ export interface I_Answer {
 export interface I_Round {
     number: number;
     leader: I_User;
+    winner: I_Answer;
     question: I_Question;
     answers: I_Answer[];
 }
