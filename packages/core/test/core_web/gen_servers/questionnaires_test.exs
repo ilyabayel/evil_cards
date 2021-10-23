@@ -1,4 +1,4 @@
-defmodule CoreWeb.QuestionaireTest do
+defmodule CoreWeb.QuestionairesTest do
   use ExUnit.Case, async: true
 
   test "creates from file" do

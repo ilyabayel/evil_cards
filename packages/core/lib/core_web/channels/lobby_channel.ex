@@ -15,9 +15,10 @@ defmodule CoreWeb.LobbyChannel do
       host: host,
       players: [],
       round_duration: 60,
+      rounds_per_player: 2,
       current_stage: "wait",
       round: %CoreWeb.Round{},
-      questionnaire_id: "id",
+      questions: [],
       code: CoreWeb.Counter.get()
     }
 

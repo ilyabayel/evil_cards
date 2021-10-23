@@ -4,9 +4,10 @@ defmodule CoreWeb.Room do
             host: %CoreWeb.User{},
             players: [],
             round_duration: 60,
-            current_stage: "wait",
+            rounds_per_player: 2,
+            current_stage: CoreWeb.Stages.wait(),
             round: %CoreWeb.Round{},
-            questionnaire_id: "",
+            questions: [],
             code: 0
 
   @typedoc """
@@ -16,10 +17,11 @@ defmodule CoreWeb.Room do
           id: String.t(),
           host: CoreWeb.User.t(),
           players: [CoreWeb.User.t()],
-          round_duration: 60,
+          round_duration: Integer,
+          rounds_per_player: Integer,
           current_stage: String.t(),
           round: CoreWeb.Round.t(),
-          questionnaire_id: String.t(),
+          questions: Enum.t(),
           code: integer
         }
 
@@ -66,11 +68,24 @@ defmodule CoreWeb.Room do
       :players,
       Enum.filter(
         room.players,
-        fn p ->
-          Map.get(p, :id) != player_id
-        end
+        &(Map.get(&1, :id) != player_id)
       )
     )
+  end
+
+  @doc """
+    Add questions to room
+
+    ## Examples
+
+      iex> room = %CoreWeb.Room{}
+      iex> questions = [%CoreWeb.Question{id: "1", text: "1"}]
+      iex> room = CoreWeb.Room.add_questions(room, questions)
+      iex> Enum.at(room.questions, 0).id
+      "1"
+  """
+  def add_questions(%CoreWeb.Room{} = room, questions) do
+    Map.put(room, :questions, questions)
   end
 
   @doc """
@@ -96,9 +111,7 @@ defmodule CoreWeb.Room do
         :answers,
         Enum.filter(
           room.round.answers,
-          fn ans ->
-            ans.player.id != answer.player.id
-          end
+          &(&1.player.id != answer.player.id)
         ) ++ [answer]
       )
 
@@ -130,9 +143,7 @@ defmodule CoreWeb.Room do
         :answers,
         Enum.filter(
           room.round.answers,
-          fn answer ->
-            answer.player.id != player_id
-          end
+          &(&1.player.id != player_id)
         )
       )
 
@@ -163,9 +174,7 @@ defmodule CoreWeb.Room do
         :winner,
         Enum.find(
           room.round.answers,
-          fn answer ->
-            answer.player.id == player_id
-          end
+          &(&1.player.id == player_id)
         )
       )
 
@@ -173,33 +182,111 @@ defmodule CoreWeb.Room do
   end
 
   @doc """
-      Set winner
+      Finish round
 
       ## Examples
 
         iex> room = %CoreWeb.Room{
-        ...> round: %CoreWeb.Round{
-        ...>  answers: [
-        ...>    %CoreWeb.Answer{
-        ...>      player: %CoreWeb.User{id: "test"},
-        ...>    }]
+        ...>  players: [
+        ...>  %CoreWeb.User{
+        ...>    id: "test",
+        ...>    name: "test"
+        ...>  },
+        ...>  %CoreWeb.User{
+        ...>     id: "test2",
+        ...>     name: "test2"
+        ...>  }],
+        ...>  round: %CoreWeb.Round{
+        ...>    leader: %CoreWeb.User{
+        ...>      id: "test",
+        ...>      name: "test"
+        ...>    }
         ...>  }
         ...> }
-        iex> room = CoreWeb.Room.set_winner(room, "test")
-        iex> room.round.winner.player.id
-        iex> "test"
+        iex> room = CoreWeb.Room.new_round(room)
+        iex> room.round.leader.id
+        iex> "test2"
   """
-  def finish_round(%CoreWeb.Room{} = room) do
-    round = %CoreWeb.Round{
-      number: room.round.number + 1,
-      leader: %CoreWeb.User{},
-      winner: %CoreWeb.Answer{},
-      question: %CoreWeb.Question{},
-      answers: []
-    }
+  def new_round(%CoreWeb.Room{} = room) do
+    case room.questions do
+      [question | remaining] ->
+        room
+        |> Map.put(
+          :round,
+          %CoreWeb.Round{
+            number: room.round.number + 1,
+            leader: get_leader(room),
+            winner: %CoreWeb.Answer{},
+            question: question,
+            current_stage: CoreWeb.Stages.prepare(),
+            answers: []
+          }
+        )
+        |> Map.put(:questions, remaining)
 
-    Map.put(room, :round, round)
+      _ ->
+        room
+    end
   end
 
+  @doc """
+    Generate list of options
 
+    ## Examples
+
+      iex> room = %CoreWeb.Room{
+      ...>  players: [
+      ...>    %CoreWeb.User{name: "test1", id: "test1"},
+      ...>    %CoreWeb.User{name: "test2", id: "test2"},
+      ...>    %CoreWeb.User{name: "test3", id: "test3"},
+      ...>  ],
+      ...>  rounds_per_player: 3
+      ...> }
+      iex> CoreWeb.Room.get_options_map(room, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])
+      %{"test1" => [1,2,3,4,5,6], "test2" => [7,8,9,10,11,12], "test3" => [13,14,15,16,17,18]}
+  """
+  def get_options_map(%CoreWeb.Room{} = room, options) do
+    options_length = length(options)
+    required = (length(room.players) + 3) * room.rounds_per_player
+
+    options = expand_options(options, options_length, required)
+
+    {map, _} =
+      Enum.reduce(
+        room.players,
+        {%{}, options},
+        &{
+          Map.put(elem(&2, 0), &1.id, Enum.take(elem(&2, 1), room.rounds_per_player + 3)),
+          Enum.drop(elem(&2, 1), room.rounds_per_player + 3)
+        }
+      )
+
+    map
+  end
+
+  defp expand_options(opts, len, required) when len < required do
+    expand_options(opts ++ opts, len * 2, required)
+  end
+
+  defp expand_options(opts, _, required) do
+    Enum.take(opts, required)
+  end
+
+  defp get_leader(%CoreWeb.Room{} = room) do
+    count = length(room.players)
+
+    currentLeaderIdx =
+      Enum.find_index(
+        room.players,
+        &(&1.id == room.round.leader.id)
+      )
+
+    Enum.at(
+      room.players,
+      get_next_leader_idx(count, currentLeaderIdx)
+    )
+  end
+
+  defp get_next_leader_idx(total, currentIdx) when currentIdx < total, do: currentIdx + 1
+  defp get_next_leader_idx(_, _), do: 0
 end

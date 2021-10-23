@@ -19,10 +19,6 @@ defmodule CoreWeb.RoomChannel do
 
   @impl true
   def handle_in("leave", payload, socket) do
-    IO.puts("====================")
-    IO.inspect(payload)
-    IO.inspect(socket)
-
     "room:" <> room_id = socket.topic
 
     case CoreWeb.RoomsState.get(room_id) do
@@ -31,6 +27,22 @@ defmodule CoreWeb.RoomChannel do
 
       %CoreWeb.Room{} = room ->
         {:reply, {:ok, handle_leave(room, socket.assigns.user_id)}, socket}
+    end
+  end
+
+  def handle_in("start_game", _payload, socket) do
+    # Start game
+    # Round number 1
+    # start_round
+    # broadcast game info
+    "room:" <> room_id = socket.topic
+
+    case CoreWeb.RoomsState.get(room_id) do
+      nil ->
+        {:reply, {:error, %{reason: "Room not found"}}, socket}
+
+      %CoreWeb.Room{} = room ->
+        {:reply, handle_start_game(room, socket), socket}
     end
   end
 
@@ -61,7 +73,7 @@ defmodule CoreWeb.RoomChannel do
   end
 
   @impl true
-  def handle_in("finish_round", payload, socket) do
+  def handle_in("finish_round", _payload, socket) do
     "room:" <> room_id = socket.topic
 
     case CoreWeb.RoomsState.get(room_id) do
@@ -127,7 +139,7 @@ defmodule CoreWeb.RoomChannel do
   end
 
   defp finish_round(room, socket) do
-    room = CoreWeb.Room.finish_round(room)
+    # room = CoreWeb.Room.finish_round(room)
 
     broadcast!(socket, "room_update", room)
 
@@ -135,5 +147,23 @@ defmodule CoreWeb.RoomChannel do
       nil -> {:reply, {:error, "Player not found"}, socket}
       %CoreWeb.Room{} -> {:reply, {:ok, "ok"}, socket}
     end
+  end
+
+  defp handle_start_game(room, socket) do
+    {:ok, questionnaire} = CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json")
+
+    IO.inspect(questionnaire)
+
+    room =
+      room
+      |> CoreWeb.Room.add_questions(questionnaire.questions)
+      |> CoreWeb.Room.new_round()
+
+    options = CoreWeb.Room.get_options_map(room, questionnaire.options)
+
+    broadcast!(socket, "game_options", options)
+    broadcast!(socket, "room_update", room)
+
+    :ok
   end
 end
