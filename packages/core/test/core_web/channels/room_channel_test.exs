@@ -5,13 +5,15 @@ defmodule CoreWeb.RoomChannelTest do
   #   {:ok, _, socket} =
   #     CoreWeb.UserSocket
   #     |> socket("user_id", %{some: :assign})
-  #     |> subscribe_and_join(CoreWeb.RoomChannel, "room:lobby")
+  #     |> subscribe_and_join(CoreWeb.RoomChannel, "room:1234")
+
+  #     IO.inspect(socket)
 
   #   %{socket: socket}
   # end
 
   # test "ping replies with status ok", %{socket: socket} do
-  #   ref = push socket, "ping", %{"hello" => "there"}
+  #   ref = push(socket, "create_room", %{"host" => })
   #   assert_reply ref, :ok, %{"hello" => "there"}
   # end
 

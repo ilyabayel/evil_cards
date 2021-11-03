@@ -6,6 +6,18 @@ defmodule CoreWeb.Questionnaire do
             questions: [],
             options: []
 
+  @typedoc """
+  A room where all actions are stored
+  """
+  @type t :: %__MODULE__{
+    id: String.t(),
+    name: String.t(),
+    author: CoreWeb.User.t(),
+    questions: Enum.t(),
+    options: Enum.t(),
+  }
+
+
   def create_from_file(filename) do
     with {:ok, body} <- File.read(filename),
          {:ok, json} <- Jason.decode(body)

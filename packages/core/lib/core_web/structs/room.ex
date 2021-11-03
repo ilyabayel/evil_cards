@@ -181,53 +181,6 @@ defmodule CoreWeb.Room do
     Map.put(room, :round, round)
   end
 
-  @doc """
-      Finish round
-
-      ## Examples
-
-        iex> room = %CoreWeb.Room{
-        ...>  players: [
-        ...>  %CoreWeb.User{
-        ...>    id: "test",
-        ...>    name: "test"
-        ...>  },
-        ...>  %CoreWeb.User{
-        ...>     id: "test2",
-        ...>     name: "test2"
-        ...>  }],
-        ...>  round: %CoreWeb.Round{
-        ...>    leader: %CoreWeb.User{
-        ...>      id: "test",
-        ...>      name: "test"
-        ...>    }
-        ...>  }
-        ...> }
-        iex> room = CoreWeb.Room.new_round(room)
-        iex> room.round.leader.id
-        iex> "test2"
-  """
-  def new_round(%CoreWeb.Room{} = room) do
-    case room.questions do
-      [question | remaining] ->
-        room
-        |> Map.put(
-          :round,
-          %CoreWeb.Round{
-            number: room.round.number + 1,
-            leader: get_leader(room),
-            winner: %CoreWeb.Answer{},
-            question: question,
-            current_stage: CoreWeb.Stages.prepare(),
-            answers: []
-          }
-        )
-        |> Map.put(:questions, remaining)
-
-      _ ->
-        room
-    end
-  end
 
   @doc """
     Generate list of options
@@ -264,6 +217,15 @@ defmodule CoreWeb.Room do
     map
   end
 
+  def next_stage(%CoreWeb.Room{} = room, current_stage) do
+    CoreWeb.Room.set_stage(room, CoreWeb.Stages.get_next_stage(current_stage))
+  end
+
+  def set_stage(%CoreWeb.Room{} = room, stage) do
+    round = Map.put(room.round, :stage, stage)
+    Map.put(room, :round, round)
+  end
+
   defp expand_options(opts, len, required) when len < required do
     expand_options(opts ++ opts, len * 2, required)
   end
@@ -271,22 +233,4 @@ defmodule CoreWeb.Room do
   defp expand_options(opts, _, required) do
     Enum.take(opts, required)
   end
-
-  defp get_leader(%CoreWeb.Room{} = room) do
-    count = length(room.players)
-
-    currentLeaderIdx =
-      Enum.find_index(
-        room.players,
-        &(&1.id == room.round.leader.id)
-      )
-
-    Enum.at(
-      room.players,
-      get_next_leader_idx(count, currentLeaderIdx)
-    )
-  end
-
-  defp get_next_leader_idx(total, currentIdx) when currentIdx < total, do: currentIdx + 1
-  defp get_next_leader_idx(_, _), do: 0
 end

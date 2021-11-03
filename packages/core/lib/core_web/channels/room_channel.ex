@@ -18,7 +18,7 @@ defmodule CoreWeb.RoomChannel do
   end
 
   @impl true
-  def handle_in("leave", payload, socket) do
+  def handle_in("leave", _payload, socket) do
     "room:" <> room_id = socket.topic
 
     case CoreWeb.RoomsState.get(room_id) do
@@ -31,18 +31,30 @@ defmodule CoreWeb.RoomChannel do
   end
 
   def handle_in("start_game", _payload, socket) do
-    # Start game
-    # Round number 1
-    # start_round
-    # broadcast game info
-    "room:" <> room_id = socket.topic
+    with "room:" <> room_id <- socket.topic,
+         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id),
+         {:ok, questionnaire} <-
+           CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json") do
+      options_map = CoreWeb.Room.get_options_map(room, Enum.shuffle(questionnaire.options))
 
-    case CoreWeb.RoomsState.get(room_id) do
-      nil ->
-        {:reply, {:error, %{reason: "Room not found"}}, socket}
+      room = CoreWeb.GameProcess.start_game(room, questionnaire)
 
-      %CoreWeb.Room{} = room ->
-        {:reply, handle_start_game(room, socket), socket}
+      broadcast!(socket, "game_options", options_map)
+      broadcast!(socket, "room_update", room)
+
+      {:noreply, socket}
+    else
+      err -> {:reply, {:error, %{reason: err}}, socket}
+    end
+  end
+
+  def handle_in("next_stage", _payload, socket) do
+    with "room:" <> room_id <- socket.topic,
+         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
+      round = Map.put(room.round, :stage, CoreWeb.Stages.get_next_stage(room.round.stage))
+      room = Map.put(room, :round, round)
+      broadcast!(socket, "room_update", room)
+      {:noreply, socket}
     end
   end
 
@@ -61,14 +73,18 @@ defmodule CoreWeb.RoomChannel do
 
   @impl true
   def handle_in("choose_winner", %{"playerId" => player_id}, socket) do
-    "room:" <> room_id = socket.topic
+    with "room:" <> room_id <- socket.topic,
+         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
+      room = CoreWeb.Room.set_winner(room, player_id)
 
-    case CoreWeb.RoomsState.get(room_id) do
-      nil ->
-        {:reply, {:error, %{reason: "Room not found"}}, socket}
+      broadcast!(socket, "room_update", room)
 
-      %CoreWeb.Room{} = room ->
-        choose_winner(room, player_id, socket)
+      case room.round.winner do
+        nil -> {:reply, {:error, "Player not found"}, socket}
+        %CoreWeb.Room{} -> {:reply, {:ok, "ok"}, socket}
+      end
+    else
+      err -> {:reply, {:error, %{reason: err}}, socket}
     end
   end
 
@@ -81,7 +97,9 @@ defmodule CoreWeb.RoomChannel do
         {:reply, {:error, %{reason: "Room not found"}}, socket}
 
       %CoreWeb.Room{} = room ->
-        finish_round(room, socket)
+        room = CoreWeb.Room.new_round(room)
+        broadcast!(socket, "room_update", room)
+        {:reply, :ok, socket}
     end
   end
 
@@ -125,45 +143,5 @@ defmodule CoreWeb.RoomChannel do
     broadcast!(socket, "room_update", room)
 
     {:reply, {:ok, "ok"}, socket}
-  end
-
-  defp choose_winner(room, player_id, socket) do
-    room = CoreWeb.Room.set_winner(room, player_id)
-
-    broadcast!(socket, "room_update", room)
-
-    case room.round.winner do
-      nil -> {:reply, {:error, "Player not found"}, socket}
-      %CoreWeb.Room{} -> {:reply, {:ok, "ok"}, socket}
-    end
-  end
-
-  defp finish_round(room, socket) do
-    # room = CoreWeb.Room.finish_round(room)
-
-    broadcast!(socket, "room_update", room)
-
-    case room.round.winner do
-      nil -> {:reply, {:error, "Player not found"}, socket}
-      %CoreWeb.Room{} -> {:reply, {:ok, "ok"}, socket}
-    end
-  end
-
-  defp handle_start_game(room, socket) do
-    {:ok, questionnaire} = CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json")
-
-    IO.inspect(questionnaire)
-
-    room =
-      room
-      |> CoreWeb.Room.add_questions(questionnaire.questions)
-      |> CoreWeb.Room.new_round()
-
-    options = CoreWeb.Room.get_options_map(room, questionnaire.options)
-
-    broadcast!(socket, "game_options", options)
-    broadcast!(socket, "room_update", room)
-
-    :ok
   end
 end
