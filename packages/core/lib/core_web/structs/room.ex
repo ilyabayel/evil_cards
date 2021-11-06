@@ -25,6 +25,21 @@ defmodule CoreWeb.Room do
           code: integer
         }
 
+  @spec add_player(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
+  @spec remove_player(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
+  @spec add_questions(CoreWeb.Room.t(), [CoreWeb.Question.t()]) :: CoreWeb.Room.t()
+  @spec add_answer(CoreWeb.Room.t(), CoreWeb.Answer.t()) :: CoreWeb.Room.t()
+  @spec remove_answer(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
+  @spec start_game(CoreWeb.Room.t(), CoreWeb.Questionnaire.t()) :: CoreWeb.Room.t()
+  @spec start_game(CoreWeb.Room.t(), CoreWeb.Questionnaire.t()) :: CoreWeb.Room.t()
+  @spec end_game(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec start_round(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec end_round(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec start_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec end_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec add_answer(CoreWeb.Room.t(), CoreWeb.Option.t()) :: CoreWeb.Room.t()
+  @spec set_winner(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
+
   @doc """
     Add player to room
 
@@ -47,7 +62,7 @@ defmodule CoreWeb.Room do
     )
   end
 
-  @spec remove_player(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
+
   @doc """
     Remove players from the room
 
@@ -181,42 +196,6 @@ defmodule CoreWeb.Room do
     Map.put(room, :round, round)
   end
 
-
-  @doc """
-    Generate list of options
-
-    ## Examples
-
-      iex> room = %CoreWeb.Room{
-      ...>  players: [
-      ...>    %CoreWeb.User{name: "test1", id: "test1"},
-      ...>    %CoreWeb.User{name: "test2", id: "test2"},
-      ...>    %CoreWeb.User{name: "test3", id: "test3"},
-      ...>  ],
-      ...>  rounds_per_player: 3
-      ...> }
-      iex> CoreWeb.Room.get_options_map(room, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])
-      %{"test1" => [1,2,3,4,5,6], "test2" => [7,8,9,10,11,12], "test3" => [13,14,15,16,17,18]}
-  """
-  def get_options_map(%CoreWeb.Room{} = room, options) do
-    options_length = length(options)
-    required = (length(room.players) + 3) * room.rounds_per_player
-
-    options = expand_options(options, options_length, required)
-
-    {map, _} =
-      Enum.reduce(
-        room.players,
-        {%{}, options},
-        &{
-          Map.put(elem(&2, 0), &1.id, Enum.take(elem(&2, 1), room.rounds_per_player + 3)),
-          Enum.drop(elem(&2, 1), room.rounds_per_player + 3)
-        }
-      )
-
-    map
-  end
-
   def next_stage(%CoreWeb.Room{} = room, current_stage) do
     CoreWeb.Room.set_stage(room, CoreWeb.Stages.get_next_stage(current_stage))
   end
@@ -225,12 +204,97 @@ defmodule CoreWeb.Room do
     round = Map.put(room.round, :stage, stage)
     Map.put(room, :round, round)
   end
-
-  defp expand_options(opts, len, required) when len < required do
-    expand_options(opts ++ opts, len * 2, required)
+  def start_game(%CoreWeb.Room{} = room, %CoreWeb.Questionnaire{} = questionnaire) do
+    room
+    |> CoreWeb.Room.add_questions(Enum.shuffle(questionnaire.questions))
+    |> CoreWeb.Room.start_round()
   end
 
-  defp expand_options(opts, _, required) do
-    Enum.take(opts, required)
+  def end_game(%CoreWeb.Room{} = room) do
+    room
   end
+
+  @doc """
+      Finish round
+
+      ## Examples
+
+        iex> room = %CoreWeb.Room{
+        ...>  players: [
+        ...>  %CoreWeb.User{
+        ...>    id: "test",
+        ...>    name: "test"
+        ...>  },
+        ...>  %CoreWeb.User{
+        ...>     id: "test2",
+        ...>     name: "test2"
+        ...>  }],
+        ...>  round: %CoreWeb.Round{
+        ...>    leader: %CoreWeb.User{
+        ...>      id: "test",
+        ...>      name: "test"
+        ...>    }
+        ...>  }
+        ...> }
+        iex> room = CoreWeb.Room.start_round(room)
+        iex> room.round.leader.id
+        iex> "test2"
+  """
+  def start_round(%CoreWeb.Room{} = room) do
+    case room.questions do
+      [question | remaining] ->
+        room
+        |> Map.put(
+          :round,
+          %CoreWeb.Round{
+            number: room.round.number + 1,
+            leader: get_leader(room),
+            winner: %CoreWeb.Answer{},
+            question: question,
+            current_stage: CoreWeb.Stages.prepare(),
+            answers: []
+          }
+        )
+        |> Map.put(:questions, remaining)
+
+      _ ->
+        room
+    end
+  end
+
+  def end_round(%CoreWeb.Room{} = room) do
+    # add score to winner
+    room
+  end
+
+
+  def start_stage(%CoreWeb.Room{} = room) do
+    round = Map.put(room.round, :stage, CoreWeb.Stages.get_next_stage(room.round.stage))
+    room = Map.put(room, :round, round)
+    room
+  end
+
+  def end_stage(%CoreWeb.Room{} = room) do
+    room
+  end
+
+  # Helper functions
+
+  defp get_leader(%CoreWeb.Room{} = room) do
+    count = length(room.players)
+
+    currentLeaderIdx =
+      Enum.find_index(
+        room.players,
+        &(&1.id == room.round.leader.id)
+      )
+
+    Enum.at(
+      room.players,
+      get_next_leader_idx(count, currentLeaderIdx)
+    )
+  end
+
+  defp get_next_leader_idx(total, currentIdx) when currentIdx < total, do: currentIdx + 1
+  defp get_next_leader_idx(_, _), do: 0
 end
