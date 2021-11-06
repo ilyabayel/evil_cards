@@ -27,17 +27,16 @@ defmodule CoreWeb.Room do
 
   @spec add_player(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
   @spec remove_player(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
-  @spec add_questions(CoreWeb.Room.t(), [CoreWeb.Question.t()]) :: CoreWeb.Room.t()
+  @spec set_questions(CoreWeb.Room.t(), [CoreWeb.Question.t()]) :: CoreWeb.Room.t()
   @spec add_answer(CoreWeb.Room.t(), CoreWeb.Answer.t()) :: CoreWeb.Room.t()
   @spec remove_answer(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
-  @spec start_game(CoreWeb.Room.t(), CoreWeb.Questionnaire.t()) :: CoreWeb.Room.t()
   @spec start_game(CoreWeb.Room.t(), CoreWeb.Questionnaire.t()) :: CoreWeb.Room.t()
   @spec end_game(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec start_round(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec end_round(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec set_stage(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
   @spec start_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec end_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
-  @spec add_answer(CoreWeb.Room.t(), CoreWeb.Option.t()) :: CoreWeb.Room.t()
   @spec set_winner(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
 
   @doc """
@@ -99,7 +98,7 @@ defmodule CoreWeb.Room do
       iex> Enum.at(room.questions, 0).id
       "1"
   """
-  def add_questions(%CoreWeb.Room{} = room, questions) do
+  def set_questions(%CoreWeb.Room{} = room, questions) do
     Map.put(room, :questions, questions)
   end
 
@@ -196,17 +195,9 @@ defmodule CoreWeb.Room do
     Map.put(room, :round, round)
   end
 
-  def next_stage(%CoreWeb.Room{} = room, current_stage) do
-    CoreWeb.Room.set_stage(room, CoreWeb.Stages.get_next_stage(current_stage))
-  end
-
-  def set_stage(%CoreWeb.Room{} = room, stage) do
-    round = Map.put(room.round, :stage, stage)
-    Map.put(room, :round, round)
-  end
   def start_game(%CoreWeb.Room{} = room, %CoreWeb.Questionnaire{} = questionnaire) do
     room
-    |> CoreWeb.Room.add_questions(Enum.shuffle(questionnaire.questions))
+    |> CoreWeb.Room.set_questions(Enum.shuffle(questionnaire.questions))
     |> CoreWeb.Room.start_round()
   end
 
@@ -267,11 +258,13 @@ defmodule CoreWeb.Room do
     room
   end
 
+  def set_stage(%CoreWeb.Room{} = room, stage) do
+    round = Map.put(room.round, :stage, stage)
+    Map.put(room, :round, round)
+  end
 
   def start_stage(%CoreWeb.Room{} = room) do
-    round = Map.put(room.round, :stage, CoreWeb.Stages.get_next_stage(room.round.stage))
-    room = Map.put(room, :round, round)
-    room
+    CoreWeb.Room.set_stage(room, CoreWeb.Stages.get_next_stage(room.round.stage))
   end
 
   def end_stage(%CoreWeb.Room{} = room) do
