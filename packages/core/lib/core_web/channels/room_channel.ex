@@ -97,7 +97,7 @@ defmodule CoreWeb.RoomChannel do
         {:reply, {:error, %{reason: "Room not found"}}, socket}
 
       %CoreWeb.Room{} = room ->
-        room = CoreWeb.Room.new_round(room)
+        room = CoreWeb.Room.finish_round(room)
         broadcast!(socket, "room_update", room)
         {:reply, :ok, socket}
     end

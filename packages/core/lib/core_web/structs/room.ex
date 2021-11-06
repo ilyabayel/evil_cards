@@ -25,18 +25,18 @@ defmodule CoreWeb.Room do
           code: integer
         }
 
+  # Public
   @spec add_player(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
   @spec remove_player(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
   @spec set_questions(CoreWeb.Room.t(), [CoreWeb.Question.t()]) :: CoreWeb.Room.t()
   @spec add_answer(CoreWeb.Room.t(), CoreWeb.Answer.t()) :: CoreWeb.Room.t()
   @spec remove_answer(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
   @spec start_game(CoreWeb.Room.t(), CoreWeb.Questionnaire.t()) :: CoreWeb.Room.t()
-  @spec end_game(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec finish_game(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec start_round(CoreWeb.Room.t()) :: CoreWeb.Room.t()
-  @spec end_round(CoreWeb.Room.t()) :: CoreWeb.Room.t()
-  @spec set_stage(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
+  @spec finish_round(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec start_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
-  @spec end_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec finish_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec set_winner(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
 
   @doc """
@@ -201,7 +201,7 @@ defmodule CoreWeb.Room do
     |> CoreWeb.Room.start_round()
   end
 
-  def end_game(%CoreWeb.Room{} = room) do
+  def finish_game(%CoreWeb.Room{} = room) do
     room
   end
 
@@ -253,25 +253,25 @@ defmodule CoreWeb.Room do
     end
   end
 
-  def end_round(%CoreWeb.Room{} = room) do
+  def finish_round(%CoreWeb.Room{} = room) do
     # add score to winner
     room
   end
 
-  def set_stage(%CoreWeb.Room{} = room, stage) do
-    round = Map.put(room.round, :stage, stage)
-    Map.put(room, :round, round)
-  end
-
   def start_stage(%CoreWeb.Room{} = room) do
-    CoreWeb.Room.set_stage(room, CoreWeb.Stages.get_next_stage(room.round.stage))
+    set_stage(room, CoreWeb.Stages.get_next_stage(room.round.stage))
   end
 
-  def end_stage(%CoreWeb.Room{} = room) do
+  def finish_stage(%CoreWeb.Room{} = room) do
     room
   end
 
   # Helper functions
+
+  defp set_stage(%CoreWeb.Room{} = room, stage) do
+    round = Map.put(room.round, :stage, stage)
+    Map.put(room, :round, round)
+  end
 
   defp get_leader(%CoreWeb.Room{} = room) do
     count = length(room.players)
