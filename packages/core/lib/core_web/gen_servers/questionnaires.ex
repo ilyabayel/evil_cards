@@ -1,6 +1,10 @@
 defmodule CoreWeb.Questionnaires do
   use GenServer
 
+  @spec start_server :: :ignore | {:error, any} | {:ok, pid}
+  @spec put(CoreWeb.Questionnaire.t()) :: :ok
+  @spec generate_game_set(CoreWeb.Room.t()) :: any
+
   # Client
 
   def start_server() do
@@ -10,6 +14,7 @@ defmodule CoreWeb.Questionnaires do
   def put(%CoreWeb.Questionnaire{} = questionnaire) do
     GenServer.cast({:global, :Questionnaires}, {:put, questionnaire})
   end
+
   def generate_game_set(%CoreWeb.Room{} = room) do
     GenServer.call({:global, :Questionnaires}, {:generate_game_set, room})
   end
