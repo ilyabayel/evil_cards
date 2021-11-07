@@ -1,4 +1,6 @@
 defmodule CoreWeb.QuestionnaireHelper do
+  @spec get_options_map([CoreWeb.Option.t()], [CoreWeb.User.t()], integer()) :: map
+
   @doc """
     Generate list of options
 
@@ -9,9 +11,15 @@ defmodule CoreWeb.QuestionnaireHelper do
       ...>    %CoreWeb.User{name: "test2", id: "test2"},
       ...>    %CoreWeb.User{name: "test3", id: "test3"},
       ...>  ]
-      ...>  rounds_per_player = 3
-      iex> CoreWeb.Room.get_options_map([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18], players, rounds_per_player)
-      %{"test1" => [1,2,3,4,5,6], "test2" => [7,8,9,10,11,12], "test3" => [13,14,15,16,17,18]}
+      iex>
+      iex> rounds_per_player = 3
+      iex>
+      iex> options =
+      ...>   Enum.to_list(1..18)
+      ...>   |> Enum.map(&(%CoreWeb.Option{id: Integer.to_string(&1), text: Integer.to_string(&1)}))
+      iex>
+      iex> CoreWeb.Room.get_options_map(options, players, rounds_per_player)
+      %{"test1" => Enum.slice(options, 0, 6), "test2" => Enum.slice(options, 6, 6), "test3" => Enum.slice(options, 12, 6)}
   """
   def get_options_map(options, players, rounds_per_player) do
     options_length = length(options)

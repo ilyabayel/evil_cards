@@ -8,6 +8,8 @@ defmodule CoreWeb.User do
           name: String.t()
         }
 
+  @spec from_string_map(%{String.t() => String.t()}) :: CoreWeb.User.t()
+
   def from_string_map(%{"id" => id, "name" => name}) do
     %__MODULE__{
       id: id,

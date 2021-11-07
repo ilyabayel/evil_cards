@@ -17,6 +17,9 @@ defmodule CoreWeb.Questionnaire do
     options: [CoreWeb.Option.t()],
   }
 
+  @spec create_from_file(String.t()) :: {:error, atom | Jason.DecodeError.t()} | {:ok, CoreWeb.Questionnaire.t()}
+  @spec create_from_hashmap(map) :: CoreWeb.Questionnaire.t()
+
 
   def create_from_file(filename) do
     with {:ok, body} <- File.read(filename),
@@ -27,6 +30,7 @@ defmodule CoreWeb.Questionnaire do
       err -> err
     end
   end
+
 
   def create_from_hashmap(%{"questions" => questions, "options" => options, "name" => name}) do
     questions =
