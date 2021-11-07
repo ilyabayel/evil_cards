@@ -35,9 +35,9 @@ defmodule CoreWeb.RoomChannel do
          %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id),
          {:ok, questionnaire} <-
            CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json") do
-      options_map = CoreWeb.Room.get_options_map(room, Enum.shuffle(questionnaire.options))
+      options_map = CoreWeb.QuestionnaireHelper.get_options_map(Enum.shuffle(questionnaire.options), room.players, room.rounds_per_player)
 
-      room = CoreWeb.GameProcess.start_game(room, questionnaire)
+      room = CoreWeb.Room.start_game(room, questionnaire)
 
       broadcast!(socket, "game_options", options_map)
       broadcast!(socket, "room_update", room)
@@ -51,7 +51,7 @@ defmodule CoreWeb.RoomChannel do
   def handle_in("next_stage", _payload, socket) do
     with "room:" <> room_id <- socket.topic,
          %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
-      round = Map.put(room.round, :stage, CoreWeb.Stages.get_next_stage(room.round.stage))
+      round = Map.put(room.round, :current_stage, CoreWeb.Stages.get_next_stage(room.round.current_stage))
       room = Map.put(room, :round, round)
       broadcast!(socket, "room_update", room)
       {:noreply, socket}
@@ -79,10 +79,7 @@ defmodule CoreWeb.RoomChannel do
 
       broadcast!(socket, "room_update", room)
 
-      case room.round.winner do
-        nil -> {:reply, {:error, "Player not found"}, socket}
-        %CoreWeb.Room{} -> {:reply, {:ok, "ok"}, socket}
-      end
+      {:reply, {:ok, "ok"}, socket}
     else
       err -> {:reply, {:error, %{reason: err}}, socket}
     end

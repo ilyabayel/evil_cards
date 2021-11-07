@@ -16,7 +16,6 @@ defmodule CoreWeb.LobbyChannel do
       players: [],
       round_duration: 60,
       rounds_per_player: 2,
-      current_stage: "wait",
       round: %CoreWeb.Round{},
       questions: [],
       code: CoreWeb.Counter.get()

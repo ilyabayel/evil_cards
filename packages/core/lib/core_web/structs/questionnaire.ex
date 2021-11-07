@@ -13,8 +13,8 @@ defmodule CoreWeb.Questionnaire do
     id: String.t(),
     name: String.t(),
     author: CoreWeb.User.t(),
-    questions: Enum.t(),
-    options: Enum.t(),
+    questions: [CoreWeb.Question.t()],
+    options: [CoreWeb.Option.t()],
   }
 
 

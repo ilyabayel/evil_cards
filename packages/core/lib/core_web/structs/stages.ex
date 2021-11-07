@@ -9,5 +9,5 @@ defmodule CoreWeb.Stages do
   def get_next_stage("prepare"), do: "play"
   def get_next_stage("play"), do: "vote"
   def get_next_stage("vote"), do: "result"
-  def get_next_stage("result"), do: "wait"
+  def get_next_stage("result"), do: "prepare"
 end

@@ -5,10 +5,11 @@ defmodule CoreWeb.Room do
             players: [],
             round_duration: 60,
             rounds_per_player: 2,
-            current_stage: CoreWeb.Stages.wait(),
             round: %CoreWeb.Round{},
             questions: [],
-            code: 0
+            status: CoreWeb.GameStatus.play(),
+            code: 0,
+            score_table: %{}
 
   @typedoc """
   A room where all actions are stored
@@ -19,13 +20,13 @@ defmodule CoreWeb.Room do
           players: [CoreWeb.User.t()],
           round_duration: Integer,
           rounds_per_player: Integer,
-          current_stage: String.t(),
           round: CoreWeb.Round.t(),
-          questions: Enum.t(),
+          questions: [CoreWeb.Question.t()],
+          status: CoreWeb.GameStatus.t(),
+          score_table: %{String.t() => Integer},
           code: integer
         }
 
-  # Public
   @spec add_player(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
   @spec remove_player(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
   @spec set_questions(CoreWeb.Room.t(), [CoreWeb.Question.t()]) :: CoreWeb.Room.t()
@@ -38,6 +39,8 @@ defmodule CoreWeb.Room do
   @spec start_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec finish_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec set_winner(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
+  @spec init_score_table(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec add_score_to_winner(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
 
   @doc """
     Add player to room
@@ -60,7 +63,6 @@ defmodule CoreWeb.Room do
       end) ++ [player]
     )
   end
-
 
   @doc """
     Remove players from the room
@@ -94,7 +96,7 @@ defmodule CoreWeb.Room do
 
       iex> room = %CoreWeb.Room{}
       iex> questions = [%CoreWeb.Question{id: "1", text: "1"}]
-      iex> room = CoreWeb.Room.add_questions(room, questions)
+      iex> room = CoreWeb.Room.set_questions(room, questions)
       iex> Enum.at(room.questions, 0).id
       "1"
   """
@@ -198,11 +200,12 @@ defmodule CoreWeb.Room do
   def start_game(%CoreWeb.Room{} = room, %CoreWeb.Questionnaire{} = questionnaire) do
     room
     |> CoreWeb.Room.set_questions(Enum.shuffle(questionnaire.questions))
+    |> CoreWeb.Room.init_score_table()
     |> CoreWeb.Room.start_round()
   end
 
   def finish_game(%CoreWeb.Room{} = room) do
-    room
+    Map.put(room, :status, CoreWeb.GameStatus.finished())
   end
 
   @doc """
@@ -249,27 +252,42 @@ defmodule CoreWeb.Room do
         |> Map.put(:questions, remaining)
 
       _ ->
-        room
+        CoreWeb.Room.finish_game(room)
     end
   end
 
   def finish_round(%CoreWeb.Room{} = room) do
-    # add score to winner
     room
+      |> CoreWeb.Room.add_score_to_winner(room.round.winner.player)
   end
 
   def start_stage(%CoreWeb.Room{} = room) do
-    set_stage(room, CoreWeb.Stages.get_next_stage(room.round.stage))
+    set_stage(room, CoreWeb.Stages.get_next_stage(room.round.current_stage))
   end
 
   def finish_stage(%CoreWeb.Room{} = room) do
     room
   end
 
+  def init_score_table(%CoreWeb.Room{} = room) do
+    score_table =
+      Enum.reduce(
+        room.players,
+        %{},
+        &Map.put(&2, &1.id, 0)
+      )
+
+    Map.put(room, :score_table, score_table)
+  end
+
+  def add_score_to_winner(%CoreWeb.Room{} = room, %CoreWeb.User{} = winner) do
+    Map.put(room, :score_table, Map.put(room.score_table, winner.id, room.score_table[winner.id] + 1))
+  end
+
   # Helper functions
 
   defp set_stage(%CoreWeb.Room{} = room, stage) do
-    round = Map.put(room.round, :stage, stage)
+    round = Map.put(room.round, :current_stage, stage)
     Map.put(room, :round, round)
   end
 
