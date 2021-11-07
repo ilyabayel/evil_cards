@@ -258,7 +258,7 @@ defmodule CoreWeb.Room do
 
   def finish_round(%CoreWeb.Room{} = room) do
     room
-      |> CoreWeb.Room.add_score_to_winner(room.round.winner.player)
+    |> CoreWeb.Room.add_score_to_winner(room.round.winner.player)
   end
 
   def start_stage(%CoreWeb.Room{} = room) do
@@ -281,7 +281,11 @@ defmodule CoreWeb.Room do
   end
 
   def add_score_to_winner(%CoreWeb.Room{} = room, %CoreWeb.User{} = winner) do
-    Map.put(room, :score_table, Map.put(room.score_table, winner.id, room.score_table[winner.id] + 1))
+    Map.put(
+      room,
+      :score_table,
+      Map.put(room.score_table, winner.id, room.score_table[winner.id] + 1)
+    )
   end
 
   # Helper functions
