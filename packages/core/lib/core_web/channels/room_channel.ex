@@ -35,11 +35,16 @@ defmodule CoreWeb.RoomChannel do
          %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id),
          {:ok, questionnaire} <-
            CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json") do
-      options_map = CoreWeb.QuestionnaireHelper.get_options_map(Enum.shuffle(questionnaire.options), room.players, room.rounds_per_player)
+      options_map =
+        CoreWeb.QuestionnaireHelper.get_options_map(
+          Enum.shuffle(questionnaire.options),
+          room.players,
+          room.rounds_per_player
+        )
 
       room = CoreWeb.Room.start_game(room, questionnaire)
 
-      broadcast!(socket, "game_options", options_map)
+      broadcast!(socket, "options_map", options_map)
       broadcast!(socket, "room_update", room)
 
       {:noreply, socket}
@@ -48,40 +53,32 @@ defmodule CoreWeb.RoomChannel do
     end
   end
 
-  def handle_in("next_stage", _payload, socket) do
+  def handle_in("finish_game", _payload, socket) do
     with "room:" <> room_id <- socket.topic,
          %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
-      round = Map.put(room.round, :current_stage, CoreWeb.Stages.get_next_stage(room.round.current_stage))
+      room = CoreWeb.Room.finish_game(room)
+
+      broadcast!(socket, "room_update", room)
+
+      {:noreply, socket}
+    else
+      err -> {:reply, {:error, %{reason: err}}, socket}
+    end
+  end
+
+  def handle_in("start_round", _payload, socket) do
+    with "room:" <> room_id <- socket.topic,
+         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
+      round =
+        Map.put(
+          room.round,
+          :current_stage,
+          CoreWeb.Stages.get_next_stage(room.round.current_stage)
+        )
+
       room = Map.put(room, :round, round)
       broadcast!(socket, "room_update", room)
       {:noreply, socket}
-    end
-  end
-
-  @impl true
-  def handle_in("answer", payload, socket) do
-    "room:" <> room_id = socket.topic
-
-    case CoreWeb.RoomsState.get(room_id) do
-      nil ->
-        {:reply, {:error, %{reason: "Room not found"}}, socket}
-
-      %CoreWeb.Room{} = room ->
-        add_answer(room, payload, socket)
-    end
-  end
-
-  @impl true
-  def handle_in("choose_winner", %{"playerId" => player_id}, socket) do
-    with "room:" <> room_id <- socket.topic,
-         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
-      room = CoreWeb.Room.set_winner(room, player_id)
-
-      broadcast!(socket, "room_update", room)
-
-      {:reply, {:ok, "ok"}, socket}
-    else
-      err -> {:reply, {:error, %{reason: err}}, socket}
     end
   end
 
@@ -97,6 +94,46 @@ defmodule CoreWeb.RoomChannel do
         room = CoreWeb.Room.finish_round(room)
         broadcast!(socket, "room_update", room)
         {:reply, :ok, socket}
+    end
+  end
+
+  def handle_in("add_answer", payload, socket) do
+    "room:" <> room_id = socket.topic
+
+    case CoreWeb.RoomsState.get(room_id) do
+      nil ->
+        {:reply, {:error, %{reason: "Room not found"}}, socket}
+
+      %CoreWeb.Room{} = room ->
+        add_answer(room, payload, socket)
+    end
+  end
+
+  def handle_in("remove_answer", _payload, socket) do
+    "room:" <> room_id = socket.topic
+
+    case CoreWeb.RoomsState.get(room_id) do
+      nil ->
+        {:reply, {:error, %{reason: "Room not found"}}, socket}
+
+      %CoreWeb.Room{} = room ->
+        room = CoreWeb.Room.remove_answer(room, socket.assigns.user_id)
+        broadcast!(socket, "room_update", room)
+        {:reply, {:ok, "ok"}, socket}
+    end
+  end
+
+  @impl true
+  def handle_in("set_winner", %{"playerId" => player_id}, socket) do
+    with "room:" <> room_id <- socket.topic,
+         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
+      room = CoreWeb.Room.set_winner(room, player_id)
+
+      broadcast!(socket, "room_update", room)
+
+      {:reply, {:ok, "ok"}, socket}
+    else
+      err -> {:reply, {:error, %{reason: err}}, socket}
     end
   end
 
