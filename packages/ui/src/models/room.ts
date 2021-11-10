@@ -5,22 +5,23 @@ export interface I_User {
     name: string;
 }
 
-interface I_Player extends I_User {
-    points: number;
+enum StageEnum {
+    wait = "wait",
+    prepare = "prepare",
+    play = "play",
+    vote = "vote",
+    result = "result"
 }
 
-enum StagesEnum {
-    Wait,
-    Prepare,
-    Play,
-    WinnerDetermination,
-    Result
+enum StatusEnum {
+    play = "play",
+    finished = "finished"
 }
 
 export interface I_Answer {
     question: I_Question;
     option: I_Option;
-    player: I_Player;
+    player: I_User;
 }
 
 export interface I_Round {
@@ -29,6 +30,7 @@ export interface I_Round {
     winner: I_Answer;
     question: I_Question;
     answers: I_Answer[];
+    current_stage: StageEnum;
 }
 
 export interface I_Question {
@@ -50,17 +52,18 @@ export interface I_Questionnaire {
 }
 
 export interface I_Leaderboard {
-    [userId: string]: number
+    [userId: string]: number;
 }
 
 export interface I_RoomInfo {
     id: string;
     host: I_User;
-    roundDuration: number;
-    roundPerPlayer: number;
-    players: I_Player[];
-    currentStage: StagesEnum;
+    round_duration: number;
+    rounds_per_player: number;
+    players: I_User[];
     round: I_Round;
-    questionnaireId: ID;
-    leaderboard: I_Leaderboard
+    questions: I_Question[];
+    leaderboard: I_Leaderboard;
+    code: number;
+    status: StatusEnum;
 }
