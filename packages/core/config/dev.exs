@@ -1,13 +1,13 @@
 use Mix.Config
 
 # Configure your database
-config :core, Core.Repo,
-  username: "postgres",
-  password: "changeme",
-  database: "core",
-  hostname: "localhost",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+# config :core, Core.Repo,
+#   username: "postgres",
+#   password: "changeme",
+#   database: "core",
+#   hostname: "localhost",
+#   show_sensitive_data_on_connection_error: true,
+#   pool_size: 10
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
