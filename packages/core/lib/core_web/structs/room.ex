@@ -9,7 +9,7 @@ defmodule CoreWeb.Room do
             questions: [],
             status: CoreWeb.GameStatus.play(),
             code: 0,
-            score_table: %{}
+            leaderboard: %{}
 
   @typedoc """
   A room where all actions are stored
@@ -23,7 +23,7 @@ defmodule CoreWeb.Room do
           round: CoreWeb.Round.t(),
           questions: [CoreWeb.Question.t()],
           status: CoreWeb.GameStatus.t(),
-          score_table: %{String.t() => Integer},
+          leaderboard: %{String.t() => Integer},
           code: integer
         }
 
@@ -39,7 +39,7 @@ defmodule CoreWeb.Room do
   @spec start_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec finish_stage(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec set_winner(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
-  @spec init_score_table(CoreWeb.Room.t()) :: CoreWeb.Room.t()
+  @spec init_leaderboard(CoreWeb.Room.t()) :: CoreWeb.Room.t()
   @spec add_score_to_winner(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
 
   @doc """
@@ -200,7 +200,7 @@ defmodule CoreWeb.Room do
   def start_game(%CoreWeb.Room{} = room, %CoreWeb.Questionnaire{} = questionnaire) do
     room
     |> CoreWeb.Room.set_questions(Enum.shuffle(questionnaire.questions))
-    |> CoreWeb.Room.init_score_table()
+    |> CoreWeb.Room.init_leaderboard()
     |> CoreWeb.Room.start_round()
   end
 
@@ -269,22 +269,22 @@ defmodule CoreWeb.Room do
     room
   end
 
-  def init_score_table(%CoreWeb.Room{} = room) do
-    score_table =
+  def init_leaderboard(%CoreWeb.Room{} = room) do
+    leaderboard =
       Enum.reduce(
         room.players,
         %{},
         &Map.put(&2, &1.id, 0)
       )
 
-    Map.put(room, :score_table, score_table)
+    Map.put(room, :leaderboard, leaderboard)
   end
 
   def add_score_to_winner(%CoreWeb.Room{} = room, %CoreWeb.User{} = winner) do
     Map.put(
       room,
-      :score_table,
-      Map.put(room.score_table, winner.id, room.score_table[winner.id] + 1)
+      :leaderboard,
+      Map.put(room.leaderboard, winner.id, room.leaderboard[winner.id] + 1)
     )
   end
 

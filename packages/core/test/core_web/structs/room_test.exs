@@ -97,7 +97,7 @@ defmodule CoreWeb.RoomTest do
   end
 
   test "should add score to winner on round finish", state do
-    score_table = %{
+    leaderboard = %{
       "test" => 0
     }
 
@@ -113,11 +113,11 @@ defmodule CoreWeb.RoomTest do
 
     room =
       state.room
-      |> Map.put(:score_table, score_table)
+      |> Map.put(:leaderboard, leaderboard)
       |> Map.put(:round, round)
       |> CoreWeb.Room.finish_round()
 
-    assert room.score_table["test"] == 1
+    assert room.leaderboard["test"] == 1
   end
 
   test "should change status to finished on finish_game", state do
@@ -126,7 +126,7 @@ defmodule CoreWeb.RoomTest do
   end
 
   test "should init all-zeros score table", state do
-    room = CoreWeb.Room.init_score_table(state.room)
+    room = CoreWeb.Room.init_leaderboard(state.room)
 
     expected_table = %{
       "test1" => 0,
@@ -134,16 +134,16 @@ defmodule CoreWeb.RoomTest do
       "test3" => 0
     }
 
-    assert room.score_table == expected_table
+    assert room.leaderboard == expected_table
   end
 
   test "should add score to winner on add_score_to_winner", state do
     room =
       state.room
-      |> Map.put(:score_table, %{"test1" => 0})
+      |> Map.put(:leaderboard, %{"test1" => 0})
       |> CoreWeb.Room.add_score_to_winner(%CoreWeb.User{id: "test1", name: "test_name"})
 
-    assert room.score_table["test1"] == 1
+    assert room.leaderboard["test1"] == 1
   end
 
   test "start_stage should correctly set stages", state do
@@ -223,9 +223,9 @@ defmodule CoreWeb.RoomTest do
       |> CoreWeb.Room.finish_stage()
       |> CoreWeb.Room.finish_round()
 
-    assert room.score_table[Enum.at(room.round.answers, 0).player.id] == 1
-    assert room.score_table[Enum.at(room.round.answers, 1).player.id] == 0
-    assert room.score_table[Enum.at(room.round.answers, 2).player.id] == 0
+    assert room.leaderboard[Enum.at(room.round.answers, 0).player.id] == 1
+    assert room.leaderboard[Enum.at(room.round.answers, 1).player.id] == 0
+    assert room.leaderboard[Enum.at(room.round.answers, 2).player.id] == 0
 
     # Start round, check that round leader is player #2
 
