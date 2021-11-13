@@ -11,10 +11,9 @@ defmodule CoreWeb.RoomChannel do
 
       room = CoreWeb.Room.add_player(room, player)
       CoreWeb.RoomsState.put(room)
-      broadcast!(socket, "room_update", room)
-      {:ok, socket}
+      {:ok, room, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -29,7 +28,7 @@ defmodule CoreWeb.RoomChannel do
 
       {:reply, :ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -50,9 +49,9 @@ defmodule CoreWeb.RoomChannel do
       broadcast!(socket, "options_map", options_map)
       broadcast!(socket, "room_update", room)
 
-      {:noreply, socket}
+      {:ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -65,9 +64,9 @@ defmodule CoreWeb.RoomChannel do
 
       broadcast!(socket, "room_update", room)
 
-      {:noreply, socket}
+      {:ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -81,7 +80,7 @@ defmodule CoreWeb.RoomChannel do
       broadcast!(socket, "room_update", room)
       {:reply, :ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -94,7 +93,7 @@ defmodule CoreWeb.RoomChannel do
       broadcast!(socket, "room_update", room)
       {:reply, :ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -106,7 +105,7 @@ defmodule CoreWeb.RoomChannel do
       broadcast!(socket, "room_update", room)
       {:reply, :ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -118,7 +117,7 @@ defmodule CoreWeb.RoomChannel do
       broadcast!(socket, "room_update", room)
       {:reply, :ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -149,7 +148,7 @@ defmodule CoreWeb.RoomChannel do
 
       {:reply, :ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -164,7 +163,7 @@ defmodule CoreWeb.RoomChannel do
 
       {:reply, :ok, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 
@@ -178,7 +177,7 @@ defmodule CoreWeb.RoomChannel do
 
       {:reply, {:ok, "ok"}, socket}
     else
-      err -> {:reply, {:error, %{reason: err}}, socket}
+      err -> {:error, %{reason: err}, socket}
     end
   end
 end

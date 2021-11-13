@@ -1,20 +1,25 @@
 <script lant="ts">
-    import PrepareStage from "./stages/prepare-stage/prepare-stage.svelte";
-    import { useParams } from "svelte-navigator";
+    import { RoomApi } from "src/api/socket";
+    import { roomStore } from "src/store/room";
+    import P from "../../components/typography/p.svelte";
+    import { useNavigate } from "svelte-navigator";
 
-    const params = useParams();
+    const roomId = localStorage.getItem("room_id");
+    const navigate = useNavigate();
 
-    console.log($params.roomId);
+    if (!roomId) {
+        navigate("/")
+    }
 
-    const roomInfo = JSON.parse(localStorage.getItem(`room-${$params.roomId}`));
+    const api = new RoomApi(roomId);
 
-    console.log(roomInfo);
+    api.onRoomUpdate(res => roomStore.set(res));
+    api.join().then((roomInfo) => roomStore.set(roomInfo));
 </script>
 
 <div class="play-screen">
-    {#if roomInfo.currentSatage === "prepare"}
-        prepare
-    {/if}
+    play page
+    <P color="white">{JSON.stringify($roomStore)}</P>
 </div>
 
 <style>

@@ -10,7 +10,7 @@
   <Frame>
     <Router>
       <Route path="/"><HomeScreen /></Route>
-      <Route path="/play/:roomId"><PlayScreen /></Route>
+      <Route path="/play"><PlayScreen /></Route>
     </Router>
   </Frame>
 </main>

@@ -4,12 +4,24 @@
     import Input from "../../../components/input/input.svelte";
     import H2 from "../../../components/typography/h2.svelte";
     import { useNavigate } from "svelte-navigator";
+    import { v4 as uuid } from "uuid";
+    import { LobbyApi } from "../../../api/socket";
 
     let nickname = "";
     let roundDuration = "60";
     let roundsPerPlayer = "3";
 
     const navigate = useNavigate();
+
+    function handleCreate() {
+        LobbyApi
+        .createRoom({ id: uuid(), name: nickname })
+        .then(res => {
+            localStorage.setItem("room_id", res);
+            navigate(`/play`);
+        })
+        .catch(err => console.log(err))        ;
+    }
 </script>
 
 <form class="create-form" on:submit={(e) => e.preventDefault()}>
@@ -30,28 +42,7 @@
     </div>
     <Button
         label="Создать"
-        onClick={() => {
-            localStorage.setItem(
-                "room-1234",
-                JSON.stringify({
-                    id: "1234",
-                    host: {
-                        id: "p1",
-                        name: nickname,
-                    },
-                    roundDuration: Number(roundDuration),
-                    roundsPerPlayer: Number(roundsPerPlayer),
-                    players: [
-                        { id: "p1", name: nickname, points: 0 },
-                        { id: "p2", name: "Player 2", points: 0 },
-                        { id: "p3", name: "Player 3", points: 0 },
-                    ],
-                    currentStage: "prepare",
-                })
-            );
-
-            navigate("/play/1234");
-        }}
+        onClick={handleCreate}
         disabled={[nickname, roundDuration, roundsPerPlayer].some(
             (item) => !item
         )}

@@ -12,7 +12,7 @@ config :core,
 
 # Configures the endpoint
 config :core, CoreWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "0.0.0.0"],
   secret_key_base: "eEM+bnw26gJQxQK3MG2NA6jDYHiXlZdvlEl2Zs7soZiBUDy6t3JVpjZLzeeUZoYY",
   render_errors: [view: CoreWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: Core.PubSub,

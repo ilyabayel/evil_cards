@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "phoenix": "^1.5.2",
-    "svelte-navigator": "^3.1.5"
+    "svelte-navigator": "^3.1.5",
+    "uuid": "^8.3.2"
   }
 }
