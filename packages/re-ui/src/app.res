@@ -1,3 +1,5 @@
+%%raw("import './styles/main.css'")
+
 @react.component
 let make = () => {
     <div>

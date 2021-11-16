@@ -7,4 +7,6 @@ S /home/ilya/projects/evil_cards/packages/re-ui/node_modules/@rescript/react/lib
 B /home/ilya/projects/evil_cards/packages/re-ui/node_modules/@rescript/react/lib/ocaml
 S src
 B lib/bs/src
+S src/components/button
+B lib/bs/src/components/button
 ####BSB GENERATED: NO EDIT}
