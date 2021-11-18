@@ -1,0 +1,28 @@
+.result-card {
+    --color-font-primary: black;
+    position: relative;
+    background-color: #e0e0e0;
+    padding: 2rem;
+    border-radius: 1.4rem;
+}
+
+.result-text-box {
+    word-wrap: break-word;
+    line-height: 2.4rem;
+}
+
+.result-text {
+    font-size: 1.6rem;
+    color: black;
+}
+
+.result-option-part {
+    display: inline-block;
+    padding: 0 0.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: black;
+    border-radius: 4px;
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: 0 0.5rem;
+}

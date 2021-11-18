@@ -1,5 +1,5 @@
 import React from "react"
-import { make as Button } from "./button.bs"
+import { make as Button } from "./Button.bs"
 
 export default {
     title: "Button",

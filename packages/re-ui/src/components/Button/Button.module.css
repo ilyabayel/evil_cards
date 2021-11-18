@@ -1,4 +1,4 @@
-button {
+.button {
     padding: 0.8em 1.6em;
     border: none;
     border-radius: 0.6em;
@@ -10,16 +10,16 @@ button {
     font-weight: 500;
     width: var(--local-width);
 }
-button:active {
+.button:active {
     opacity: 0.85;
 }
-button.primary {
+.button.primary {
     background: var(--color-primary);
 }
-button.secondary {
+.button.secondary {
     background: var(--color-secondary);
 }
-button:disabled {
+.button:disabled {
     opacity: 0.5;
     cursor: default;
 }

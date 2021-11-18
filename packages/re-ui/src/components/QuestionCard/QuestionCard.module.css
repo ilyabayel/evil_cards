@@ -1,0 +1,74 @@
+.question-card {
+    --color-font-primary: black;
+    position: relative;
+    background-color: #e0e0e0;
+    padding: 2rem 2rem 3rem 2rem;
+    border-radius: 1.4rem;
+}
+
+.question-text-box {
+    word-wrap: break-word;
+    line-height: 2.4rem;
+}
+
+.question-text {
+    font-size: 1.6rem;
+    color: black;
+}
+
+.option-text {
+    display: inline-block;
+    padding: 0.5rem 0.5rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border-radius: 4px;
+    font-size: 1.6rem;
+    margin: 0 0.5rem;
+    border: none;
+    cursor: pointer;
+}
+
+.option-text.selectable {
+    background-color: #ffdb3a;
+    animation: bgColor 3s infinite linear;
+}
+
+.option-text:not.disabled:hover {
+    outline: 2px solid white;
+}
+
+.round-leader {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-primary);
+    position: absolute;
+    bottom: 1rem;
+    right: 2rem;
+}
+
+@keyframes bgColor {
+    12.5% {
+      background-color: #e6e6e6;
+    }
+    25% {
+        background-color: #ffdb3a;
+    }
+    37.5% {
+        background-color: #e6e6e6;
+    }
+    50% {
+        background-color: #ffdb3a;
+    }
+    62.5% {
+        background-color: #e6e6e6;
+    }
+    75% {
+        background-color: #ffdb3a;
+    }
+    87.5% {
+        background-color: #e6e6e6;
+    }
+    100% {
+        background-color: #ffdb3a;
+    }
+  }
