@@ -1,5 +1,5 @@
 .option-card {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--color-option-card-background);
     padding: 1em 1.5em;
     border-radius: 1em;
     cursor: pointer;
@@ -9,5 +9,5 @@
 }
 
 .option-card.selected {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: var(--color-option-card-background-selected);
 }

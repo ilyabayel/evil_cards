@@ -1,9 +1,12 @@
-%%raw("import './styles/main.css'")
+%%raw("import './GlobalStyle.css'")
 
 @react.component
 let make = () => {
-    <div>
-        <h1>{React.string("App")}</h1>
-        <p>{React.string("App")}</p>
-    </div>
+    let url = RescriptReactRouter.useUrl()
+
+    switch url.path {
+    | list{"play"} => <div>{React.string("play")}</div>
+    | list{} => <HomeScreen/>
+    | _ => <p>{React.string("page not found")}</p>
+    }
 }

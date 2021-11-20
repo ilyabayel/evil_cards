@@ -7,6 +7,24 @@ S /home/ilya/projects/evil_cards/packages/re-ui/node_modules/@rescript/react/lib
 B /home/ilya/projects/evil_cards/packages/re-ui/node_modules/@rescript/react/lib/ocaml
 S src
 B lib/bs/src
-S src/components/button
-B lib/bs/src/components/button
+S src/components/Input
+B lib/bs/src/components/Input
+S src/components/Button
+B lib/bs/src/components/Button
+S src/components/OptionCard
+B lib/bs/src/components/OptionCard
+S src/components/ResultCard
+B lib/bs/src/components/ResultCard
+S src/components/QuestionCard
+B lib/bs/src/components/QuestionCard
+S src/components/UserCard
+B lib/bs/src/components/UserCard
+S src/components/Frame
+B lib/bs/src/components/Frame
+S src/components/BottomModal
+B lib/bs/src/components/BottomModal
+S src/utils
+B lib/bs/src/utils
+S src/screens/Home
+B lib/bs/src/screens/Home
 ####BSB GENERATED: NO EDIT}

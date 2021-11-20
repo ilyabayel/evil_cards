@@ -1,7 +1,7 @@
 @module external styles: {..} = "./Button.module.css"
 
 @react.component
-let make = (~label, ~onClick, ~className, ~disabled) => {
+let make = (~label, ~onClick, ~className="", ~disabled=false) => {
   let className = 
     className
     -> ClassName.add(styles["button"])

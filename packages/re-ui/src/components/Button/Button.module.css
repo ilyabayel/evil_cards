@@ -3,8 +3,8 @@
     border: none;
     border-radius: 0.6em;
     cursor: pointer;
-    background: rgb(41, 111, 151);
-    color: var(--color-font-primary);
+    background: var(--color-button-background);
+    color: var(--color-button-font);
     transition: box-shadow 0.2s;
     font-size: 1.6em;
     font-weight: 500;
