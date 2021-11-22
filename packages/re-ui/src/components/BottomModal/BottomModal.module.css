@@ -10,14 +10,14 @@
 
 .bottom-modal-background.visible {
     pointer-events: all;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var(--color-bottom-modal-background);
     animation: fadeInFromNone 0.2s ease;
     opacity: 1;
 }
 
 .bottom-modal-background.hiding {
     pointer-events: all;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var(--color-bottom-modal-background);
     animation: fadeOutToNone 0.2s ease;
     opacity: 0;
 }
@@ -37,7 +37,7 @@
     min-height: 20vh;
     max-height: var(--local-max-height);
     padding: 2em 2em 3em 2em;
-    background-color: var(--color-bg);
+    background-color: var(--color-bottom-modal-card);
     box-sizing: border-box;
     border-radius: 2em 2em 0 0;
 }
@@ -73,7 +73,7 @@
 
 .close-btn span {
     font-weight: 500;
-    color: white;
+    color: var(--color-bottom-modal-close-btn-font);
     font-size: 1.6rem;
     margin-right: 1rem;
 }

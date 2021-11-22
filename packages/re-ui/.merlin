@@ -27,4 +27,8 @@ S src/utils
 B lib/bs/src/utils
 S src/screens/Home
 B lib/bs/src/screens/Home
+S src/screens/Home/components/CreateForm
+B lib/bs/src/screens/Home/components/CreateForm
+S src/screens/Home/components/JoinForm
+B lib/bs/src/screens/Home/components/JoinForm
 ####BSB GENERATED: NO EDIT}

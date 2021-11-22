@@ -37,7 +37,7 @@
     "format:js": "prettier --write \"**/*.{js,json,md,yml}\"",
     "format:res": "rescript format -all",
     "serve": "vite preview",
-    "start": "vite",
+    "dev": "vite",
     "test": "echo \"Error: no test specified\" && exit 1",
     "sb": "concurrently \"npx rescript build -w -with-deps\" \"start-storybook -p 6006\"",
     "build-sb": "concurrently yarn build && build-storybook"

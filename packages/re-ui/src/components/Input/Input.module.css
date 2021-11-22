@@ -5,9 +5,13 @@
     border-radius: 6px;
     font-size: 1.6em;
     color: var(--color-input-font);
+    background-color: var(--color-input-background);
     font-weight: 500;
 }
 .input:focus {
     outline: none;
     background: var(--color-input-background-focus);
+}
+.input::placeholder {
+    color: var(--color-input-placeholder);
 }

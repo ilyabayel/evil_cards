@@ -3,7 +3,7 @@ let add = ClassName.add
 let cond = ClassName.cond
 
 @react.component
-let make = (~onClose, ~visible=false, ~closeLabel="Close", ~children) => {
+let make = (~onClose, ~visible=false, ~closeLabel=`Закрыть`, ~children) => {
   let (hiding, setHiding) = React.useState(_ => false)
   let (hidden, setHidden) = React.useState(_ => true)
 
@@ -22,13 +22,11 @@ let make = (~onClose, ~visible=false, ~closeLabel="Close", ~children) => {
     None
   }, [visible])
 
-  Js.log(styles["default"])
-
   let bgClassName =
     styles["default"]["bottom-modal-background"]
-    ->cond( styles["default"]["visible"], visible)
-    ->cond( styles["default"]["hiding"], hiding)
-    ->cond( styles["default"]["hidden"], hidden)
+    ->cond(styles["default"]["visible"], visible)
+    ->cond(styles["default"]["hiding"], hiding)
+    ->cond(styles["default"]["hidden"], hidden)
 
   let modalClassName =
     styles["default"]["bottom-modal"]

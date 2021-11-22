@@ -3,8 +3,6 @@
     border: none;
     border-radius: 0.6em;
     cursor: pointer;
-    background: var(--color-button-background);
-    color: var(--color-button-font);
     transition: box-shadow 0.2s;
     font-size: 1.6em;
     font-weight: 500;
@@ -13,12 +11,15 @@
 .button:active {
     opacity: 0.85;
 }
-.button.primary {
-    background: var(--color-primary);
+.button:global(.primary) {
+    background-color: var(--color-button-primary-background);
+    color: var(--color-button-primary-font);
 }
-.button.secondary {
-    background: var(--color-secondary);
+.button:global(.secondary) {
+    background-color: var(--color-button-secondary-background);
+    color: var(--color-button-secondary-font);
 }
+
 .button:disabled {
     opacity: 0.5;
     cursor: default;
