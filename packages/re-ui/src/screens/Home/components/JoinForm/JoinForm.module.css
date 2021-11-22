@@ -1,0 +1,12 @@
+.join-form {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    justify-items: center;
+    gap: 2rem;
+}
+
+
+.join-form button {
+    justify-self: center;
+    width: 20rem;
+}

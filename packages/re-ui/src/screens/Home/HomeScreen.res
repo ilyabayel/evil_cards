@@ -20,7 +20,7 @@ let make = () => {
   }
 
   let handleCreateForm = formValue => {
-    
+    ()
   }
 
   <Frame>
@@ -29,7 +29,7 @@ let make = () => {
         <h1> {React.string(`Злобные карты`)} </h1>
         <h3> {React.string(`Хорошая игра для плохих людей`)} </h3>
       </div>
-      <div className="buttons">
+      <div className={styles["buttons"]}>
         <Button label=`Создать игру` onClick={showCreateForm} />
         <Button label=`Подключится к игре` onClick={showJoinForm} />
       </div>

@@ -80,9 +80,10 @@
 
 .body {
     width: 100%;
+    max-width: 100vw;
     height: min-content;
     max-height: calc(var(--local-max-height) - 5em);
-    overflow: auto;
+    overflow: hidden;
 }
 
 @keyframes SlideIn {

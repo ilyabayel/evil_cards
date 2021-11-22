@@ -34,6 +34,7 @@
     --color-option-card-background: rgba(255, 255, 255, 0.1);
     --color-option-card-background-selected: rgba(255, 255, 255, 0.4);
 }
+
 body {
     margin: 0;
     padding: 0;

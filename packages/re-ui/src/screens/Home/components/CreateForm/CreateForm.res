@@ -1,5 +1,7 @@
 @module external styles: {..} = "./CreateForm.module.css"
 
+let styles = styles["default"]
+
 type createForm = {
   name: string,
   round_duration: int,
@@ -34,32 +36,38 @@ let make = (~onChange, ~value: createForm, ~onSubmit) => {
     onSubmit(e)
   }
 
-  <form onSubmit={handleSubmit}>
-    <h3> {React.string(`Новая игра`)} </h3>
-    <Input
-      type_="text"
-      value={value.name}
-      onChange={onNameChange}
-      name="Name"
-      placeholder=`Введите ваше имя`
-    />
-    <h4> {React.string(`Настройка раундов`)} </h4>
+  <form onSubmit={handleSubmit} className={styles["create-form"]}>
     <div>
+      <h3> {React.string(`Новая игра`)} </h3>
+      <br/>
       <Input
-        type_="number"
-        value={Js.Int.toString(value.round_duration)}
-        onChange={onRoundDurationChange}
-        name="Round Duration"
-        placeholder=`Длительность раунда (60 сек)`
-      />
-      <Input
-        type_="number"
-        value={Js.Int.toString(value.rounds_per_player)}
-        onChange={onRoundsPerPlayerChange}
-        name="Rounds per Player"
-        placeholder=`Раундов на игрока (3)`
+        type_="text"
+        value={value.name}
+        onChange={onNameChange}
+        name="Name"
+        placeholder=`Введите ваше имя`
       />
     </div>
-    <Button type_="submit" label=`Создать игру` onClick={_ => ()}/>
+    <div>
+      <h4> {React.string(`Настройка раундов`)} </h4>
+      <br/>
+      <div className={styles["round-settings"]}>
+        <Input
+          type_="number"
+          value={Js.Int.toString(value.round_duration)}
+          onChange={onRoundDurationChange}
+          name="Round Duration"
+          placeholder=`Длительность раунда (60 сек)`
+        />
+        <Input
+          type_="number"
+          value={Js.Int.toString(value.rounds_per_player)}
+          onChange={onRoundsPerPlayerChange}
+          name="Rounds per Player"
+          placeholder=`Раундов на игрока (3)`
+        />
+      </div>
+    </div>
+    <Button type_="submit" label=`Создать игру` onClick={_ => ()} />
   </form>
 }

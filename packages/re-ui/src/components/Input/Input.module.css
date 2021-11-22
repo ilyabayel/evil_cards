@@ -7,6 +7,8 @@
     color: var(--color-input-font);
     background-color: var(--color-input-background);
     font-weight: 500;
+    width: 100%;
+    box-sizing: border-box;
 }
 .input:focus {
     outline: none;

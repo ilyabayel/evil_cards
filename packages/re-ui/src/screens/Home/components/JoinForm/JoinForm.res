@@ -1,5 +1,7 @@
 @module external styles: {..} = "./JoinForm.module.css"
 
+let styles = styles["default"]
+
 type joinForm = {
   name: string,
   room_code: string
@@ -24,7 +26,7 @@ let make = (~onChange, ~value: joinForm, ~onSubmit) => {
     ReactEvent.Form.preventDefault(e)
     onSubmit(e)
   }
-  <form onSubmit={handleSubmit}>
+  <form onSubmit={handleSubmit} className={styles["join-form"]}>
     <h3> {React.string(`Присоединиться к игре`)} </h3>
     <Input
       type_="text"
