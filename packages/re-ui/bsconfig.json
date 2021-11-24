@@ -11,7 +11,9 @@
     },
     "suffix": ".bs.js",
     "bs-dependencies": [
-      "@rescript/react"
+      "@rescript/react",
+      "rescript-phoenixjs",
+      "rescript-recoil"
     ],
     "warnings": {
       "error" : "+101"
