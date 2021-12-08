@@ -15,7 +15,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "recoil": "^0.5.2",
-    "rescript-recoil": "^3.0.0"
+    "rescript-recoil": "^3.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -28,6 +29,7 @@
     "babel-loader": "^8.2.3",
     "bs-fetch": "^0.6.2",
     "bs-webapi": "^0.19.1",
+    "concurrently": "^6.4.0",
     "prettier": "^2.3.2",
     "rescript": "^9.1.4",
     "rescript-phoenixjs": "^1.6.2-fix1",
