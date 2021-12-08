@@ -7,15 +7,15 @@ defmodule CoreWeb.LobbyChannel do
   end
 
   @impl true
-  def handle_in("create_room", %{"host" => host}, socket) do
+  def handle_in("create_room", %{"host" => host, "roomInfo" => roomInfo}, socket) do
     host = CoreWeb.User.from_string_map(host)
 
     room = %CoreWeb.Room{
       id: UUID.uuid4(),
       host: host,
       players: [],
-      round_duration: 60,
-      rounds_per_player: 2,
+      round_duration: roomInfo["round_duration"],
+      rounds_per_player: roomInfo["rounds_per_player"],
       round: %CoreWeb.Round{},
       questions: [],
       code: CoreWeb.Counter.get()
