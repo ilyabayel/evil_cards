@@ -66,47 +66,35 @@ let empty = {
   players: [
     {
       id: "1",
-      name: "1",
+      name: "First player",
     },
     {
       id: "2",
-      name: "2",
+      name: "Second player",
     },
     {
       id: "3",
-      name: "3",
+      name: "Third player",
     },
     {
       id: "4",
-      name: "4",
+      name: "Fourth player",
     },
     {
       id: "5",
-      name: "5",
+      name: "Fifth player",
     },
     {
       id: "6",
-      name: "6",
+      name: "Sixth player",
     },
     {
       id: "7",
-      name: "7",
+      name: "Seventh player",
     },
     {
       id: "8",
-      name: "8",
-    },
-    {
-      id: "9",
-      name: "9",
-    },
-    {
-      id: "0",
-      name: "0",
-    },
-    {
-      id: "01",
-      name: "01",
+      name: "Eighth player",
     }
   ],
   round: {
