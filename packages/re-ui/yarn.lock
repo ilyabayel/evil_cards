@@ -3528,6 +3528,13 @@ bs-fetch@^0.6.2:
   resolved "https://registry.yarnpkg.com/bs-fetch/-/bs-fetch-0.6.2.tgz#37d982e9f79b9bc44c23e87ae78ccbee1f869adf"
   integrity sha512-VXEjp8kY3vHPckaoy3d96Bx0KYjJAPLNISBwfpwMN26K6DtuZYwI2HKhx7zeHBajz1bRArfx7O8OOLcdtujMvg==
 
+bs-uuid@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/bs-uuid/-/bs-uuid-0.3.1.tgz#4686b3b956d3bb7d51eaa32c2a562ef6aad4abe8"
+  integrity sha512-hAIx2LmOLNhHx6LipR/6l3I20SXBOKIhQT7Zi/FXg0xqIkACne6w2+y2GTGfWmt2tmRGdc+i8i43qTTTaSmGGw==
+  dependencies:
+    uuid "^3.2.1"
+
 bs-webapi@^0.19.1:
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/bs-webapi/-/bs-webapi-0.19.1.tgz#cae7d65fc43795376becc44b56f46d85e5b8e878"
@@ -8705,6 +8712,13 @@ rescript-recoil@^3.0.0:
   resolved "https://registry.yarnpkg.com/rescript-recoil/-/rescript-recoil-3.0.0.tgz#5b0f2c868efc684d5fe909f4d33a5c487c311b88"
   integrity sha512-uR7zmQC4i+PCTyIWK+CHO6SpUmx1mP1XzgcG34u0lAAn1IRsln1eZbApBMCG6RrsFJ2f0dp3T+LG8HkqRioVEA==
 
+rescript-uuid@^8.3.2-alpha:
+  version "8.3.2-alpha"
+  resolved "https://registry.yarnpkg.com/rescript-uuid/-/rescript-uuid-8.3.2-alpha.tgz#0d2996f6104277ba57d9335ea59f26f02e84b10d"
+  integrity sha512-fth0i93fTj039jAYGz+1P+GO0k8LOtoShmkLcjn/gkJCA/hhOi0YBdFGVVVDHMAqWoPvYr+1cbtKL1ytYO5VSQ==
+  dependencies:
+    uuid "^3.2.1"
+
 rescript@^9.1.4:
   version "9.1.4"
   resolved "https://registry.yarnpkg.com/rescript/-/rescript-9.1.4.tgz#1eb126f98d6c16942c0bf0df67c050198e580515"
@@ -10000,7 +10014,7 @@ uuid-browser@^3.1.0:
   resolved "https://registry.yarnpkg.com/uuid-browser/-/uuid-browser-3.1.0.tgz#0f05a40aef74f9e5951e20efbf44b11871e56410"
   integrity sha1-DwWkCu90+eWVHiDvv0SxGHHlZBA=
 
-uuid@^3.3.2:
+uuid@^3.2.1, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==

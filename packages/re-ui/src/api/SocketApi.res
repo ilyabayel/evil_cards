@@ -1,13 +1,22 @@
 type userInfo = {
-  userName: string,
-  userId: string,
+  userId: string
 }
+
+let userId = switch Dom.Storage2.getItem(Dom.Storage2.localStorage, "userId") {
+| None => {
+  let newUuid = Uuid.V4.make()
+  Dom.Storage2.setItem(Dom.Storage2.localStorage, "userId", newUuid)
+  newUuid
+}
+| Some(v) => v
+}
+
 
 let instance = Phoenix.Socket.make(
   "ws://localhost:4000/socket",
   Some(
     Phoenix.Socket.options(
-      ~params={userName: "Ilya", userId: "ilya1234"},
+      ~params={"userId": userId},
       (),
     ),
   ),

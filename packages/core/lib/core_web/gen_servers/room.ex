@@ -45,7 +45,7 @@ defmodule CoreWeb.RoomsState do
     {_id, room} =
       state
       |> Map.to_list()
-      |> Enum.find(nil, fn {_id, r} -> r.code == code end)
+      |> Enum.find({nil, nil}, fn {_id, r} -> r.code == code end)
 
     {:reply, room, state}
   end

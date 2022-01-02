@@ -2,11 +2,12 @@ defmodule CoreWeb.RoomChannel do
   use CoreWeb, :channel
 
   @impl true
-  def join("room:" <> room_id, _payload, socket) do
+  def join("room:" <> room_id, %{"userName" => user_name}, socket) do
     with %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
+      assign(socket, user_name: user_name)
       player = %CoreWeb.User{
         id: socket.assigns.user_id,
-        name: socket.assigns.user_name
+        name: user_name
       }
 
       room = CoreWeb.Room.add_player(room, player)

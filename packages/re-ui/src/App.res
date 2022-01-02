@@ -4,7 +4,7 @@
 let make = () => {
   let url = RescriptReactRouter.useUrl()
 
-  <RoomContext.Provider value=RoomContext.value>
+  <RoomContext.Provider>
     {
       switch url.path {
       | list{"play"} => <PlayScreen/>

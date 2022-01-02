@@ -1,15 +1,16 @@
-let context = React.createContext(Room.empty)
+let context = React.createContext((Room.empty, (_) => ()))
+
+let useRoomState = () => {
+  React.useContext(context)
+}
 
 module Provider = {
   let provider = React.Context.provider(context)
 
   @react.component
-  let make = (~value, ~children) => {
-    React.createElement(provider, {"value": value, "children": children})
+  let make = (~children) => {
+    let (roomState, setRoomState) = React.useState(() => Room.empty)
+
+    React.createElement(provider, {"value": (roomState, setRoomState), "children": children})
   }
 }
-
-let refValue = ref(Room.empty)
-let value = refValue.contents
-
-let useRoomState = () => (value, (newValue) => refValue := newValue)

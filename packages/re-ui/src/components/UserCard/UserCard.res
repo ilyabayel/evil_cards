@@ -4,11 +4,11 @@
 let make = (~userName="", ~avatar="", ~score=0) => {
   <div className={styles["default"]["user-card"]}>
     <div className={styles["default"]["avatar-box"]}>
-      {if Js.String2.length(userName) > 0 {
+      {if Js.String2.length(avatar) > 0 {
         <img src=avatar alt="Avatar" className={styles["default"]["avatar"]} />
       } else {
         <div className={styles["default"]["avatar"]}>
-          <p> {React.string(Js.String2.charAt(userName, 0))} </p>
+          <p> {UserUtils.getInitials(userName)->React.string} </p>
         </div>
       }}
     </div>

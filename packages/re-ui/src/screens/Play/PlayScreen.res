@@ -1,8 +1,6 @@
 @react.component
 let make = () => {
-    let room = React.useContext(RoomContext.context)
-
-    Js.log(room)
+    let (room, _) = React.useContext(RoomContext.context)
 
     switch room.round.current_stage {
     | #wait => <WaitStage/>

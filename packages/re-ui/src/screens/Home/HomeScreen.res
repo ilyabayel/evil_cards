@@ -8,9 +8,7 @@ let make = () => {
   let (isJoinFormVisible, setIsJoinFormVisible) = React.useState(() => false)
   let (createFormValue, setCreateFormValue) = React.useState(() => CreateForm.defaultValue)
   let (joinFormValue, setJoinFormValue) = React.useState(() => JoinForm.defaultValue)
-  let (roomState, setRoomState) = RoomContext.useRoomState()
-
-  Js.log(roomState)
+  let (_, setRoomState) = RoomContext.useRoomState()
 
   let showCreateForm = _ => {
     setIsCreateFormVisible(_ => true)
@@ -22,28 +20,28 @@ let make = () => {
     setIsJoinFormVisible(_ => true)
   }
 
-  let joinRoom = (roomId) => {
-    let _ = RoomApi.join(roomId)
-    ->Phoenix.Push.receive(~status="ok", ~callback=msg => {
-      Js.log(msg)
-      setRoomState(msg)
-    })
-    ->Phoenix.Push.receive(~status="error", ~callback=msg => Js.log(msg))
-    ->Phoenix.Push.receive(~status="timeout", ~callback=msg => Js.log(msg))
-    ()
+  let joinRoom = (~roomId, ~userName) => {
+    let _ =
+      RoomApi.join(~roomId, ~userName, ~onUpdate=state => setRoomState(_ => state))
+      ->Phoenix.Push.receive(~status="ok", ~callback=msg => {
+        setRoomState(_ => msg)
+        RescriptReactRouter.push("play")
+      })
+      ->Phoenix.Push.receive(~status="error", ~callback=msg => Js.log(msg))
+      ->Phoenix.Push.receive(~status="timeout", ~callback=msg => Js.log(msg))
   }
 
   let handleCreateForm = _ => {
     let _ = LobbyApi.createRoom(
-      ~host={id: "id", name: createFormValue.name},
+      ~host={id: SocketApi.userId, name: createFormValue.name},
       ~roomInfo={
         "rounds_per_player": createFormValue.rounds_per_player,
         "round_duration": createFormValue.round_duration,
       },
-      ~onRecieve=(s) => {
+      ~onRecieve=s => {
         Js.log(s)
-        joinRoom(s)
-      }
+        joinRoom(~roomId=s, ~userName=createFormValue.name)
+      },
     )
   }
 
@@ -67,7 +65,13 @@ let make = () => {
       <BottomModal visible={isJoinFormVisible} onClose={_ => setIsJoinFormVisible(_ => false)}>
         <JoinForm
           onChange={v => setJoinFormValue(_ => v)}
-          onSubmit={_ => Js.log("submit")}
+          onSubmit={_ => {
+            Js.log("submit")
+            let _ = LobbyApi.getRoomByCode(~code=joinFormValue.room_code, ~onRecieve=id => {
+              Js.log(id)
+              joinRoom(~roomId=id, ~userName=joinFormValue.name)
+            })
+          }}
           value={joinFormValue}
         />
       </BottomModal>

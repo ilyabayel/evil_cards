@@ -63,6 +63,48 @@ let empty = {
   },
   round_duration: 0,
   rounds_per_player: 0,
+  players: [],
+  round: {
+    number: 0,
+    leader: {
+      id: "",
+      name: "",
+    },
+    winner: {
+      question: {
+        id: "",
+        text: "",
+      },
+      option: {
+        id: "",
+        text: "",
+      },
+      player: {
+        id: "",
+        name: "",
+      },
+    },
+    question: {
+      id: "",
+      text: "",
+    },
+    answers: [],
+    current_stage: #wait,
+  },
+  questions: [],
+  leaderboard: Js.Dict.empty(),
+  code: 0,
+  status: #play,
+}
+
+let testRoom = {
+  id: "room",
+  host: {
+    id: "1",
+    name: "First player",
+  },
+  round_duration: 60,
+  rounds_per_player: 3,
   players: [
     {
       id: "1",
@@ -95,13 +137,13 @@ let empty = {
     {
       id: "8",
       name: "Eighth player",
-    }
+    },
   ],
   round: {
     number: 0,
     leader: {
-      id: "",
-      name: "",
+      id: "1",
+      name: "First player",
     },
     winner: {
       question: {
@@ -118,14 +160,14 @@ let empty = {
       },
     },
     question: {
-      id: "",
-      text: "",
+      id: "q1",
+      text: "Question one {_} end",
     },
     answers: [],
     current_stage: #wait,
   },
   questions: [],
-  leaderboard: Js.Dict.empty(),
-  code: 0,
+  leaderboard: Js.Dict.fromArray([("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 0), ("7", 1), ("8", 3)]),
+  code: 1337,
   status: #play,
 }
