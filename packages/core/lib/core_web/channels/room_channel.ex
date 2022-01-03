@@ -11,11 +11,20 @@ defmodule CoreWeb.RoomChannel do
       }
 
       room = CoreWeb.Room.add_player(room, player)
-      CoreWeb.RoomsState.put(room)
+
+      send(self(), {:after_join, room})
+
       {:ok, room, socket}
     else
-      err -> {:error, %{reason: err}, socket}
+      err -> {:error, %{reason: err}}
     end
+  end
+
+  @impl true
+  def handle_info({:after_join, room}, socket) do
+    CoreWeb.RoomsState.put(room)
+    broadcast!(socket, "room_update", room)
+    {:noreply, socket}
   end
 
   @impl true
