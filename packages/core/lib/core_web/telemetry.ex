@@ -31,11 +31,11 @@ defmodule CoreWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("core.repo.query.total_time", unit: {:native, :millisecond}),
-      summary("core.repo.query.decode_time", unit: {:native, :millisecond}),
-      summary("core.repo.query.query_time", unit: {:native, :millisecond}),
-      summary("core.repo.query.queue_time", unit: {:native, :millisecond}),
-      summary("core.repo.query.idle_time", unit: {:native, :millisecond}),
+      # summary("core.repo.query.total_time", unit: {:native, :millisecond}),
+      # summary("core.repo.query.decode_time", unit: {:native, :millisecond}),
+      # summary("core.repo.query.query_time", unit: {:native, :millisecond}),
+      # summary("core.repo.query.queue_time", unit: {:native, :millisecond}),
+      # summary("core.repo.query.idle_time", unit: {:native, :millisecond}),
 
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),

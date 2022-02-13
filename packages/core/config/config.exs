@@ -7,8 +7,8 @@
 # General application configuration
 use Mix.Config
 
-config :core,
-  ecto_repos: [Core.Repo]
+# config :core,
+  # ecto_repos: [Core.Repo]
 
 # Configures the endpoint
 config :core, CoreWeb.Endpoint,
