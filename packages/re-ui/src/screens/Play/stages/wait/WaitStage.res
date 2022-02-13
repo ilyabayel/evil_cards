@@ -15,7 +15,7 @@ let handleClick = (_) => {
 
 @react.component
 let make = () => {
-    let (room, _setRoom) = RoomContext.useRoomState()
+    let (room, _setRoom) = RoomContext.useState()
 
     <div className=styles["wait-stage"]>
         <div className=styles["room-code"]>

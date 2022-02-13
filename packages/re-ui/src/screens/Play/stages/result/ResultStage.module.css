@@ -1,0 +1,35 @@
+.wait-stage {
+    display: grid;
+    grid-template-rows: 40% 50% 10%;
+    height: 100vh;
+    width: 100vw;
+    padding: 4rem 2rem;
+    box-sizing: border-box;
+    align-items: end;
+}
+
+.room-code {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    height: 100%;
+}
+
+.connected-users {
+    text-align: center;
+    display: grid;
+    grid-template-rows: 3rem auto;
+    grid-template-columns: 100%;
+    justify-content: center;
+    gap: 2rem;
+    height: 100%;
+}
+
+.user-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    overflow: auto;
+}

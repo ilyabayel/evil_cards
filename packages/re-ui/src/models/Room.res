@@ -56,46 +56,46 @@ type t = {
 }
 
 let empty = {
-  id: "",
-  host: {
     id: "",
-    name: "",
-  },
-  round_duration: 0,
-  rounds_per_player: 0,
-  players: [],
-  round: {
-    number: 0,
-    leader: {
+    host: {
       id: "",
       name: "",
     },
-    winner: {
+    round_duration: 0,
+    rounds_per_player: 0,
+    players: [],
+    round: {
+      number: 0,
+      leader: {
+        id: "",
+        name: "",
+      },
+      winner: {
+        question: {
+          id: "",
+          text: "",
+        },
+        option: {
+          id: "",
+          text: "",
+        },
+        player: {
+          id: "",
+          name: "",
+        },
+      },
       question: {
         id: "",
         text: "",
       },
-      option: {
-        id: "",
-        text: "",
-      },
-      player: {
-        id: "",
-        name: "",
-      },
+      answers: [],
+      current_stage: #wait,
     },
-    question: {
-      id: "",
-      text: "",
-    },
-    answers: [],
-    current_stage: #wait,
-  },
-  questions: [],
-  leaderboard: Js.Dict.empty(),
-  code: 0,
-  status: #play,
-}
+    questions: [],
+    leaderboard: Js.Dict.empty(),
+    code: 0,
+    status: #play,
+  }
 
 let testRoom = {
   id: "room",
@@ -167,7 +167,16 @@ let testRoom = {
     current_stage: #wait,
   },
   questions: [],
-  leaderboard: Js.Dict.fromArray([("1", 1), ("2", 1), ("3", 1), ("4", 1), ("5", 1), ("6", 0), ("7", 1), ("8", 3)]),
+  leaderboard: Js.Dict.fromArray([
+    ("1", 1),
+    ("2", 1),
+    ("3", 1),
+    ("4", 1),
+    ("5", 1),
+    ("6", 0),
+    ("7", 1),
+    ("8", 3),
+  ]),
   code: 1337,
   status: #play,
 }

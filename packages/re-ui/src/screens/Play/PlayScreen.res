@@ -1,9 +1,13 @@
 @react.component
 let make = () => {
-    let (room, _) = React.useContext(RoomContext.context)
+  let (room, _) = RoomContext.useState()
+  RoomContext.useReconnect()
 
-    switch room.round.current_stage {
-    | #wait => <WaitStage/>
-    | _ => <p>{React.string("others")}</p>
-    }
+  switch room.round.current_stage {
+  | #wait => <WaitStage />
+  | #prepare => <PrepareStage />
+  | #play => <PlayStage />
+  | #vote => <VoteStage />
+  | #result => <ResultStage />
+  }
 }

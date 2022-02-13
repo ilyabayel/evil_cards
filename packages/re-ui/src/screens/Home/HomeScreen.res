@@ -2,13 +2,23 @@
 
 let styles = styles["default"]
 
+module Response = {
+  type t<'data>
+  @send external json: t<'data> => Promise.t<'data> = "json"
+}
+
+@val @scope("globalThis")
+external fetch: (string, 'params) => Promise.t<Response.t<{"data": Js.Nullable.t<array<int>>}>> =
+  "fetch"
+
 @react.component
 let make = () => {
   let (isCreateFormVisible, setIsCreateFormVisible) = React.useState(() => false)
   let (isJoinFormVisible, setIsJoinFormVisible) = React.useState(() => false)
   let (createFormValue, setCreateFormValue) = React.useState(() => CreateForm.defaultValue)
   let (joinFormValue, setJoinFormValue) = React.useState(() => JoinForm.defaultValue)
-  let (_, setRoomState) = RoomContext.useRoomState()
+  let (_roomState, _setRoomState) = RoomContext.useState()
+  let (userState, setUserState) = UserContext.useState()
 
   let showCreateForm = _ => {
     setIsCreateFormVisible(_ => true)
@@ -20,16 +30,7 @@ let make = () => {
     setIsJoinFormVisible(_ => true)
   }
 
-  let joinRoom = (~roomId, ~userName) => {
-    let _ =
-      RoomApi.join(~roomId, ~userName, ~onUpdate=state => setRoomState(_ => state))
-      ->Phoenix.Push.receive(~status="ok", ~callback=msg => {
-        setRoomState(_ => msg)
-        RescriptReactRouter.push("play")
-      })
-      ->Phoenix.Push.receive(~status="error", ~callback=msg => Js.log(msg))
-      ->Phoenix.Push.receive(~status="timeout", ~callback=msg => Js.log(msg))
-  }
+  let connect = RoomContext.useConnect()
 
   let handleCreateForm = _ => {
     let _ = LobbyApi.createRoom(
@@ -38,9 +39,8 @@ let make = () => {
         "rounds_per_player": createFormValue.rounds_per_player,
         "round_duration": createFormValue.round_duration,
       },
-      ~onRecieve=s => {
-        Js.log(s)
-        joinRoom(~roomId=s, ~userName=createFormValue.name)
+      ~onRecieve=roomId => {
+        connect(roomId)
       },
     )
   }
@@ -58,7 +58,10 @@ let make = () => {
       <BottomModal visible={isCreateFormVisible} onClose={_ => setIsCreateFormVisible(_ => false)}>
         <CreateForm
           value={createFormValue}
-          onChange={v => setCreateFormValue(_ => v)}
+          onChange={v => {
+            setUserState({id: userState.id, name: v.name})
+            setCreateFormValue(_ => v)
+          }}
           onSubmit={handleCreateForm}
         />
       </BottomModal>
@@ -68,8 +71,7 @@ let make = () => {
           onSubmit={_ => {
             Js.log("submit")
             let _ = LobbyApi.getRoomByCode(~code=joinFormValue.room_code, ~onRecieve=id => {
-              Js.log(id)
-              joinRoom(~roomId=id, ~userName=joinFormValue.name)
+              connect(~roomId=id)
             })
           }}
           value={joinFormValue}
