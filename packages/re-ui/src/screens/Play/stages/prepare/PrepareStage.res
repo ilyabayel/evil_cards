@@ -9,7 +9,7 @@ let getScore = (leaderboard, id) => {
 }
 
 let handleClick = _ => {
-  let _ = RoomApi.startGame()
+  let _ = RoomApi.startGame(RoomContext.roomChan.contents)
 }
 
 @react.component
@@ -17,9 +17,7 @@ let make = () => {
   let (room, _setRoom) = RoomContext.useState()
 
   <div className={styles["wait-stage"]}>
-    <div className={styles["room-code"]}>
-      <RoundLeader leaderId={"0"} userId={"0"} />
-    </div>
+    <div className={styles["room-code"]}> <RoundLeader leaderId={"0"} userId={"0"} /> </div>
     <div className={styles["connected-users"]}>
       <h3> {React.string(`Подключились`)} </h3>
       <div className={styles["user-list"]}>

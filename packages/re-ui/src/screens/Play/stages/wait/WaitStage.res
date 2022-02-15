@@ -9,7 +9,7 @@ let getScore = (leaderboard, id) => {
 }
 
 let handleClick = (_) => {
-    let _ = RoomApi.startGame()
+    let _ = RoomApi.startGame(RoomContext.roomChan.contents)
     ()
 }
 

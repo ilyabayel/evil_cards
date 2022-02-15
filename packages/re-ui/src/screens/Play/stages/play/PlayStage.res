@@ -1,8 +1,8 @@
 @module external styles: {..} = "./PlayStage.module.css"
 let styles = styles["default"]
 
-let handleClick = _ => {
-  let _ = RoomApi.startGame()
+let handleClick = (_) => {
+  let _ = RoomApi.startGame(RoomContext.roomChan.contents)
 }
 
 

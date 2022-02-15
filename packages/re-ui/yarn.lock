@@ -7436,11 +7436,6 @@ npmlog@^5.0.1:
     gauge "^3.0.0"
     set-blocking "^2.0.0"
 
-npmrc@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/npmrc/-/npmrc-1.1.1.tgz#281ba93ade85c4de2b04611031f2ff2f24e621dd"
-  integrity sha1-KBupOt6FxN4rBGEQMfL/LyTmId0=
-
 nth-check@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/nth-check/-/nth-check-2.0.1.tgz#2efe162f5c3da06a28959fbd3db75dbeea9f0fc2"
@@ -7843,10 +7838,15 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-phoenix@^1.5.4, phoenix@^1.6.2:
+phoenix@^1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.6.2.tgz#8d1d9f06e51cb893d08059e80488cd0de328e01a"
   integrity sha512-VjR27NETvrLSj8rI6DlpVAfo7pCYth/9+1OCoTof4LKEbq0141ze/tdxFHHZzVQSok3gqJUo2h/tqbxR3r8eyw==
+
+phoenix@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/phoenix/-/phoenix-1.6.6.tgz#16b578e36361d238707a66bf235e3f59ff3fb298"
+  integrity sha512-KLNHVlrZH8UAoEzeCS1XBI9z5juWz0gZ/+No7j5p/byVINnd+del9H5vtBMzQgZa3ZcUjVVZcQR8bKdnH/FmMg==
 
 picocolors@^0.2.1:
   version "0.2.1"
@@ -8699,13 +8699,12 @@ require-directory@^2.1.1:
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha1-jGStX9MNqxyXbiNE/+f3kqam30I=
 
-rescript-phoenixjs@^1.6.2-fix1:
-  version "1.6.2-fix1"
-  resolved "https://registry.yarnpkg.com/rescript-phoenixjs/-/rescript-phoenixjs-1.6.2-fix1.tgz#e7cdad20371af830563b2c1b896d7efa47b3e203"
-  integrity sha512-sOxyLY8DDZROjIrRfURn8fwEaxHh9un42nagOVNgi1ZwX18GjS52TlBy/jHEdxW/I99oMvQk9Wv6+uyWGZvkCA==
+rescript-phoenixjs@^1.6.6-alpha-2:
+  version "1.6.6-alpha-2"
+  resolved "https://registry.yarnpkg.com/rescript-phoenixjs/-/rescript-phoenixjs-1.6.6-alpha-2.tgz#8ceb214fc010bdff1df69d18397ab408d10a68b7"
+  integrity sha512-yaMSUWp1Mc4JhD+bCTWv3735XqUYFQ0m/8Cskl6V08ZrGI63lKYqFyiqnnPG/YxmOTzoKK55VMMZ/7Ec5sPMOQ==
   dependencies:
-    npmrc "^1.1.1"
-    phoenix "^1.5.4"
+    phoenix "^1.6.6"
 
 rescript-recoil@^3.0.0:
   version "3.0.0"

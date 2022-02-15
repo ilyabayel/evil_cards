@@ -1,14 +1,5 @@
-let instance = ref(Phoenix.Channel.make(SocketApi.instance, ``, ()))
-let isConnected = ref(false)
-
 let make = (socket, ~roomId, ~userName) => {
-  if isConnected.contents {
-    instance.contents
-  } else {
-    instance := Phoenix.Channel.make(socket, `room:${roomId}`, {"userName": userName})
-    isConnected := true
-    instance.contents
-  }
+  Phoenix.Channel.make(socket, `room:${roomId}`, {"userName": userName})
 }
 
 let onRoomUpdate = (channel, ~onUpdate) => {
@@ -17,7 +8,6 @@ let onRoomUpdate = (channel, ~onUpdate) => {
 }
 
 let join = channel => {
-  Js.log(channel)
   Phoenix.Channel.join(channel, ~timeout=1000, ())
 }
 
@@ -26,43 +16,43 @@ let leave = channel => {
   Phoenix.Channel.leave(channel, ~timeout=1000, ())
 }
 
-let startGame = () => {
-  Phoenix.Channel.push(instance.contents, ~event="start_game", ())
+let startGame = (channel) => {
+  Phoenix.Channel.push(channel, ~event="start_game", ())
 }
 
-let finishGame = () => {
-  Phoenix.Channel.push(instance.contents, ~event="finish_game", ())
+let finishGame = (channel) => {
+  Phoenix.Channel.push(channel, ~event="finish_game", ())
 }
 
-let startRound = () => {
-  Phoenix.Channel.push(instance.contents, ~event="start_round", ())
+let startRound = (channel) => {
+  Phoenix.Channel.push(channel, ~event="start_round", ())
 }
 
-let finishRound = () => {
-  Phoenix.Channel.push(instance.contents, ~event="finish_round", ())
+let finishRound = (channel) => {
+  Phoenix.Channel.push(channel, ~event="finish_round", ())
 }
 
-let startStage = () => {
-  Phoenix.Channel.push(instance.contents, ~event="start_stage", ())
+let startStage = (channel) => {
+  Phoenix.Channel.push(channel, ~event="start_stage", ())
 }
 
-let finishStage = () => {
-  Phoenix.Channel.push(instance.contents, ~event="finish_stage", ())
+let finishStage = (channel) => {
+  Phoenix.Channel.push(channel, ~event="finish_stage", ())
 }
 
-let addAnswer = (~id: string, ~text: string) => {
+let addAnswer = (channel, ~id: string, ~text: string) => {
   Phoenix.Channel.push(
-    instance.contents,
+    channel,
     ~event="add_answer",
     ~payload={"id": id, "text": text},
     (),
   )
 }
 
-let removeAnswer = () => {
-  Phoenix.Channel.push(instance.contents, ~event="remove_answer", ())
+let removeAnswer = (channel) => {
+  Phoenix.Channel.push(channel, ~event="remove_answer", ())
 }
 
-let setWinner = (~playerId) => {
-  Phoenix.Channel.push(instance.contents, ~event="set_winner", ~payload={"playerId": playerId}, ())
+let setWinner = (channel, ~playerId) => {
+  Phoenix.Channel.push(channel, ~event="set_winner", ~payload={"playerId": playerId}, ())
 }

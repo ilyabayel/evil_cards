@@ -14,7 +14,8 @@
       "@rescript/react",
       "rescript-phoenixjs",
       "rescript-recoil",
-      "rescript-uuid"
+      "rescript-uuid",
+      "@ryyppy/rescript-promise"
     ],
     "warnings": {
       "error" : "+101"

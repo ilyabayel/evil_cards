@@ -2,7 +2,7 @@
 let styles = styles["default"]
 
 let handleClick = _ => {
-  let _ = RoomApi.startGame()
+  let _ = RoomApi.startGame(RoomContext.roomChan.contents)
 }
 
 @react.component

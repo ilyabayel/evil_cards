@@ -33,7 +33,7 @@
     "concurrently": "^6.4.0",
     "prettier": "^2.3.2",
     "rescript": "^9.1.4",
-    "rescript-phoenixjs": "^1.6.2-fix1",
+    "rescript-phoenixjs": "^1.6.6-alpha-2",
     "rescript-uuid": "^8.3.2-alpha",
     "storybook-builder-vite": "^0.1.6",
     "vite": "^2.5.3"

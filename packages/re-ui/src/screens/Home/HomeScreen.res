@@ -69,9 +69,8 @@ let make = () => {
         <JoinForm
           onChange={v => setJoinFormValue(_ => v)}
           onSubmit={_ => {
-            Js.log("submit")
             let _ = LobbyApi.getRoomByCode(~code=joinFormValue.room_code, ~onRecieve=id => {
-              connect(~roomId=id)
+              connect(id)
             })
           }}
           value={joinFormValue}
