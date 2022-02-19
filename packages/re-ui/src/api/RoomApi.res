@@ -17,7 +17,7 @@ let leave = channel => {
 }
 
 let startGame = (channel) => {
-  Phoenix.Channel.push(channel, ~event="start_game", ())
+  Phoenix.Channel.push(channel, ~event="start_game", ~payload=None, ())
 }
 
 let finishGame = (channel) => {

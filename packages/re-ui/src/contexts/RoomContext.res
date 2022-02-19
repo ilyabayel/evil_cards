@@ -27,6 +27,7 @@ let useConnect = () => {
       let _ = Phoenix.Channel.leave(roomChan.contents)
       roomChan := emptyRoomChan
     } else if roomChan.contents.topic != `room:${roomId}` {
+      Js.log("join")
       let _ =
         RoomApi.make(SocketApi.instance, ~roomId, ~userName={userState.name})
         ->RoomApi.onRoomUpdate(~onUpdate=room => {
@@ -35,11 +36,15 @@ let useConnect = () => {
         ->updateRoom
         ->RoomApi.join
         ->Phoenix.Push.receive(~status="ok", ~callback=_ => {
+          Dom.Storage2.setItem(Dom.Storage2.localStorage, "room.id", roomId)
           RescriptReactRouter.push("play")
         })
-        ->Phoenix.Push.receive(~status="error", ~callback=msg => Js.log(msg))
+        ->Phoenix.Push.receive(~status="error", ~callback=_ => {
+          let _ = Phoenix.Channel.leave(roomChan.contents, ~timeout=1000, ())
+          roomChan := emptyRoomChan
+          RescriptReactRouter.push("/")
+        })
         ->Phoenix.Push.receive(~status="timeout", ~callback=msg => Js.log(msg))
-      Dom.Storage2.setItem(Dom.Storage2.localStorage, "room.id", roomId)
     }
   }
 }

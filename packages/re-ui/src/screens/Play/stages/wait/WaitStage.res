@@ -10,6 +10,7 @@ let getScore = (leaderboard, id) => {
 
 let handleClick = (_) => {
     let _ = RoomApi.startGame(RoomContext.roomChan.contents)
+    -> Phoenix.Push.receive(~status="ok", ~callback=(_) => Js.log("Ok"))
     ()
 }
 
