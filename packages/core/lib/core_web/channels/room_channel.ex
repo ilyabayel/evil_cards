@@ -59,7 +59,7 @@ defmodule CoreWeb.RoomChannel do
       broadcast!(socket, "options_map", options_map)
       broadcast!(socket, "room_update", room)
 
-      {:ok, socket}
+      {:reply, :ok, socket}
     else
       err -> {:error, %{reason: err}, socket}
     end
