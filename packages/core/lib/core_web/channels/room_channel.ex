@@ -1,68 +1,49 @@
 defmodule CoreWeb.RoomChannel do
   use CoreWeb, :channel
+  alias CoreWeb.GenServers.Room
 
-  @impl true
+  @impl Phoenix.Channel
   def join("room:" <> room_id, %{"userName" => user_name}, socket) do
-    with %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
-      assign(socket, user_name: user_name)
-      player = %CoreWeb.User{
+    assign(socket, user_name: user_name)
+
+    Room.join(
+      room_id,
+      %CoreWeb.User{
         id: socket.assigns.user_id,
         name: user_name
       }
+    )
 
-      room = CoreWeb.Room.add_player(room, player)
-
-      send(self(), {:after_join, room})
-
-      {:ok, room, socket}
-    else
-      err -> {:error, %{reason: err}}
-    end
+    room = Room.get(room_id)
+    send(self(), {:after_join, room})
+    {:ok, room, socket}
   end
 
-  @impl true
+  @impl Phoenix.Channel
   def handle_info({:after_join, room}, socket) do
-    CoreWeb.RoomsState.put(room)
     broadcast!(socket, "room_update", room)
     {:noreply, socket}
   end
 
-  @impl true
+  @impl Phoenix.Channel
   def handle_in("leave", _payload, socket) do
-    with "room:" <> room_id <- socket.topic,
-         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id) do
-      room = CoreWeb.Room.remove_player(room, socket.assigns.user_id)
-      CoreWeb.RoomsState.put(room)
+    "room:" <> room_id = socket.topic
+    Room.leave(room_id, socket.assigns.user_id)
 
-      broadcast!(socket, "room_update", room)
-
-      {:reply, :ok, socket}
-    else
-      err -> {:error, %{reason: err}, socket}
-    end
+    broadcast!(socket, "room_update", Room.get(room_id))
+    {:reply, :ok, socket}
   end
 
+  @impl Phoenix.Channel
   def handle_in("start_game", _payload, socket) do
-    with "room:" <> room_id <- socket.topic,
-         %CoreWeb.Room{} = room <- CoreWeb.RoomsState.get(room_id),
-         {:ok, questionnaire} <-
-           CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json") do
-      options_map =
-        CoreWeb.QuestionnaireHelper.get_options_map(
-          Enum.shuffle(questionnaire.options),
-          room.players,
-          room.rounds_per_player
-        )
+    "room:" <> room_id = socket.topic
 
-      room = CoreWeb.Room.start_game(room, questionnaire)
+    Room.start_game(room_id)
+    room = Room.get(room_id)
 
-      broadcast!(socket, "options_map", options_map)
-      broadcast!(socket, "room_update", room)
+    broadcast!(socket, "room_update", room)
 
-      {:reply, :ok, socket}
-    else
-      err -> {:error, %{reason: err}, socket}
-    end
+    {:reply, :ok, socket}
   end
 
   def handle_in("finish_game", _payload, socket) do

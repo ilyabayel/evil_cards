@@ -7,21 +7,17 @@ defmodule Core.Application do
 
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      # Core.Repo,
-      # Start the Telemetry supervisor
       CoreWeb.Telemetry,
-      # Start the PubSub system
       {Phoenix.PubSub, name: Core.PubSub},
       {Task.Supervisor, name: Core.TaskSupervisor},
-      # Start the Endpoint (http/https)
-      CoreWeb.Endpoint
-      # Start a worker by calling: Core.Worker.start_link(arg)
-      # {Core.Worker, arg}
+      CoreWeb.Endpoint,
+      CoreWeb.RoomsState,
+      CoreWeb.Counter,
+      Registry, [keys: :unique, name: CoreWeb.RoomSession],
+      Core.RoomSupervisor, []
     ]
 
-    CoreWeb.RoomsState.start_server()
-    CoreWeb.Counter.start_server()
+
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

@@ -1,57 +1,59 @@
-defmodule CoreWeb.RoomsState do
+defmodule CoreWeb.GenServers.Room do
   use GenServer
+  alias CoreWeb.Room
 
   # Client
-
-  def start_server() do
-    GenServer.start_link(CoreWeb.RoomsState, %{}, name: {:global, :Rooms})
-  end
-
-  def get_all() do
-    GenServer.call({:global, :Rooms}, :get_all)
+  def start_link(room_id) do
+    GenServer.start_link(__MODULE__, %CoreWeb.Room{id: room_id}, name: via(room_id))
   end
 
   def get(room_id) do
-    GenServer.call({:global, :Rooms}, {:get, String.to_atom(room_id)})
+    GenServer.call(via(room_id), :get)
   end
 
-  def get_by_code(code) do
-    GenServer.call({:global, :Rooms}, {:get_by_code, code})
+  def join(room_id, %CoreWeb.User{} = player) do
+    GenServer.cast(via(room_id), {:join, player})
   end
 
-  def put(%CoreWeb.Room{} = room) do
-    GenServer.cast({:global, :Rooms}, {:put, room})
+  def leave(room_id, player_id) do
+    GenServer.cast(via(room_id), {:leave, player_id})
+  end
+
+  def start_game(room_id) do
+    GenServer.cast(via(room_id), :start_game)
   end
 
   # Server
 
-  @impl true
+  @impl GenServer
   def init(_state) do
     {:ok, %{}}
   end
 
-  @impl true
-  def handle_call(:get_all, _from, state) do
+  @impl GenServer
+  def handle_call(:get, _from, state) do
     {:reply, state, state}
   end
 
-  @impl true
-  def handle_call({:get, room_id}, _from, state) do
-    {:reply, state[room_id], state}
+  @impl GenServer
+  def handle_cast({:join, player}, room) do
+    {:noreply, Room.add_player(room, player)}
   end
 
-  @impl true
-  def handle_call({:get_by_code, code}, _from, state) do
-    {_id, room} =
-      state
-      |> Map.to_list()
-      |> Enum.find({nil, nil}, fn {_id, r} -> r.code == code end)
-
-    {:reply, room, state}
+  @impl GenServer
+  def handle_cast({:leave, player_id}, room) do
+    {:noreply, Room.remove_player(room, player_id)}
   end
 
-  @impl true
-  def handle_cast({:put, %CoreWeb.Room{} = room}, state) do
-    {:noreply, Map.put(state, String.to_atom(room.id), room)}
+  @impl GenServer
+  def handle_cast(:start_game, room) do
+    {:ok, questionnaire} = CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json")
+    room = CoreWeb.Room.start_game(room, questionnaire)
+    {:noreply, room}
+  end
+
+  # Private
+  defp via(room_id) when is_binary(room_id) do
+    {:via, Registry, {:game_registry, room_id}}
   end
 end
