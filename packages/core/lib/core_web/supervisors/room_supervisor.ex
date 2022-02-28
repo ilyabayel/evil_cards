@@ -15,7 +15,7 @@ defmodule CoreWeb.RoomSupervisor do
     DynamicSupervisor.start_child(__MODULE__, child_specification)
   end
 
-  @impl true
+  @impl DynamicSupervisor
   def init(_arg) do
     # :one_for_one strategy: if a child process crashes, only that process is restarted.
     DynamicSupervisor.init(strategy: :one_for_one)

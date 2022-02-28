@@ -13,7 +13,7 @@ defmodule Core.Application do
       CoreWeb.Endpoint,
       CoreWeb.RoomsState,
       CoreWeb.Counter,
-      Registry, [keys: :unique, name: CoreWeb.RoomSession],
+      Registry, [keys: :unique, name: :room_session],
       Core.RoomSupervisor, []
     ]
 
