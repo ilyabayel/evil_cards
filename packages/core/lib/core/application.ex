@@ -13,6 +13,7 @@ defmodule Core.Application do
       CoreWeb.Endpoint,
       CoreWeb.GenServers.Codes,
       CoreWeb.RoomRegistry,
+      CoreWeb.Questionnaires,
       CoreWeb.RoomSupervisor,
       CoreWeb.Counter,
     ]
