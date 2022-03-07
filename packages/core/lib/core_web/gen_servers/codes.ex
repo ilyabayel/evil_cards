@@ -2,12 +2,11 @@ defmodule CoreWeb.GenServers.Codes do
   use GenServer
 
   # Client
-  def start_server() do
+  def start_link(_) do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
-
-  def get_room_id_by_code(code) when is_binary(code) do
+  def get_room_id_by_code(code) do
     GenServer.call(__MODULE__, {:get_room_id_by_code, code})
   end
 

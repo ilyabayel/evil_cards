@@ -11,6 +11,7 @@ defmodule Core.Application do
       {Phoenix.PubSub, name: Core.PubSub},
       {Task.Supervisor, name: Core.TaskSupervisor},
       CoreWeb.Endpoint,
+      CoreWeb.GenServers.Codes,
       CoreWeb.RoomRegistry,
       CoreWeb.RoomSupervisor,
       CoreWeb.Counter,
