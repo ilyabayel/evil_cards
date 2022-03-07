@@ -2,10 +2,10 @@ type userInfo = {
   userId: string
 }
 
-let userId = switch Dom.Storage2.getItem(Dom.Storage2.localStorage, "userId") {
+let userId = switch Dom.Storage2.getItem(Dom.Storage2.localStorage, "user.id") {
 | None => {
   let newUuid = Uuid.V4.make()
-  Dom.Storage2.setItem(Dom.Storage2.localStorage, "userId", newUuid)
+  Dom.Storage2.setItem(Dom.Storage2.localStorage, "user.id", newUuid)
   newUuid
 }
 | Some(v) => v

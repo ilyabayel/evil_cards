@@ -67,7 +67,10 @@ let make = () => {
       </BottomModal>
       <BottomModal visible={isJoinFormVisible} onClose={_ => setIsJoinFormVisible(_ => false)}>
         <JoinForm
-          onChange={v => setJoinFormValue(_ => v)}
+          onChange={v => {
+            setUserState({id: userState.id, name: v.name})
+            setJoinFormValue(_ => v)
+            }}
           onSubmit={_ => {
             let _ = LobbyApi.getRoomByCode(~code=joinFormValue.room_code, ~onRecieve=id => {
               connect(id)
