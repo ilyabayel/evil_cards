@@ -1,57 +1,132 @@
-defmodule CoreWeb.RoomsState do
+defmodule CoreWeb.GenServers.Room do
   use GenServer
+  alias CoreWeb.Room
+  alias CoreWeb.RoomRegistry
 
   # Client
-
-  def start_server() do
-    GenServer.start_link(CoreWeb.RoomsState, %{}, name: {:global, :Rooms})
-  end
-
-  def get_all() do
-    GenServer.call({:global, :Rooms}, :get_all)
+  def start_link(%Room{} = room) do
+    GenServer.start_link(__MODULE__, room, name: RoomRegistry.via(room.id))
   end
 
   def get(room_id) do
-    GenServer.call({:global, :Rooms}, {:get, String.to_atom(room_id)})
+    GenServer.call(RoomRegistry.via(room_id), :get)
   end
 
-  def get_by_code(code) do
-    GenServer.call({:global, :Rooms}, {:get_by_code, code})
+  def join(room_id, %CoreWeb.User{} = player) do
+    GenServer.cast(RoomRegistry.via(room_id), {:join, player})
   end
 
-  def put(%CoreWeb.Room{} = room) do
-    GenServer.cast({:global, :Rooms}, {:put, room})
+  def leave(room_id, player_id) do
+    GenServer.cast(RoomRegistry.via(room_id), {:leave, player_id})
+  end
+
+  def start_game(room_id) do
+    GenServer.cast(RoomRegistry.via(room_id), :start_game)
+  end
+
+  def finish_game(room_id) do
+    GenServer.cast(RoomRegistry.via(room_id), :finish_game)
+  end
+
+  def start_round(room_id) do
+    GenServer.cast(RoomRegistry.via(room_id), :start_round)
+  end
+
+  def finish_round(room_id) do
+    GenServer.cast(RoomRegistry.via(room_id), :finish_round)
+  end
+
+  def start_stage(room_id) do
+    GenServer.cast(RoomRegistry.via(room_id), :start_stage)
+  end
+
+  def finish_stage(room_id) do
+    GenServer.cast(RoomRegistry.via(room_id), :finish_stage)
+  end
+
+  def add_answer(room_id, option, player) do
+    GenServer.cast(RoomRegistry.via(room_id), {:add_answer, option, player})
+  end
+
+  def remove_answer(room_id, player_id) do
+    GenServer.cast(RoomRegistry.via(room_id), {:remove_answer, player_id})
+  end
+
+  def set_winner(room_id, player_id) do
+    GenServer.cast(RoomRegistry.via(room_id), {:set_winner, player_id})
   end
 
   # Server
 
-  @impl true
-  def init(_state) do
-    {:ok, %{}}
+  @impl GenServer
+  def init(%Room{} = state) do
+    {:ok, state}
   end
 
-  @impl true
-  def handle_call(:get_all, _from, state) do
+  @impl GenServer
+  def handle_call(:get, _from, state) do
     {:reply, state, state}
   end
 
-  @impl true
-  def handle_call({:get, room_id}, _from, state) do
-    {:reply, state[room_id], state}
+  @impl GenServer
+  def handle_cast({:join, player}, room) do
+    {:noreply, Room.add_player(room, player)}
   end
 
-  @impl true
-  def handle_call({:get_by_code, code}, _from, state) do
-    {_id, room} =
-      state
-      |> Map.to_list()
-      |> Enum.find({nil, nil}, fn {_id, r} -> r.code == code end)
-
-    {:reply, room, state}
+  @impl GenServer
+  def handle_cast({:leave, player_id}, room) do
+    {:noreply, Room.remove_player(room, player_id)}
   end
 
-  @impl true
-  def handle_cast({:put, %CoreWeb.Room{} = room}, state) do
-    {:noreply, Map.put(state, String.to_atom(room.id), room)}
+  @impl GenServer
+  def handle_cast(:start_game, room) do
+    {:ok, questionnaire} = CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json")
+    room = Room.start_game(room, questionnaire)
+    {:noreply, room}
+  end
+
+  @impl GenServer
+  def handle_cast(:finish_game, room) do
+    {:noreply, Room.finish_game(room)}
+  end
+
+  @impl GenServer
+  def handle_cast(:start_round, room) do
+    {:noreply, Room.start_round(room)}
+  end
+
+  @impl GenServer
+  def handle_cast(:finish_round, room) do
+    {:noreply, Room.finish_round(room)}
+  end
+
+  @impl GenServer
+  def handle_cast(:start_stage, room) do
+    {:noreply, Room.start_stage(room)}
+  end
+
+  @impl GenServer
+  def handle_cast(:finish_stage, room) do
+    {:noreply, Room.finish_stage(room)}
+  end
+
+  @impl GenServer
+  def handle_cast({:add_answer, option, player}, room) do
+    answer = %CoreWeb.Answer{
+      question: room.round.question,
+      option: option,
+      player: player
+    }
+    {:noreply, Room.add_answer(room, answer)}
+  end
+
+  @impl GenServer
+  def handle_cast({:remove_answer, player_id}, room) do
+    {:noreply, Room.remove_answer(room, player_id)}
+  end
+
+  @impl GenServer
+  def handle_cast({:set_winner, player_id}, room) do
+    {:noreply, Room.set_winner(room, player_id)}
   end
 end

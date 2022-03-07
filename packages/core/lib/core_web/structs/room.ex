@@ -7,6 +7,7 @@ defmodule CoreWeb.Room do
             rounds_per_player: 2,
             round: %CoreWeb.Round{},
             questions: [],
+            options: [],
             status: CoreWeb.GameStatus.play(),
             code: 0,
             leaderboard: %{}
@@ -22,6 +23,7 @@ defmodule CoreWeb.Room do
           rounds_per_player: Integer,
           round: CoreWeb.Round.t(),
           questions: [CoreWeb.Question.t()],
+          options: map,
           status: CoreWeb.GameStatus.t(),
           leaderboard: %{String.t() => Integer},
           code: integer
@@ -30,6 +32,7 @@ defmodule CoreWeb.Room do
   @spec add_player(CoreWeb.Room.t(), CoreWeb.User.t()) :: CoreWeb.Room.t()
   @spec remove_player(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
   @spec set_questions(CoreWeb.Room.t(), [CoreWeb.Question.t()]) :: CoreWeb.Room.t()
+  @spec set_options(CoreWeb.Room.t(), [CoreWeb.Option.t()]) :: CoreWeb.Room.t()
   @spec add_answer(CoreWeb.Room.t(), CoreWeb.Answer.t()) :: CoreWeb.Room.t()
   @spec remove_answer(CoreWeb.Room.t(), String.t()) :: CoreWeb.Room.t()
   @spec start_game(CoreWeb.Room.t(), CoreWeb.Questionnaire.t()) :: CoreWeb.Room.t()
@@ -102,6 +105,28 @@ defmodule CoreWeb.Room do
   """
   def set_questions(%CoreWeb.Room{} = room, questions) do
     Map.put(room, :questions, questions)
+  end
+
+  @doc """
+    Add questions to room
+
+    ## Examples
+
+      iex> room = %CoreWeb.Room{players: [%CoreWeb.User{id: "u1"}]}
+      iex> options = [%CoreWeb.Option{id: "1", text: "1"}]
+      iex> room = CoreWeb.Room.set_options(room, options)
+      iex> Enum.at(room.options["u1"], 0).id
+      "1"
+
+  """
+  def set_options(%CoreWeb.Room{} = room, options) do
+    options_map = CoreWeb.QuestionnaireHelper.get_options_map(
+      Enum.shuffle(options),
+      room.players,
+      room.rounds_per_player
+    )
+
+    Map.put(room, :options, options_map)
   end
 
   @doc """
@@ -200,6 +225,7 @@ defmodule CoreWeb.Room do
   def start_game(%CoreWeb.Room{} = room, %CoreWeb.Questionnaire{} = questionnaire) do
     room
     |> CoreWeb.Room.set_questions(Enum.shuffle(questionnaire.questions))
+    |> CoreWeb.Room.set_options(questionnaire.options)
     |> CoreWeb.Room.init_leaderboard()
     |> CoreWeb.Room.start_round()
   end

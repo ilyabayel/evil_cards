@@ -13,7 +13,7 @@ let defaultValue = {
 }
 
 @react.component
-let make = (~onChange, ~value: joinForm, ~onSubmit) => {
+let make = (~onChange: (joinForm) => unit, ~value: joinForm, ~onSubmit) => {
   let onNameChange = React.useCallback1(e => {
     let val = ReactEvent.Form.target(e)["value"]
     onChange({...value, name: val})

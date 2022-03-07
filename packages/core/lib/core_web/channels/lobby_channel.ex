@@ -18,18 +18,20 @@ defmodule CoreWeb.LobbyChannel do
       rounds_per_player: roomInfo["rounds_per_player"],
       round: %CoreWeb.Round{},
       questions: [],
-      code: CoreWeb.Counter.get()
+      code: CoreWeb.Counter.value()
     }
 
-    CoreWeb.RoomsState.put(room)
+    :ok = CoreWeb.Counter.increment()
+    _ = CoreWeb.RoomSupervisor.start_child(room)
+    _ = CoreWeb.GenServers.Codes.put(room.code, room.id)
 
     {:reply, {:ok, room.id}, socket}
   end
 
   def handle_in("get_room_by_code", %{"code" => code}, socket) do
-    case CoreWeb.RoomsState.get_by_code(code) do
+    case CoreWeb.GenServers.Codes.get_room_id_by_code(code) do
       nil -> {:reply, {:error, "Room not found"}, socket}
-      room -> {:reply, {:ok, room.id}, socket}
+      room_id -> {:reply, {:ok, room_id}, socket}
     end
   end
 end

@@ -1,22 +1,21 @@
 defmodule CoreWeb.Questionnaires do
   use GenServer
 
-  @spec start_server :: :ignore | {:error, any} | {:ok, pid}
   @spec put(CoreWeb.Questionnaire.t()) :: :ok
   @spec generate_game_set(CoreWeb.Room.t()) :: any
 
   # Client
 
-  def start_server() do
-    GenServer.start_link(CoreWeb.RoomsState, %{}, name: {:global, :Questionnaires})
+  def start_link(_) do
+    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
   def put(%CoreWeb.Questionnaire{} = questionnaire) do
-    GenServer.cast({:global, :Questionnaires}, {:put, questionnaire})
+    GenServer.cast(__MODULE__, {:put, questionnaire})
   end
 
   def generate_game_set(%CoreWeb.Room{} = room) do
-    GenServer.call({:global, :Questionnaires}, {:generate_game_set, room})
+    GenServer.call(__MODULE__, {:generate_game_set, room})
   end
 
   # Server

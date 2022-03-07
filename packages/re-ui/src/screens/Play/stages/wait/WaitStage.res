@@ -2,41 +2,47 @@
 let styles = styles["default"]
 
 let getScore = (leaderboard, id) => {
-    switch Js.Dict.get(leaderboard, id) {
-    | Some(score) => score
-    | None => 0
-    }
+  switch Js.Dict.get(leaderboard, id) {
+  | Some(score) => score
+  | None => 0
+  }
 }
 
-let handleClick = (_) => {
-    let _ = RoomApi.startGame(RoomContext.roomChan.contents)
-    -> Phoenix.Push.receive(~status="ok", ~callback=(_) => Js.log("Ok"))
-    ()
+let handleClick = _ => {
+  let _ =
+    RoomApi.startGame(RoomContext.roomChan.contents)->Phoenix.Push.receive(
+      ~status="ok",
+      ~callback=_ => Js.log("Ok"),
+    )
 }
 
 @react.component
 let make = () => {
-    let (room, _setRoom) = RoomContext.useState()
+  let (room, _setRoom) = RoomContext.useState()
+  let (user, _setUser) = UserContext.useState()
 
-    <div className=styles["wait-stage"]>
-        <div className=styles["room-code"]>
-            <h2>{React.string(`Код комнаты`)}</h2>
-            <h1>{React.string(Js.Int.toString(room.code))}</h1>
-        </div>
-        <div className=styles["connected-users"]>
-            <h3>{React.string(`Подключились`)}</h3>
-            <div className=styles["user-list"]>
-                {
-                    Js.Array2.sortInPlaceWith(room.players, (p1, p2) => {
-                        getScore(room.leaderboard, p2.id) - getScore(room.leaderboard, p1.id)
-                    })
-                    -> Js.Array2.map((player) => {
-                        <UserCard key=player.id score={getScore(room.leaderboard, player.id)} userName=player.name/>
-                    })
-                    -> React.array
-                }
-            </div>
-        </div>
-        <Button label=`Начать` onClick={handleClick} />
+  <div className={styles["wait-stage"]}>
+    <div className={styles["room-code"]}>
+      <h2> {React.string(`Код комнаты`)} </h2>
+      <h1> {React.string(Js.Int.toString(room.code))} </h1>
     </div>
+    <div className={styles["connected-users"]}>
+      <h3> {React.string(`Подключились`)} </h3>
+      <div className={styles["user-list"]}>
+        {Js.Array2.sortInPlaceWith(room.players, (p1, p2) => {
+          getScore(room.leaderboard, p2.id) - getScore(room.leaderboard, p1.id)
+        })
+        ->Js.Array2.map(player => {
+          <UserCard
+            key=player.id score={getScore(room.leaderboard, player.id)} userName=player.name
+          />
+        })
+        ->React.array}
+      </div>
+    </div>
+    {switch room.host.id == user.id {
+    | true => <Button label=`Начать` onClick={handleClick} />
+    | false => <> </>
+    }}
+  </div>
 }

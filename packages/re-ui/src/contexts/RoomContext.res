@@ -27,7 +27,6 @@ let useConnect = () => {
       let _ = Phoenix.Channel.leave(roomChan.contents)
       roomChan := emptyRoomChan
     } else if roomChan.contents.topic != `room:${roomId}` {
-      Js.log("join")
       let _ =
         RoomApi.make(SocketApi.instance, ~roomId, ~userName={userState.name})
         ->RoomApi.onRoomUpdate(~onUpdate=room => {
