@@ -11,12 +11,10 @@ defmodule Core.Application do
       {Phoenix.PubSub, name: Core.PubSub},
       {Task.Supervisor, name: Core.TaskSupervisor},
       CoreWeb.Endpoint,
-      CoreWeb.RoomsState,
+      CoreWeb.RoomRegistry,
+      CoreWeb.RoomSupervisor,
       CoreWeb.Counter,
-      Registry, [keys: :unique, name: :room_session],
-      Core.RoomSupervisor, []
     ]
-
 
 
     # See https://hexdocs.pm/elixir/Supervisor.html

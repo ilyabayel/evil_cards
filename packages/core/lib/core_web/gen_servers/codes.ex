@@ -1,20 +1,18 @@
 defmodule CoreWeb.GenServers.Codes do
   use GenServer
 
-  @name {:global, __MODULE__}
-
   # Client
   def start_server() do
-    GenServer.start_link(__MODULE__, %{}, name: @name)
+    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
 
   def get_room_id_by_code(code) when is_binary(code) do
-    GenServer.call(@name, {:get_room_id_by_code, code})
+    GenServer.call(__MODULE__, {:get_room_id_by_code, code})
   end
 
-  def put({code, roomId}) do
-    GenServer.cast(@name, {:put, code, roomId})
+  def put(code, roomId) do
+    GenServer.cast(__MODULE__, {:put, code, roomId})
   end
 
   # Server

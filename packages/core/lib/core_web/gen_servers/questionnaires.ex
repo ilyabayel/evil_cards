@@ -8,7 +8,7 @@ defmodule CoreWeb.Questionnaires do
   # Client
 
   def start_server() do
-    GenServer.start_link(CoreWeb.RoomsState, %{}, name: {:global, :Questionnaires})
+    GenServer.start_link(__MODULE__, %{}, name: {:global, :Questionnaires})
   end
 
   def put(%CoreWeb.Questionnaire{} = questionnaire) do

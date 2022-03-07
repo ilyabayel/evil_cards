@@ -1,16 +1,13 @@
 defmodule CoreWeb.Counter do
   use GenServer
 
-  @spec start_link :: :ignore | {:error, any} | {:ok, pid}
-  @spec get :: integer()
-
   # Client
-  def start_link() do
-    GenServer.start_link(__MODULE__, %{}, name: {:global, :Counter})
+  def start_link(_) do
+    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
   def get() do
-    GenServer.call({:global, :Counter}, :get)
+    GenServer.call(__MODULE__, :get)
   end
 
   # Server

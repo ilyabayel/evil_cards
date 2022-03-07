@@ -6,11 +6,11 @@ defmodule CoreWeb.RoomSupervisor do
   alias CoreWeb.GenServers.Room
 
   def start_link(_arg) do
-    DynamicSupervisor.start_link(__MODULE__, [], name: __MODULE__)
+    DynamicSupervisor.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
-  def start_child(room_id) do
-    child_specification = {Room, room_id}
+  def start_child(room) do
+    child_specification = {Room, room}
 
     DynamicSupervisor.start_child(__MODULE__, child_specification)
   end

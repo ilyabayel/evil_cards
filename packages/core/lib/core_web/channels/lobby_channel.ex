@@ -21,13 +21,14 @@ defmodule CoreWeb.LobbyChannel do
       code: CoreWeb.Counter.get()
     }
 
-    CoreWeb.RoomsState.put(room)
+    _ = CoreWeb.RoomSupervisor.start_child(room)
+    _ = CoreWeb.GenServers.Codes.put(CoreWeb.Counter.get(), room.id)
 
     {:reply, {:ok, room.id}, socket}
   end
 
   def handle_in("get_room_by_code", %{"code" => code}, socket) do
-    case CoreWeb.RoomsState.get_by_code(code) do
+    case CoreWeb.GenServers.Codes.get_room_id_by_code(code) do
       nil -> {:reply, {:error, "Room not found"}, socket}
       room -> {:reply, {:ok, room.id}, socket}
     end

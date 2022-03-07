@@ -112,11 +112,12 @@ defmodule CoreWeb.Room do
 
     ## Examples
 
-      iex> room = %CoreWeb.Room{}
+      iex> room = %CoreWeb.Room{players: [%CoreWeb.User{id: "u1"}]}
       iex> options = [%CoreWeb.Option{id: "1", text: "1"}]
       iex> room = CoreWeb.Room.set_options(room, options)
-      iex> Enum.at(room.options, 0).id
+      iex> Enum.at(room.options["u1"], 0).id
       "1"
+
   """
   def set_options(%CoreWeb.Room{} = room, options) do
     options_map = CoreWeb.QuestionnaireHelper.get_options_map(
