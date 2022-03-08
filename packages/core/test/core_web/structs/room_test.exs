@@ -1,75 +1,75 @@
 defmodule CoreWeb.RoomTest do
   use ExUnit.Case, async: true
-  doctest CoreWeb.Room
+  doctest Game.Room
 
   setup_all do
-    room = %CoreWeb.Room{
+    room = %Game.Room{
       id: "test",
-      host: %CoreWeb.User{
+      host: %Game.User{
         id: "test",
         name: "test"
       },
       players: [
-        %CoreWeb.User{
+        %Game.User{
           id: "test1",
           name: "test1"
         },
-        %CoreWeb.User{
+        %Game.User{
           id: "test2",
           name: "test2"
         },
-        %CoreWeb.User{
+        %Game.User{
           id: "test3",
           name: "test3"
         }
       ],
       round_duration: 60,
       rounds_per_player: 2,
-      round: %CoreWeb.Round{},
+      round: %Game.Round{},
       questions: [],
       code: 1000
     }
 
-    questionnaire = %CoreWeb.Questionnaire{
+    questionnaire = %Game.Questionnaire{
       id: "id",
       name: "name",
       author: "author",
       questions: [
-        %CoreWeb.Question{
+        %Game.Question{
           id: "q1",
           text: "quest 1"
         },
-        %CoreWeb.Question{
+        %Game.Question{
           id: "q2",
           text: "quest 2"
         },
-        %CoreWeb.Question{
+        %Game.Question{
           id: "q3",
           text: "quest 3"
         }
       ],
       options: [
-        %CoreWeb.Option{
+        %Game.Option{
           id: "o1",
           text: "option 1"
         },
-        %CoreWeb.Option{
+        %Game.Option{
           id: "o2",
           text: "option 2"
         },
-        %CoreWeb.Option{
+        %Game.Option{
           id: "o3",
           text: "option 3"
         },
-        %CoreWeb.Option{
+        %Game.Option{
           id: "o4",
           text: "option 4"
         },
-        %CoreWeb.Option{
+        %Game.Option{
           id: "o6",
           text: "option 6"
         },
-        %CoreWeb.Option{
+        %Game.Option{
           id: "o7",
           text: "option 7"
         }
@@ -80,20 +80,20 @@ defmodule CoreWeb.RoomTest do
   end
 
   test "should generate right round on start_game", state do
-    room = CoreWeb.Room.start_game(state.room, state.questionnaire)
+    room = Game.Room.start_game(state.room, state.questionnaire)
 
     assert length(room.questions) == 2
     assert room.round.number == 1
-    assert room.round.current_stage == CoreWeb.Stages.prepare()
+    assert room.round.current_stage == Game.Stages.prepare()
     assert room.round.leader == Enum.at(state.room.players, 0)
-    assert room.round.winner == %CoreWeb.Answer{}
+    assert room.round.winner == %Game.Answer{}
     assert room.round.answers == []
-    assert room.status == CoreWeb.GameStatus.play()
+    assert room.status == Game.Status.play()
   end
 
   test "should end game if no question left", state do
-    room = CoreWeb.Room.start_round(state.room)
-    assert room.status == CoreWeb.GameStatus.finished()
+    room = Game.Room.start_round(state.room)
+    assert room.status == Game.Status.finished()
   end
 
   test "should add score to winner on round finish", state do
@@ -102,10 +102,10 @@ defmodule CoreWeb.RoomTest do
     }
 
     round =
-      Map.put(state.room.round, :winner, %CoreWeb.Answer{
-        question: %CoreWeb.Question{},
-        option: %CoreWeb.Option{},
-        player: %CoreWeb.User{
+      Map.put(state.room.round, :winner, %Game.Answer{
+        question: %Game.Question{},
+        option: %Game.Option{},
+        player: %Game.User{
           id: "test",
           name: "test_name"
         }
@@ -115,18 +115,18 @@ defmodule CoreWeb.RoomTest do
       state.room
       |> Map.put(:leaderboard, leaderboard)
       |> Map.put(:round, round)
-      |> CoreWeb.Room.finish_round()
+      |> Game.Room.finish_round()
 
     assert room.leaderboard["test"] == 1
   end
 
   test "should change status to finished on finish_game", state do
-    room = CoreWeb.Room.finish_game(state.room)
-    assert room.status == CoreWeb.GameStatus.finished()
+    room = Game.Room.finish_game(state.room)
+    assert room.status == Game.Status.finished()
   end
 
   test "should init all-zeros score table", state do
-    room = CoreWeb.Room.init_leaderboard(state.room)
+    room = Game.Room.init_leaderboard(state.room)
 
     expected_table = %{
       "test1" => 0,
@@ -141,87 +141,87 @@ defmodule CoreWeb.RoomTest do
     room =
       state.room
       |> Map.put(:leaderboard, %{"test1" => 0})
-      |> CoreWeb.Room.add_score_to_winner(%CoreWeb.User{id: "test1", name: "test_name"})
+      |> Game.Room.add_score_to_winner(%Game.User{id: "test1", name: "test_name"})
 
     assert room.leaderboard["test1"] == 1
   end
 
   test "start_stage should correctly set stages", state do
-    assert state.room.round.current_stage == CoreWeb.Stages.wait()
+    assert state.room.round.current_stage == Game.Stages.wait()
 
-    room = CoreWeb.Room.start_stage(state.room)
-    assert room.round.current_stage == CoreWeb.Stages.prepare()
+    room = Game.Room.start_stage(state.room)
+    assert room.round.current_stage == Game.Stages.prepare()
 
-    room = CoreWeb.Room.start_stage(room)
-    assert room.round.current_stage == CoreWeb.Stages.play()
+    room = Game.Room.start_stage(room)
+    assert room.round.current_stage == Game.Stages.play()
 
-    room = CoreWeb.Room.start_stage(room)
-    assert room.round.current_stage == CoreWeb.Stages.vote()
+    room = Game.Room.start_stage(room)
+    assert room.round.current_stage == Game.Stages.vote()
 
-    room = CoreWeb.Room.start_stage(room)
-    assert room.round.current_stage == CoreWeb.Stages.result()
+    room = Game.Room.start_stage(room)
+    assert room.round.current_stage == Game.Stages.result()
 
-    room = CoreWeb.Room.start_stage(room)
-    assert room.round.current_stage == CoreWeb.Stages.prepare()
+    room = Game.Room.start_stage(room)
+    assert room.round.current_stage == Game.Stages.prepare()
   end
 
   test "game process", state do
 
     # Init room
     room =
-      %CoreWeb.Room{
+      %Game.Room{
         id: "test",
-        host: %CoreWeb.User{id: "test1", name: "test1"}
+        host: %Game.User{id: "test1", name: "test1"}
       }
-      |> CoreWeb.Room.add_player(%CoreWeb.User{id: "test1", name: "test1"})
-      |> CoreWeb.Room.add_player(%CoreWeb.User{id: "test2", name: "test2"})
-      |> CoreWeb.Room.add_player(%CoreWeb.User{id: "test3", name: "test3"})
-      |> CoreWeb.Room.start_game(state.questionnaire)
+      |> Game.Room.add_player(%Game.User{id: "test1", name: "test1"})
+      |> Game.Room.add_player(%Game.User{id: "test2", name: "test2"})
+      |> Game.Room.add_player(%Game.User{id: "test3", name: "test3"})
+      |> Game.Room.start_game(state.questionnaire)
 
-    assert room.round.current_stage == CoreWeb.Stages.prepare()
+    assert room.round.current_stage == Game.Stages.prepare()
     assert room.round.leader == Enum.at(room.players, 0)
 
     # Start play stage, add answers to question and finish stage
     room =
       room
-      |> CoreWeb.Room.start_stage()
-      |> CoreWeb.Room.add_answer(%CoreWeb.Answer{
+      |> Game.Room.start_stage()
+      |> Game.Room.add_answer(%Game.Answer{
         question: room.round.question,
         option: Enum.at(state.questionnaire.options, 0),
         player: Enum.at(room.players, 0)
       })
-      |> CoreWeb.Room.add_answer(%CoreWeb.Answer{
+      |> Game.Room.add_answer(%Game.Answer{
         question: room.round.question,
         option: Enum.at(state.questionnaire.options, 1),
         player: Enum.at(room.players, 1)
       })
-      |> CoreWeb.Room.add_answer(%CoreWeb.Answer{
+      |> Game.Room.add_answer(%Game.Answer{
         question: room.round.question,
         option: Enum.at(state.questionnaire.options, 2),
         player: Enum.at(room.players, 2)
       })
-      |> CoreWeb.Room.finish_stage()
+      |> Game.Room.finish_stage()
 
     assert length(room.round.answers) == 3
-    assert room.round.current_stage == CoreWeb.Stages.play()
+    assert room.round.current_stage == Game.Stages.play()
 
     # Start vote stage, set winner and finish stage
     room =
       room
-      |> CoreWeb.Room.start_stage()
-      |> CoreWeb.Room.set_winner(Enum.at(room.round.answers, 0).player.id)
-      |> CoreWeb.Room.finish_stage()
+      |> Game.Room.start_stage()
+      |> Game.Room.set_winner(Enum.at(room.round.answers, 0).player.id)
+      |> Game.Room.finish_stage()
 
     assert room.round.winner == Enum.at(room.round.answers, 0)
-    assert room.round.current_stage == CoreWeb.Stages.vote()
+    assert room.round.current_stage == Game.Stages.vote()
 
     # Start result stage, finish stage, finish round
     # Check score table
     room =
       room
-      |> CoreWeb.Room.start_stage()
-      |> CoreWeb.Room.finish_stage()
-      |> CoreWeb.Room.finish_round()
+      |> Game.Room.start_stage()
+      |> Game.Room.finish_stage()
+      |> Game.Room.finish_round()
 
     assert room.leaderboard[Enum.at(room.round.answers, 0).player.id] == 1
     assert room.leaderboard[Enum.at(room.round.answers, 1).player.id] == 0
@@ -231,7 +231,7 @@ defmodule CoreWeb.RoomTest do
 
     room =
       room
-      |> CoreWeb.Room.start_round()
+      |> Game.Room.start_round()
 
     assert room.round.leader == Enum.at(room.players, 1)
   end

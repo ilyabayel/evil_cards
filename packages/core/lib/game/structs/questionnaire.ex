@@ -1,8 +1,8 @@
-defmodule CoreWeb.Questionnaire do
+defmodule Game.Questionnaire do
   @derive Jason.Encoder
   defstruct id: "",
             name: "",
-            author: %CoreWeb.User{},
+            author: %Game.User{},
             questions: [],
             options: []
 
@@ -12,13 +12,13 @@ defmodule CoreWeb.Questionnaire do
   @type t :: %__MODULE__{
     id: String.t(),
     name: String.t(),
-    author: CoreWeb.User.t(),
-    questions: [CoreWeb.Question.t()],
-    options: [CoreWeb.Option.t()],
+    author: Game.User.t(),
+    questions: [Game.Question.t()],
+    options: [Game.Option.t()],
   }
 
-  @spec create_from_file(String.t()) :: {:error, atom | Jason.DecodeError.t()} | {:ok, CoreWeb.Questionnaire.t()}
-  @spec create_from_hashmap(map) :: CoreWeb.Questionnaire.t()
+  @spec create_from_file(String.t()) :: {:error, atom | Jason.DecodeError.t()} | {:ok, Game.Questionnaire.t()}
+  @spec create_from_hashmap(map) :: Game.Questionnaire.t()
 
 
   def create_from_file(filename) do
@@ -37,7 +37,7 @@ defmodule CoreWeb.Questionnaire do
       Enum.map(
         questions,
         fn q ->
-          %CoreWeb.Question{
+          %Game.Question{
             id: UUID.uuid4(),
             text: q
           }
@@ -48,17 +48,17 @@ defmodule CoreWeb.Questionnaire do
       Enum.map(
         options,
         fn o ->
-          %CoreWeb.Option{
+          %Game.Option{
             id: UUID.uuid4(),
             text: o
           }
         end
       )
 
-    %CoreWeb.Questionnaire{
+    %Game.Questionnaire{
       id: UUID.uuid4(),
       name: name,
-      author: %CoreWeb.User{},
+      author: %Game.User{},
       questions: questions,
       options: options
     }

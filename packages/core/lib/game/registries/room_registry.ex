@@ -1,4 +1,4 @@
-defmodule CoreWeb.RoomRegistry do
+defmodule Game.SessionRegistry do
   def start_link do
     Registry.start_link(keys: :unique, name: __MODULE__)
   end

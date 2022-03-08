@@ -1,4 +1,4 @@
-defmodule CoreWeb.User do
+defmodule Game.User do
   @derive Jason.Encoder
   @derive Phoenix.Param
   defstruct id: "", name: ""
@@ -8,7 +8,7 @@ defmodule CoreWeb.User do
           name: String.t()
         }
 
-  @spec from_string_map(%{String.t() => String.t()}) :: CoreWeb.User.t()
+  @spec from_string_map(%{String.t() => String.t()}) :: Game.User.t()
 
   def from_string_map(%{"id" => id, "name" => name}) do
     %__MODULE__{

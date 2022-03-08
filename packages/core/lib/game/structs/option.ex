@@ -1,4 +1,4 @@
-defmodule CoreWeb.Option do
+defmodule Game.Option do
   @derive Jason.Encoder
   defstruct id: "",
             text: ""

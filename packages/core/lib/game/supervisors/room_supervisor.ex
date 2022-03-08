@@ -1,16 +1,16 @@
-defmodule CoreWeb.RoomSupervisor do
+defmodule Game.RoomSupervisor do
   @moduledoc """
   This supervisor is responsible game child processes.
   """
   use DynamicSupervisor
-  alias CoreWeb.GenServers.Room
+  alias Game.GenServers.Session
 
   def start_link(_arg) do
     DynamicSupervisor.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def start_child(room) do
-    child_specification = {Room, room}
+    child_specification = {Session, room}
 
     DynamicSupervisor.start_child(__MODULE__, child_specification)
   end

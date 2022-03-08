@@ -1,4 +1,4 @@
-defmodule CoreWeb.Question do
+defmodule Game.Question do
   @derive Jason.Encoder
   defstruct id: "",
             text: ""

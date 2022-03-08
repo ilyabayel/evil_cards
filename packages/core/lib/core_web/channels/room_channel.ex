@@ -1,20 +1,20 @@
 defmodule CoreWeb.RoomChannel do
   use CoreWeb, :channel
-  alias CoreWeb.GenServers.Room
+  alias Game.GenServers.Session
 
   @impl Phoenix.Channel
   def join("room:" <> room_id, %{"userName" => user_name}, socket) do
     assign(socket, user_name: user_name)
 
-    Room.join(
+    Session.join(
       room_id,
-      %CoreWeb.User{
+      %Game.User{
         id: socket.assigns.user_id,
         name: user_name
       }
     )
 
-    room = Room.get(room_id)
+    room = Session.get(room_id)
     send(self(), {:after_join, room})
     {:ok, room, socket}
   end
@@ -28,17 +28,17 @@ defmodule CoreWeb.RoomChannel do
   @impl Phoenix.Channel
   def handle_in("leave", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.leave(room_id, socket.assigns.user_id)
+    Session.leave(room_id, socket.assigns.user_id)
 
-    broadcast!(socket, "room_update", Room.get(room_id))
+    broadcast!(socket, "room_update", Session.get(room_id))
     {:reply, :ok, socket}
   end
 
   @impl Phoenix.Channel
   def handle_in("start_game", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.start_game(room_id)
-    room = Room.get(room_id)
+    Session.start_game(room_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:reply, :ok, socket}
@@ -46,8 +46,8 @@ defmodule CoreWeb.RoomChannel do
 
   def handle_in("finish_game", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.finish_game(room_id)
-    room = Room.get(room_id)
+    Session.finish_game(room_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}
@@ -55,8 +55,8 @@ defmodule CoreWeb.RoomChannel do
 
   def handle_in("start_round", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.start_round(room_id)
-    room = Room.get(room_id)
+    Session.start_round(room_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}
@@ -65,8 +65,8 @@ defmodule CoreWeb.RoomChannel do
   @impl true
   def handle_in("finish_round", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.finish_round(room_id)
-    room = Room.get(room_id)
+    Session.finish_round(room_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}
@@ -74,8 +74,8 @@ defmodule CoreWeb.RoomChannel do
 
   def handle_in("start_stage", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.start_stage(room_id)
-    room = Room.get(room_id)
+    Session.start_stage(room_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}
@@ -83,8 +83,8 @@ defmodule CoreWeb.RoomChannel do
 
   def handle_in("finish_stage", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.finish_stage(room_id)
-    room = Room.get(room_id)
+    Session.finish_stage(room_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}
@@ -93,18 +93,18 @@ defmodule CoreWeb.RoomChannel do
   def handle_in("add_answer", %{"id" => option_id, "text" => option_text}, socket) do
     "room:" <> room_id = socket.topic
 
-    option = %CoreWeb.Option{
+    option = %Game.Option{
       id: option_id,
       text: option_text
     }
 
-    player = %CoreWeb.User{
+    player = %Game.User{
       id: socket.assigns.user_id,
       name: socket.assigns.user_name
     }
 
-    Room.add_answer(room_id, option, player)
-    room = Room.get(room_id)
+    Session.add_answer(room_id, option, player)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}
@@ -112,8 +112,8 @@ defmodule CoreWeb.RoomChannel do
 
   def handle_in("remove_answer", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Room.remove_answer(room_id, socket.assigns.user_id)
-    room = Room.get(room_id)
+    Session.remove_answer(room_id, socket.assigns.user_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}
@@ -122,8 +122,8 @@ defmodule CoreWeb.RoomChannel do
   @impl true
   def handle_in("set_winner", %{"playerId" => player_id}, socket) do
     "room:" <> room_id = socket.topic
-    Room.set_winner(room_id, player_id)
-    room = Room.get(room_id)
+    Session.set_winner(room_id, player_id)
+    room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)
     {:ok, socket}

@@ -1,4 +1,4 @@
-defmodule CoreWeb.Stages do
+defmodule Game.Stages do
   def wait, do: "wait"
   def prepare, do: "prepare"
   def play, do: "play"

@@ -8,28 +8,28 @@ defmodule CoreWeb.LobbyChannel do
 
   @impl true
   def handle_in("create_room", %{"host" => host, "roomInfo" => roomInfo}, socket) do
-    host = CoreWeb.User.from_string_map(host)
+    host = Game.User.from_string_map(host)
 
-    room = %CoreWeb.Room{
+    room = %Game.Room{
       id: UUID.uuid4(),
       host: host,
       players: [],
       round_duration: roomInfo["round_duration"],
       rounds_per_player: roomInfo["rounds_per_player"],
-      round: %CoreWeb.Round{},
+      round: %Game.Round{},
       questions: [],
-      code: CoreWeb.Counter.value()
+      code: Game.GenServers.Counter.value()
     }
 
-    :ok = CoreWeb.Counter.increment()
-    _ = CoreWeb.RoomSupervisor.start_child(room)
-    _ = CoreWeb.GenServers.Codes.put(room.code, room.id)
+    :ok = Game.GenServers.Counter.increment()
+    _ = Game.RoomSupervisor.start_child(room)
+    _ = Game.GenServers.RoomCodes.put(room.code, room.id)
 
     {:reply, {:ok, room.id}, socket}
   end
 
   def handle_in("get_room_by_code", %{"code" => code}, socket) do
-    case CoreWeb.GenServers.Codes.get_room_id_by_code(code) do
+    case Game.GenServers.RoomCodes.get_room_id_by_code(code) do
       nil -> {:reply, {:error, "Room not found"}, socket}
       room_id -> {:reply, {:ok, room_id}, socket}
     end

@@ -1,4 +1,4 @@
-defmodule CoreWeb.GameStatus do
+defmodule Game.Status do
   def play, do: "play"
   def finished, do: "finished"
 

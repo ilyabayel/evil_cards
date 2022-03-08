@@ -1,4 +1,4 @@
-defmodule CoreWeb.Counter do
+defmodule Game.GenServers.Counter do
   use Agent
 
   def start_link(_) do

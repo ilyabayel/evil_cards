@@ -1,4 +1,4 @@
-defmodule CoreWeb.GenServers.Codes do
+defmodule Game.GenServers.RoomCodes do
   use GenServer
 
   # Client

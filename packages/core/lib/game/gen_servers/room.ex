@@ -1,59 +1,59 @@
-defmodule CoreWeb.GenServers.Room do
+defmodule Game.GenServers.Session do
   use GenServer
-  alias CoreWeb.Room
-  alias CoreWeb.RoomRegistry
+  alias Game.Room
+  alias Game.SessionRegistry
 
   # Client
   def start_link(%Room{} = room) do
-    GenServer.start_link(__MODULE__, room, name: RoomRegistry.via(room.id))
+    GenServer.start_link(__MODULE__, room, name: SessionRegistry.via(room.id))
   end
 
   def get(room_id) do
-    GenServer.call(RoomRegistry.via(room_id), :get)
+    GenServer.call(SessionRegistry.via(room_id), :get)
   end
 
-  def join(room_id, %CoreWeb.User{} = player) do
-    GenServer.cast(RoomRegistry.via(room_id), {:join, player})
+  def join(room_id, %Game.User{} = player) do
+    GenServer.cast(SessionRegistry.via(room_id), {:join, player})
   end
 
   def leave(room_id, player_id) do
-    GenServer.cast(RoomRegistry.via(room_id), {:leave, player_id})
+    GenServer.cast(SessionRegistry.via(room_id), {:leave, player_id})
   end
 
   def start_game(room_id) do
-    GenServer.cast(RoomRegistry.via(room_id), :start_game)
+    GenServer.cast(SessionRegistry.via(room_id), :start_game)
   end
 
   def finish_game(room_id) do
-    GenServer.cast(RoomRegistry.via(room_id), :finish_game)
+    GenServer.cast(SessionRegistry.via(room_id), :finish_game)
   end
 
   def start_round(room_id) do
-    GenServer.cast(RoomRegistry.via(room_id), :start_round)
+    GenServer.cast(SessionRegistry.via(room_id), :start_round)
   end
 
   def finish_round(room_id) do
-    GenServer.cast(RoomRegistry.via(room_id), :finish_round)
+    GenServer.cast(SessionRegistry.via(room_id), :finish_round)
   end
 
   def start_stage(room_id) do
-    GenServer.cast(RoomRegistry.via(room_id), :start_stage)
+    GenServer.cast(SessionRegistry.via(room_id), :start_stage)
   end
 
   def finish_stage(room_id) do
-    GenServer.cast(RoomRegistry.via(room_id), :finish_stage)
+    GenServer.cast(SessionRegistry.via(room_id), :finish_stage)
   end
 
   def add_answer(room_id, option, player) do
-    GenServer.cast(RoomRegistry.via(room_id), {:add_answer, option, player})
+    GenServer.cast(SessionRegistry.via(room_id), {:add_answer, option, player})
   end
 
   def remove_answer(room_id, player_id) do
-    GenServer.cast(RoomRegistry.via(room_id), {:remove_answer, player_id})
+    GenServer.cast(SessionRegistry.via(room_id), {:remove_answer, player_id})
   end
 
   def set_winner(room_id, player_id) do
-    GenServer.cast(RoomRegistry.via(room_id), {:set_winner, player_id})
+    GenServer.cast(SessionRegistry.via(room_id), {:set_winner, player_id})
   end
 
   # Server
@@ -80,7 +80,7 @@ defmodule CoreWeb.GenServers.Room do
 
   @impl GenServer
   def handle_cast(:start_game, room) do
-    {:ok, questionnaire} = CoreWeb.Questionnaire.create_from_file("lib/core/questionnaire.json")
+    {:ok, questionnaire} = Game.Questionnaire.create_from_file("lib/core/questionnaire.json")
     room = Room.start_game(room, questionnaire)
     {:noreply, room}
   end
@@ -112,7 +112,7 @@ defmodule CoreWeb.GenServers.Room do
 
   @impl GenServer
   def handle_cast({:add_answer, option, player}, room) do
-    answer = %CoreWeb.Answer{
+    answer = %Game.Answer{
       question: room.round.question,
       option: option,
       player: player

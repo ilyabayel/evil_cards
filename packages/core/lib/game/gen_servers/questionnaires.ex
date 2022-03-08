@@ -1,8 +1,8 @@
-defmodule CoreWeb.Questionnaires do
+defmodule Game.GenServers.Questionnaires do
   use GenServer
 
-  @spec put(CoreWeb.Questionnaire.t()) :: :ok
-  @spec generate_game_set(CoreWeb.Room.t()) :: any
+  @spec put(Game.Questionnaire.t()) :: :ok
+  @spec generate_game_set(Game.Room.t()) :: any
 
   # Client
 
@@ -10,11 +10,11 @@ defmodule CoreWeb.Questionnaires do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
-  def put(%CoreWeb.Questionnaire{} = questionnaire) do
+  def put(%Game.Questionnaire{} = questionnaire) do
     GenServer.cast(__MODULE__, {:put, questionnaire})
   end
 
-  def generate_game_set(%CoreWeb.Room{} = room) do
+  def generate_game_set(%Game.Room{} = room) do
     GenServer.call(__MODULE__, {:generate_game_set, room})
   end
 
@@ -34,7 +34,7 @@ defmodule CoreWeb.Questionnaires do
   end
 
   @impl true
-  def handle_cast({:put, %CoreWeb.Questionnaire{} = questionnaire}, state) do
+  def handle_cast({:put, %Game.Questionnaire{} = questionnaire}, state) do
     {:noreply, Map.put(state, String.to_atom(questionnaire.id), questionnaire)}
   end
 end

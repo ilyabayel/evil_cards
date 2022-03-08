@@ -1,5 +1,5 @@
 defmodule CoreWeb.QuestionnaireHelper do
-  @spec get_options_map([CoreWeb.Option.t()], [CoreWeb.User.t()], integer()) :: map
+  @spec get_options_map([Game.Option.t()], [Game.User.t()], integer()) :: map
 
   @doc """
     Generate list of options
@@ -7,18 +7,18 @@ defmodule CoreWeb.QuestionnaireHelper do
     ## Examples
 
       iex> players = [
-      ...>    %CoreWeb.User{name: "test1", id: "test1"},
-      ...>    %CoreWeb.User{name: "test2", id: "test2"},
-      ...>    %CoreWeb.User{name: "test3", id: "test3"},
+      ...>    %Game.User{name: "test1", id: "test1"},
+      ...>    %Game.User{name: "test2", id: "test2"},
+      ...>    %Game.User{name: "test3", id: "test3"},
       ...>  ]
       iex>
       iex> rounds_per_player = 3
       iex>
       iex> options =
       ...>   Enum.to_list(1..18)
-      ...>   |> Enum.map(&(%CoreWeb.Option{id: Integer.to_string(&1), text: Integer.to_string(&1)}))
+      ...>   |> Enum.map(&(%Game.Option{id: Integer.to_string(&1), text: Integer.to_string(&1)}))
       iex>
-      iex> CoreWeb.Room.get_options_map(options, players, rounds_per_player)
+      iex> Game.Room.get_options_map(options, players, rounds_per_player)
       %{"test1" => Enum.slice(options, 0, 6), "test2" => Enum.slice(options, 6, 6), "test3" => Enum.slice(options, 12, 6)}
   """
   def get_options_map(options, players, rounds_per_player) do
