@@ -1,4 +1,4 @@
-defmodule Game.GenServers.RoomCodes do
+defmodule Game.Services.RoomCodes do
   use GenServer
 
   # Client

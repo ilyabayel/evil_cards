@@ -11,11 +11,11 @@ defmodule Core.Application do
       {Phoenix.PubSub, name: Core.PubSub},
       {Task.Supervisor, name: Core.TaskSupervisor},
       CoreWeb.Endpoint,
-      Game.GenServers.RoomCodes,
+      Game.Services.RoomCodes,
       Game.SessionRegistry,
-      Game.GenServers.Questionnaires,
+      Game.Services.Questionnaires,
       Game.RoomSupervisor,
-      Game.GenServers.Counter,
+      Game.Services.Counter,
     ]
 
 

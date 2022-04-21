@@ -1,6 +1,6 @@
 defmodule CoreWeb.RoomChannel do
   use CoreWeb, :channel
-  alias Game.GenServers.Session
+  alias Game.Services.Session
 
   @impl Phoenix.Channel
   def join("room:" <> room_id, %{"userName" => user_name}, socket) do

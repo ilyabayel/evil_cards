@@ -1,4 +1,4 @@
-defmodule Game.GenServers.Session do
+defmodule Game.Services.Session do
   use GenServer
   alias Game.Room
   alias Game.SessionRegistry

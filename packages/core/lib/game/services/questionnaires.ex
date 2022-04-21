@@ -1,4 +1,4 @@
-defmodule Game.GenServers.Questionnaires do
+defmodule Game.Services.Questionnaires do
   use GenServer
 
   @spec put(Game.Questionnaire.t()) :: :ok

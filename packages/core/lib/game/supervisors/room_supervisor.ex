@@ -3,7 +3,7 @@ defmodule Game.RoomSupervisor do
   This supervisor is responsible game child processes.
   """
   use DynamicSupervisor
-  alias Game.GenServers.Session
+  alias Game.Services.Session
 
   def start_link(_arg) do
     DynamicSupervisor.start_link(__MODULE__, nil, name: __MODULE__)
