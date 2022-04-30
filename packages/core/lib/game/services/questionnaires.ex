@@ -1,4 +1,7 @@
 defmodule Game.Services.Questionnaires do
+  @moduledoc """
+    In-memory cache for questionnaires
+  """
   use GenServer
 
   @spec put(Game.Questionnaire.t()) :: :ok

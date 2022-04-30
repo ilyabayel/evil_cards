@@ -1,4 +1,7 @@
 defmodule Game.Services.RoomCodes do
+  @moduledoc """
+  Service that allows to find roomId by room.code
+  """
   use GenServer
 
   # Client

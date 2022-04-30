@@ -1,6 +1,6 @@
-defmodule Game.RoomSupervisor do
+defmodule Game.SessionSupervisor do
   @moduledoc """
-  This supervisor is responsible game child processes.
+  This supervisor is responsible for Game Sessions.
   """
   use DynamicSupervisor
   alias Game.Services.Session

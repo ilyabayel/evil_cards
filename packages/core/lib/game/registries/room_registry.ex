@@ -1,4 +1,8 @@
 defmodule Game.SessionRegistry do
+  @moduledoc """
+  Registry for Game Sessions.
+  """
+
   def start_link do
     Registry.start_link(keys: :unique, name: __MODULE__)
   end

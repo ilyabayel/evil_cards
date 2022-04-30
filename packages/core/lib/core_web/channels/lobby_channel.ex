@@ -18,11 +18,10 @@ defmodule CoreWeb.LobbyChannel do
       rounds_per_player: roomInfo["rounds_per_player"],
       round: %Game.Round{},
       questions: [],
-      code: Game.Services.Counter.value()
+      code: Game.Services.Counter.generate()
     }
 
-    :ok = Game.Services.Counter.increment()
-    _ = Game.RoomSupervisor.start_child(room)
+    _ = Game.SessionSupervisor.start_child(room)
     _ = Game.Services.RoomCodes.put(room.code, room.id)
 
     {:reply, {:ok, room.id}, socket}
