@@ -1,6 +1,4 @@
 defmodule CoreWeb.QuestionnaireHelper do
-  @spec get_options_map([Game.Option.t()], [Game.User.t()], integer()) :: map
-
   @doc """
     Generate list of options
 
@@ -21,6 +19,7 @@ defmodule CoreWeb.QuestionnaireHelper do
       iex> Game.Room.get_options_map(options, players, rounds_per_player)
       %{"test1" => Enum.slice(options, 0, 6), "test2" => Enum.slice(options, 6, 6), "test3" => Enum.slice(options, 12, 6)}
   """
+  @spec get_options_map([Game.Option.t()], [Game.User.t()], integer()) :: map()
   def get_options_map(options, players, rounds_per_player) do
     options_length = length(options)
     required = (length(players) + 3) * rounds_per_player

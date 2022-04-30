@@ -1,6 +1,6 @@
 @module external styles: {..} = "./OptionCard.module.css"
+open ClassName
 
-let cond = ClassName.cond
 let styles = styles["default"]
 
 type evilOption = {

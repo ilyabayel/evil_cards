@@ -37,7 +37,7 @@ defmodule CoreWeb.RoomChannel do
   @impl Phoenix.Channel
   def handle_in("start_game", _payload, socket) do
     "room:" <> room_id = socket.topic
-    Session.start_game(room_id)
+    :ok = Session.start_game(room_id)
     room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)

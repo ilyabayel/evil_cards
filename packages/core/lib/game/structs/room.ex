@@ -7,7 +7,7 @@ defmodule Game.Room do
             rounds_per_player: 2,
             round: %Game.Round{},
             questions: [],
-            options: [],
+            options: %{},
             status: Game.Status.play(),
             code: 0,
             leaderboard: %{}
@@ -19,31 +19,31 @@ defmodule Game.Room do
           id: String.t(),
           host: Game.User.t(),
           players: [Game.User.t()],
-          round_duration: Integer,
-          rounds_per_player: Integer,
+          round_duration: integer(),
+          rounds_per_player: integer(),
           round: Game.Round.t(),
           questions: [Game.Question.t()],
-          options: map,
+          options: map(),
           status: Game.Status.t(),
-          leaderboard: %{String.t() => Integer},
-          code: integer
+          leaderboard: %{String.t() => integer()},
+          code: integer()
         }
 
-  @spec add_player(Game.Room.t(), Game.User.t()) :: Game.Room.t()
-  @spec remove_player(Game.Room.t(), String.t()) :: Game.Room.t()
-  @spec set_questions(Game.Room.t(), [Game.Question.t()]) :: Game.Room.t()
-  @spec set_options(Game.Room.t(), [Game.Option.t()]) :: Game.Room.t()
-  @spec add_answer(Game.Room.t(), Game.Answer.t()) :: Game.Room.t()
-  @spec remove_answer(Game.Room.t(), String.t()) :: Game.Room.t()
-  @spec start_game(Game.Room.t(), Game.Questionnaire.t()) :: Game.Room.t()
-  @spec finish_game(Game.Room.t()) :: Game.Room.t()
-  @spec start_round(Game.Room.t()) :: Game.Room.t()
-  @spec finish_round(Game.Room.t()) :: Game.Room.t()
-  @spec start_stage(Game.Room.t()) :: Game.Room.t()
-  @spec finish_stage(Game.Room.t()) :: Game.Room.t()
-  @spec set_winner(Game.Room.t(), Game.User.t()) :: Game.Room.t()
-  @spec init_leaderboard(Game.Room.t()) :: Game.Room.t()
-  @spec add_score_to_winner(Game.Room.t(), Game.User.t()) :: Game.Room.t()
+  @spec add_player(t(), Game.User.t()) :: t()
+  @spec remove_player(t(), String.t()) :: t()
+  @spec set_questions(t(), [Game.Question.t()]) :: t()
+  @spec set_options(t(), list(Game.Option.t())) :: t()
+  @spec add_answer(t(), Game.Answer.t()) :: t()
+  @spec remove_answer(t(), String.t()) :: t()
+  @spec start_game(t(), Game.Questionnaire.t()) :: t()
+  @spec finish_game(t()) :: t()
+  @spec start_round(t()) :: t()
+  @spec finish_round(t()) :: t()
+  @spec start_stage(t()) :: t()
+  @spec finish_stage(t()) :: t()
+  @spec set_winner(t(), Game.User.t()) :: t()
+  @spec init_leaderboard(t()) :: t()
+  @spec add_score_to_winner(t(), Game.User.t()) :: t()
 
   @doc """
     Add player to room
@@ -120,11 +120,12 @@ defmodule Game.Room do
 
   """
   def set_options(%Game.Room{} = room, options) do
-    options_map = CoreWeb.QuestionnaireHelper.get_options_map(
-      Enum.shuffle(options),
-      room.players,
-      room.rounds_per_player
-    )
+    options_map =
+      CoreWeb.QuestionnaireHelper.get_options_map(
+        Enum.shuffle(options),
+        room.players,
+        room.rounds_per_player
+      )
 
     Map.put(room, :options, options_map)
   end
@@ -332,7 +333,8 @@ defmodule Game.Room do
 
     Enum.at(
       room.players,
-      get_next_leader_idx(count, currentLeaderIdx)
+      get_next_leader_idx(count, currentLeaderIdx),
+      %Game.User{}
     )
   end
 

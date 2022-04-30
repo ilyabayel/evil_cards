@@ -12,14 +12,14 @@ type question = {
   text: string,
 }
 
-type option = {
+type answerOption = {
   id: string,
   text: string,
 }
 
 type answer = {
   question: question,
-  option: option,
+  option: answerOption,
   player: user,
 }
 
@@ -37,7 +37,7 @@ type questionnaire = {
   name: string,
   author: string,
   questions: array<question>,
-  options: array<option>,
+  options: array<answerOption>,
 }
 
 type leaderboard = Js.Dict.t<int>

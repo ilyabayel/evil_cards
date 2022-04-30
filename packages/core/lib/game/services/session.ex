@@ -3,6 +3,21 @@ defmodule Game.Services.Session do
   alias Game.Room
   alias Game.SessionRegistry
 
+  # Api Specs
+  @spec start_link(Room.t()) :: :ignore | {:error, any} | {:ok, pid}
+  @spec get(binary) :: Room.t()
+  @spec join(binary(), Game.User.t()) :: :ok
+  @spec leave(binary(), binary()) :: :ok
+  @spec start_game(binary()) :: :ok
+  @spec finish_game(binary()) :: :ok
+  @spec start_round(binary()) :: :ok
+  @spec finish_round(binary()) :: :ok
+  @spec start_stage(binary()) :: :ok
+  @spec finish_stage(binary()) :: :ok
+  @spec add_answer(binary(), Game.Option.t(), Game.User.t()) :: :ok
+  @spec remove_answer(binary(), binary()) :: :ok
+  @spec set_winner(binary(), binary()) :: :ok
+
   # Client
   def start_link(%Room{} = room) do
     GenServer.start_link(__MODULE__, room, name: SessionRegistry.via(room.id))
@@ -117,6 +132,7 @@ defmodule Game.Services.Session do
       option: option,
       player: player
     }
+
     {:noreply, Room.add_answer(room, answer)}
   end
 
