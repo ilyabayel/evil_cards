@@ -223,6 +223,32 @@ defmodule Game.Room do
     Map.put(room, :round, round)
   end
 
+  @doc """
+    Start game
+
+    ## Examples
+
+      iex> host = %Game.User{id: "1", name: "host"}
+      iex> player = %Game.User{id: "2", name: "player"}
+      iex> room = %Game.Room{host: host, players: [host, player]}
+      iex> questionnaire = %Game.Questionnaire{
+      ...>    questions: [
+      ...>      %Game.Question{id: "1"},
+      ...>      %Game.Question{id: "2"},
+      ...>      %Game.Question{id: "3"},
+      ...>      %Game.Question{id: "4"},
+      ...>    ],
+      ...>    options: [
+      ...>      %Game.Option{id: "1"},
+      ...>      %Game.Option{id: "2"},
+      ...>      %Game.Option{id: "3"},
+      ...>      %Game.Option{id: "4"},
+      ...>    ]
+      ...> }
+      iex> room = Game.Room.start_game(room, questionnaire)
+      iex> room.round.current_stage
+      "play"
+  """
   def start_game(%Game.Room{} = room, %Game.Questionnaire{} = questionnaire) do
     room
     |> Game.Room.set_questions(Enum.shuffle(questionnaire.questions))
@@ -338,6 +364,6 @@ defmodule Game.Room do
     )
   end
 
-  defp get_next_leader_idx(total, currentIdx) when currentIdx < total, do: currentIdx + 1
+  defp get_next_leader_idx(total, currentIdx) when currentIdx + 1 < total, do: currentIdx + 1
   defp get_next_leader_idx(_, _), do: 0
 end

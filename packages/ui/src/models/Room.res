@@ -9,6 +9,7 @@ type roomStatus = [#play | #finished]
 
 type question = {
   id: string,
+  title: string,
   text: string,
 }
 
@@ -73,6 +74,7 @@ let empty = {
       winner: {
         question: {
           id: "",
+          title: "",
           text: "",
         },
         option: {
@@ -86,6 +88,7 @@ let empty = {
       },
       question: {
         id: "",
+        title: "",
         text: "",
       },
       answers: [],
@@ -149,6 +152,7 @@ let testRoom = {
       question: {
         id: "",
         text: "",
+        title: "",
       },
       option: {
         id: "",
@@ -162,6 +166,7 @@ let testRoom = {
     question: {
       id: "q1",
       text: "Question one {_} end",
+      title: "Question #1"
     },
     answers: [],
     current_stage: #wait,

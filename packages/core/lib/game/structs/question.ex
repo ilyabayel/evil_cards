@@ -1,6 +1,7 @@
 defmodule Game.Question do
   @derive Jason.Encoder
   defstruct id: "",
+            title: "",
             text: ""
 
   @type t :: %__MODULE__{
