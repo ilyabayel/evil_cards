@@ -21,23 +21,23 @@ let startGame = (channel) => {
 }
 
 let finishGame = (channel) => {
-  Phoenix.Channel.push(channel, ~event="finish_game", ())
+  Phoenix.Channel.push(channel, ~event="finish_game", ~payload=None, ())
 }
 
 let startRound = (channel) => {
-  Phoenix.Channel.push(channel, ~event="start_round", ())
+  Phoenix.Channel.push(channel, ~event="start_round", ~payload=None, ())
 }
 
 let finishRound = (channel) => {
-  Phoenix.Channel.push(channel, ~event="finish_round", ())
+  Phoenix.Channel.push(channel, ~event="finish_round", ~payload=None, ())
 }
 
 let startStage = (channel) => {
-  Phoenix.Channel.push(channel, ~event="start_stage", ())
+  Phoenix.Channel.push(channel, ~event="start_stage", ~payload=None, ())
 }
 
 let finishStage = (channel) => {
-  Phoenix.Channel.push(channel, ~event="finish_stage", ())
+  Phoenix.Channel.push(channel, ~event="finish_stage", ~payload=None, ())
 }
 
 let addAnswer = (channel, ~id: string, ~text: string) => {
