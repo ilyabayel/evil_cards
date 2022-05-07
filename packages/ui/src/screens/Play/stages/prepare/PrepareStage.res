@@ -9,7 +9,7 @@ let getScore = (leaderboard, id) => {
 }
 
 let handleClick = _ => {
-  let _ = RoomApi.startGame(RoomContext.roomChan.contents)
+  let _ = RoomApi.startStage(RoomContext.roomChan.contents)
 }
 
 @react.component
@@ -23,18 +23,11 @@ let make = () => {
     </div>
     <div className={styles["connected-users"]}>
       <h3> {React.string(`Подключились`)} </h3>
-      <div className={styles["user-list"]}>
-        {Js.Array2.sortInPlaceWith(room.players, (p1, p2) => {
-          getScore(room.leaderboard, p2.id) - getScore(room.leaderboard, p1.id)
-        })
-        ->Js.Array2.map(player => {
-          <UserCard
-            key=player.id score={getScore(room.leaderboard, player.id)} userName=player.name
-          />
-        })
-        ->React.array}
-      </div>
+      <PlayerList players=room.players leaderboard=room.leaderboard />
     </div>
-    <Button label=`Начать` onClick={handleClick} />
+    {switch room.round.leader.id == user.id {
+    | true => <Button label=`Начать` onClick={handleClick} />
+    | false => <> </>
+    }}
   </div>
 }

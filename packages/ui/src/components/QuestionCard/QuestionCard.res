@@ -8,7 +8,7 @@ type bodyPart =
   | Option({id: string, text: string})
 
 @react.component
-let make = (~heading, ~body, ~roundLeader, ~selectedOption, ~onSelect) => {
+let make = (~title, ~body, ~roundLeader, ~selectedOption, ~onSelect) => {
   let isSelectable = Js.String2.length(selectedOption) > 0
 
   let optionPartClassName =
@@ -20,7 +20,7 @@ let make = (~heading, ~body, ~roundLeader, ~selectedOption, ~onSelect) => {
   }
 
   <div className={cn["question-card"]}>
-    <h6> {React.string(heading)} </h6>
+    <h6> {React.string(title)} </h6>
     <br />
     <p className={cn["question-text-box"]}>
       {Js.Array2.map(body, part => {

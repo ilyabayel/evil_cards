@@ -1,4 +1,4 @@
-.user-card {
+.player-card {
     display: grid;
     grid-template-columns: 6rem auto;
     height: 6rem;
