@@ -12,7 +12,7 @@ let make = (~body: array<bodyPart>, ~heading="") => {
     <br />
     <p className={cn["result-text-box"]}>
       {
-        Js.Array2.map(body, part => {
+        Array.mapU(body, (. part) => {
         switch part {
         | Statement(s) => <span className=cn["result-text"] key=s> {React.string(s)} </span>
         | Option({id, text}) => <span className=cn["result-option-part"] key=id> {React.string(text)} </span>

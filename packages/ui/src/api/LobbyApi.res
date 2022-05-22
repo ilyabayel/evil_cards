@@ -31,11 +31,7 @@ let getRoomByCode = (~code: string, ~onRecieve) => {
     ~timeout=1000,
     (),
   )
-  ->Phoenix.Push.receive(~status="ok", ~callback=(s: string) => {
-    Js.log("state")
-    Js.log(s)
-    onRecieve(s)
-  })
+  ->Phoenix.Push.receive(~status="ok", ~callback=(s: string) => onRecieve(s))
   ->Phoenix.Push.receive(~status="error", ~callback=s => Js.log(s))
   ->Phoenix.Push.receive(~status="timeout", ~callback=s => Js.log(s))
 }

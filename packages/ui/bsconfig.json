@@ -20,6 +20,7 @@
     "warnings": {
       "error" : "+101"
     },
-    "reason": { "react-jsx": 3 }
+    "reason": { "react-jsx": 3 },
+    "bsc-flags": ["-open Belt"]
   }
   

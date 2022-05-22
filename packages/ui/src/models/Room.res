@@ -41,7 +41,7 @@ type questionnaire = {
   options: array<answerOption>,
 }
 
-type leaderboard = Js.Dict.t<int>
+type leaderboard = Map.String.t<int>
 
 type t = {
   id: string,
@@ -95,7 +95,7 @@ let empty = {
       current_stage: #wait,
     },
     questions: [],
-    leaderboard: Js.Dict.empty(),
+    leaderboard: Map.String.empty,
     code: 0,
     status: #play,
   }
@@ -172,7 +172,7 @@ let testRoom = {
     current_stage: #wait,
   },
   questions: [],
-  leaderboard: Js.Dict.fromArray([
+  leaderboard: Map.String.fromArray([
     ("1", 1),
     ("2", 1),
     ("3", 1),

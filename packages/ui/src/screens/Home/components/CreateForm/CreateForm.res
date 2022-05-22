@@ -54,14 +54,14 @@ let make = (~onChange: (createForm) => unit, ~value: createForm, ~onSubmit) => {
       <div className={styles["round-settings"]}>
         <Input
           type_="number"
-          value={Js.Int.toString(value.round_duration)}
+          value={Int.toString(value.round_duration)}
           onChange={onRoundDurationChange}
           name="Round Duration"
           placeholder=`Длительность раунда (60 сек)`
         />
         <Input
           type_="number"
-          value={Js.Int.toString(value.rounds_per_player)}
+          value={Int.toString(value.rounds_per_player)}
           onChange={onRoundsPerPlayerChange}
           name="Rounds per Player"
           placeholder=`Раундов на игрока (3)`

@@ -23,7 +23,7 @@ let make = (~title, ~body, ~roundLeader, ~selectedOption, ~onSelect) => {
     <h6> {React.string(title)} </h6>
     <br />
     <p className={cn["question-text-box"]}>
-      {Js.Array2.map(body, part => {
+      {Array.map(body, part => {
         switch part {
         | Statement(s) => <span className={cn["question-text"]}> {React.string(s)} </span>
         | Option({id, text}) =>

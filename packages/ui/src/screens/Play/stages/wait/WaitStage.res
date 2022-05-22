@@ -2,7 +2,7 @@
 let styles = styles["default"]
 
 let getScore = (leaderboard, id) => {
-  switch Js.Dict.get(leaderboard, id) {
+  switch Map.String.get(leaderboard, id) {
   | Some(score) => score
   | None => 0
   }
@@ -24,7 +24,7 @@ let make = () => {
   <div className={styles["wait-stage"]}>
     <div className={styles["room-code"]}>
       <h2> {React.string(`Код комнаты`)} </h2>
-      <h1> {React.string(Js.Int.toString(room.code))} </h1>
+      <h1> {React.string(Int.toString(room.code))} </h1>
     </div>
     <div className={styles["connected-users"]}>
       <h3> {React.string(`Подключились`)} </h3>

@@ -2,7 +2,7 @@
 let styles = styles["default"]
 
 let getScore = (leaderboard, id) => {
-  switch Js.Dict.get(leaderboard, id) {
+  switch Map.String.get(leaderboard, id) {
   | Some(score) => score
   | None => 0
   }
