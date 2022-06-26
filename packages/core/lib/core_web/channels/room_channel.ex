@@ -39,6 +39,7 @@ defmodule CoreWeb.RoomChannel do
     "room:" <> room_id = socket.topic
     :ok = Session.start_game(room_id)
     room = Session.get(room_id)
+    true = Game.Services.RoomCodes.delete(room.code)
 
     broadcast!(socket, "room_update", room)
     {:reply, :ok, socket}

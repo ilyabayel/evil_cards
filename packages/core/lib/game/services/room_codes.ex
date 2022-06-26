@@ -4,34 +4,35 @@ defmodule Game.Services.RoomCodes do
   """
   use GenServer
 
-  # Client
+  # Server
   def start_link(_) do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  end
+
+  @impl GenServer
+  def init(_) do
+    :ets.new(__MODULE__, [:set, :public, :named_table])
+
+    {:ok, nil}
+  end
+
+  @spec insert(binary(), binary()) :: boolean()
+  @spec delete(binary()) :: boolean()
+  @spec get_room_id_by_code(binary()) :: binary() | nil
+
+  # Client
+  def insert(code, roomId) do
+    :ets.insert(__MODULE__, {code, roomId})
+  end
+
+  def delete(code) do
+    :ets.delete(__MODULE__, code)
   end
 
   def get_room_id_by_code(code) do
-    GenServer.call(__MODULE__, {:get_room_id_by_code, code})
-  end
-
-  def put(code, roomId) do
-    GenServer.cast(__MODULE__, {:put, code, roomId})
-  end
-
-  # Server
-  @impl GenServer
-  def init(_state) do
-    {:ok, %{}}
-  end
-
-  @impl GenServer
-  def handle_call({:get_room_id_by_code, code}, _from, state) do
-    room_id = Map.get(state, code, nil)
-
-    {:reply, room_id, state}
-  end
-
-  @impl GenServer
-  def handle_cast({:put, code, room_id}, state) do
-    {:noreply, Map.put(state, code, room_id)}
+    case :ets.lookup(__MODULE__, code) do
+      [{^code, room_id}] -> room_id
+      [] -> nil
+    end
   end
 end

@@ -22,7 +22,7 @@ defmodule CoreWeb.LobbyChannel do
     }
 
     _ = Game.SessionSupervisor.start_child(room)
-    _ = Game.Services.RoomCodes.put(room.code, room.id)
+    true = Game.Services.RoomCodes.insert(room.code, room.id)
 
     {:reply, {:ok, room.id}, socket}
   end
