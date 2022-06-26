@@ -3,5 +3,5 @@
     "emmet.includeLanguages": {
         "rescript": "javascriptreact"
     },
-    "elixirLS.projectDir": "packages/core"
+    "elixirLS.projectDir": "./packages/core"
 }
