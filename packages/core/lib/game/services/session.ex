@@ -14,7 +14,7 @@ defmodule Game.Services.Session do
   @spec finish_round(binary()) :: :ok
   @spec start_stage(binary()) :: :ok
   @spec finish_stage(binary()) :: :ok
-  @spec add_answer(binary(), Game.Option.t(), Game.User.t()) :: :ok
+  @spec add_answer(binary(), list(Game.Option.t()), Game.User.t()) :: :ok
   @spec remove_answer(binary(), binary()) :: :ok
   @spec set_winner(binary(), binary()) :: :ok
 
@@ -59,8 +59,8 @@ defmodule Game.Services.Session do
     GenServer.cast(SessionRegistry.via(room_id), :finish_stage)
   end
 
-  def add_answer(room_id, option, player) do
-    GenServer.cast(SessionRegistry.via(room_id), {:add_answer, option, player})
+  def add_answer(room_id, options, player) do
+    GenServer.cast(SessionRegistry.via(room_id), {:add_answer, options, player})
   end
 
   def remove_answer(room_id, player_id) do
@@ -126,10 +126,10 @@ defmodule Game.Services.Session do
   end
 
   @impl GenServer
-  def handle_cast({:add_answer, option, player}, room) do
+  def handle_cast({:add_answer, options, player}, room) do
     answer = %Game.Answer{
       question: room.round.question,
-      option: option,
+      options: options,
       player: player
     }
 

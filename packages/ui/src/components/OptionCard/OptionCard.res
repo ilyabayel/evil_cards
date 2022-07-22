@@ -3,13 +3,8 @@ open ClassName
 
 let styles = styles["default"]
 
-type evilOption = {
-  id: string,
-  text: string,
-}
-
 @react.component
-let make = (~onClick, ~option, ~isSelected) => {
+let make = (~onClick, ~option: Room.answerOption, ~isSelected) => {
   let handleClick = e => {
     ReactEvent.Mouse.preventDefault(e)
     onClick(option)

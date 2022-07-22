@@ -41,7 +41,7 @@ type questionnaire = {
   options: array<answerOption>,
 }
 
-type leaderboard = Map.String.t<int>
+type leaderboard = Js.Dict.t<int>
 
 type t = {
   id: string,
@@ -52,53 +52,55 @@ type t = {
   round: round,
   questions: array<question>,
   leaderboard: leaderboard,
+  options: Js.Dict.t<array<answerOption>>,
   code: int,
   status: roomStatus,
 }
 
 let empty = {
+  id: "",
+  host: {
     id: "",
-    host: {
+    name: "",
+  },
+  round_duration: 0,
+  rounds_per_player: 0,
+  players: [],
+  round: {
+    number: 0,
+    leader: {
       id: "",
       name: "",
     },
-    round_duration: 0,
-    rounds_per_player: 0,
-    players: [],
-    round: {
-      number: 0,
-      leader: {
-        id: "",
-        name: "",
-      },
-      winner: {
-        question: {
-          id: "",
-          title: "",
-          text: "",
-        },
-        option: {
-          id: "",
-          text: "",
-        },
-        player: {
-          id: "",
-          name: "",
-        },
-      },
+    winner: {
       question: {
         id: "",
         title: "",
         text: "",
       },
-      answers: [],
-      current_stage: #wait,
+      option: {
+        id: "",
+        text: "",
+      },
+      player: {
+        id: "",
+        name: "",
+      },
     },
-    questions: [],
-    leaderboard: Map.String.empty,
-    code: 0,
-    status: #play,
-  }
+    question: {
+      id: "",
+      title: "",
+      text: "",
+    },
+    answers: [],
+    current_stage: #wait,
+  },
+  questions: [],
+  leaderboard: Js.Dict.empty(),
+  options: Js.Dict.empty(),
+  code: 0,
+  status: #play,
+}
 
 let testRoom = {
   id: "room",
@@ -166,13 +168,13 @@ let testRoom = {
     question: {
       id: "q1",
       text: "Question one {_} end",
-      title: "Question #1"
+      title: "Question #1",
     },
     answers: [],
     current_stage: #wait,
   },
   questions: [],
-  leaderboard: Map.String.fromArray([
+  leaderboard: Js.Dict.fromArray([
     ("1", 1),
     ("2", 1),
     ("3", 1),
@@ -181,6 +183,16 @@ let testRoom = {
     ("6", 0),
     ("7", 1),
     ("8", 3),
+  ]),
+  options: Js.Dict.fromArray([
+    ("1", []),
+    ("2", []),
+    ("3", []),
+    ("4", []),
+    ("5", []),
+    ("6", []),
+    ("7", []),
+    ("8", []),
   ]),
   code: 1337,
   status: #play,

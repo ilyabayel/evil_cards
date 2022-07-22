@@ -40,11 +40,11 @@ let finishStage = (channel) => {
   Phoenix.Channel.push(channel, ~event="finish_stage", ~payload=None, ())
 }
 
-let addAnswer = (channel, ~id: string, ~text: string) => {
+let addAnswer = (channel, options) => {
   Phoenix.Channel.push(
     channel,
     ~event="add_answer",
-    ~payload={"id": id, "text": text},
+    ~payload={"options": options},
     (),
   )
 }

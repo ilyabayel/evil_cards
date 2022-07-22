@@ -1,12 +1,12 @@
 defmodule Game.Answer do
   @derive Jason.Encoder
   defstruct question: %Game.Question{},
-            option: %Game.Option{},
+            options: [],
             player: %Game.User{}
 
   @type t :: %__MODULE__{
-    question: Game.Question.t(),
-    option: Game.Option.t(),
-    player: Game.User.t()
-  }
+          question: Game.Question.t(),
+          options: list(Game.Option.t()),
+          player: Game.User.t()
+        }
 end

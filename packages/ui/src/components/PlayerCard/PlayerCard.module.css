@@ -5,6 +5,15 @@
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     text-align: start;
+    position: relative;
+}
+
+.player-card.highlighted {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.player-card.is-leader {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .avatar-box {
@@ -24,10 +33,31 @@
     display: grid;
     place-items: center;
     object-fit: cover;
+    position: relative;
+}
+
+.player-card.is-leader .avatar::before {
+    content: '';
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    top: -0.35rem;
+    left: -0.25rem;
+    background-image: url('/assets/crown.svg');
+    background-size: 100%;
 }
 
 .info-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-right: 8px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.info-box>* {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }

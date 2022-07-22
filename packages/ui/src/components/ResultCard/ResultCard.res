@@ -1,5 +1,5 @@
 @module external styles: {..} = "./ResultCard.module.css"
-let cn = styles["default"]
+let styles = styles["default"]
 
 type bodyPart =
   | Statement(string)
@@ -7,15 +7,15 @@ type bodyPart =
 
 @react.component
 let make = (~body: array<bodyPart>, ~heading="") => {
-  <div className={cn["result-card"]}>
+  <div className={styles["result-card"]}>
     <h6> {React.string(heading)} </h6>
     <br />
-    <p className={cn["result-text-box"]}>
+    <p className={styles["result-text-box"]}>
       {
         Array.mapU(body, (. part) => {
         switch part {
-        | Statement(s) => <span className=cn["result-text"] key=s> {React.string(s)} </span>
-        | Option({id, text}) => <span className=cn["result-option-part"] key=id> {React.string(text)} </span>
+        | Statement(s) => <span className=styles["result-text"] key=s> {React.string(s)} </span>
+        | Option({id, text}) => <span className=styles["result-option-part"] key=id> {React.string(text)} </span>
         }
       })->React.array}
     </p>

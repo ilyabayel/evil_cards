@@ -1,38 +1,41 @@
 @module external styles: {..} = "./QuestionCard.module.css"
 
-let cn = styles["default"]
+let styles = styles["default"]
 let cond = ClassName.cond
 
 type bodyPart =
   | Statement(string)
-  | Option({id: string, text: string})
+  | Option((int, Room.answerOption))
 
 @react.component
 let make = (~title, ~body, ~roundLeader, ~selectedOption, ~onSelect) => {
   let isSelectable = Js.String2.length(selectedOption) > 0
 
-  let optionPartClassName =
-    cn["option-text"]->cond(cn["selectable"], isSelectable)
+  let optionPartClassName = styles["option-text"]->cond(styles["selectable"], isSelectable)
 
-  let onClick = (e, option) => {
+  let onClick = (e, idx) => {
     ReactEvent.Mouse.preventDefault(e)
-    onSelect(option)
+    onSelect(idx)
   }
 
-  <div className={cn["question-card"]}>
+  <div className={styles["question-card"]}>
     <h6> {React.string(title)} </h6>
     <br />
-    <p className={cn["question-text-box"]}>
+    <p className={styles["question-text-box"]}>
       {Array.map(body, part => {
         switch part {
-        | Statement(s) => <span className={cn["question-text"]}> {React.string(s)} </span>
-        | Option({id, text}) =>
-          <button className=optionPartClassName onClick={(e) => onClick(e, Option({id, text}))} key=id disabled={!isSelectable}>
+        | Statement(s) => <span key=s className={styles["question-text"]}> {React.string(s)} </span>
+        | Option((idx, {id, text})) =>
+          <button
+            className=optionPartClassName
+            onClick={e => onClick(e, idx)}
+            key=id
+            disabled={!isSelectable}>
             {React.string(text)}
           </button>
         }
       })->React.array}
     </p>
-    <span className={cn["round-leader"]}> {React.string(roundLeader)} </span>
+    <span className={styles["round-leader"]}> {React.string(roundLeader)} </span>
   </div>
 }
