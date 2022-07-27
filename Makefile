@@ -1,4 +1,4 @@
-.PHONY: install ui api
+.PHONY: install ui core
 SHELL := /bin/bash
 CONCURRENTLY := ./packages/ui/node_modules/.bin/concurrently
 MIX := cd packages/core; mix
@@ -10,17 +10,12 @@ install:
 	$(MIX) ecto.create
 	$(MIX) test
 
-dev:
-	$(CONCURRENTLY) \
-		-n api,ui \
-		"$(MIX) phx.server" \
-		"cd packages/ui; yarn dev" \
-		-c "bgGreen.bold,bgCyan.bold"
+dev: ui core
 
 ui:
 	cd packages/ui; yarn dev
 
-api:
+core:
 	$(MIX) phx.server
 
 test:
