@@ -1,6 +1,5 @@
 .PHONY: install ui core
 SHELL := /bin/bash
-CONCURRENTLY := ./packages/ui/node_modules/.bin/concurrently
 MIX := cd packages/core; mix
 
 install:
@@ -10,7 +9,8 @@ install:
 	$(MIX) ecto.create
 	$(MIX) test
 
-dev: ui core
+dev: 
+	make -j 2 ui core
 
 ui:
 	cd packages/ui; yarn dev

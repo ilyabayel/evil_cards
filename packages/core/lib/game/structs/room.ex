@@ -318,6 +318,9 @@ defmodule Game.Room do
     set_stage(room, Game.Stages.get_next_stage(room.round.current_stage))
   end
 
+  @doc """
+  Does nothing for now, but I assume that it will be helpful in future
+  """
   def finish_stage(%Game.Room{} = room) do
     room
   end

@@ -132,6 +132,8 @@ defmodule CoreWeb.RoomChannel do
   def handle_in("set_winner", %{"playerId" => player_id}, socket) do
     "room:" <> room_id = socket.topic
     Session.set_winner(room_id, player_id)
+    Session.finish_stage(room_id)
+    Session.start_stage(room_id)
     room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)

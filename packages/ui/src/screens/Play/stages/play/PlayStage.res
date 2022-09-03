@@ -20,8 +20,8 @@ let sendAnswer = (answer, _) => {
   let _ = RoomApi.addAnswer(RoomContext.roomChan.contents, options)
 }
 
-let finishStage = (_) => {
-  let _ = RoomApi.finishStage(RoomContext.roomChan.contents)
+let nextStage = (_) => {
+  let _ = RoomApi.startStage(RoomContext.roomChan.contents)
 }
 
 module LeaderView = {
@@ -41,7 +41,7 @@ module LeaderView = {
 
     <div className={styles["play-stage"]}>
       <div className={styles["room-code"]}>
-        <h3> {React.string(`Раунд 1`)} </h3>
+        <h3> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h3>
         <QuestionCard
           title={room.round.question.title}
           body={questionBody}
@@ -68,7 +68,7 @@ module LeaderView = {
       </div>
       <Button
         label={`Продолжить`}
-        onClick={finishStage}
+        onClick={nextStage}
         disabled={!isButtonEnabled}
       />
     </div>
@@ -99,7 +99,7 @@ module PlayerView = {
 
     <div className={styles["play-stage"]}>
       <div className={styles["room-code"]}>
-        <h3> {React.string(`Раунд 1`)} </h3>
+        <h3> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h3>
         <QuestionCard
           title={room.round.question.title}
           body={questionBody}

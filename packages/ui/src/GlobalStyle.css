@@ -3,6 +3,7 @@
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     font-size: 10px;
     background-color: var(--color-bg);
+    padding-bottom: env(safe-area-inset-bottom);
     
     /* Global */
     --color-primary: #747474;
@@ -91,4 +92,8 @@ p {
     font-size: 1.6rem;
     font-weight: 400;
     margin: 0;
+}
+
+* {
+    box-sizing: border-box;
 }

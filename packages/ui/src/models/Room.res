@@ -20,7 +20,7 @@ type answerOption = {
 
 type answer = {
   question: question,
-  option: answerOption,
+  options: array<answerOption>,
   player: user,
 }
 
@@ -78,10 +78,7 @@ let empty = {
         title: "",
         text: "",
       },
-      option: {
-        id: "",
-        text: "",
-      },
+      options: [],
       player: {
         id: "",
         name: "",
@@ -156,10 +153,7 @@ let testRoom = {
         text: "",
         title: "",
       },
-      option: {
-        id: "",
-        text: "",
-      },
+      options: [],
       player: {
         id: "",
         name: "",
