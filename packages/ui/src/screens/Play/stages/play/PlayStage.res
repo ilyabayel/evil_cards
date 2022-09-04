@@ -40,7 +40,7 @@ module LeaderView = {
     let isButtonEnabled = allPlayersAnswered
 
     <div className={styles["play-stage"]}>
-      <div className={styles["room-code"]}>
+      <div className={styles["question-wrapper"]}>
         <h3> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h3>
         <QuestionCard
           title={room.round.question.title}
@@ -98,7 +98,7 @@ module PlayerView = {
     )
 
     <div className={styles["play-stage"]}>
-      <div className={styles["room-code"]}>
+      <div className={styles["question-wrapper"]}>
         <h3> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h3>
         <QuestionCard
           title={room.round.question.title}

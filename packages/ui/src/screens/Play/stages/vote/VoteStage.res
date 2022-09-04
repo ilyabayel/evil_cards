@@ -12,8 +12,6 @@ let make = () => {
     ()
   }
 
-  Js.log(room)
-
   <div className={styles["vote-stage"]}>
     <div className={styles["heading"]}>
       <h2> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h2>
