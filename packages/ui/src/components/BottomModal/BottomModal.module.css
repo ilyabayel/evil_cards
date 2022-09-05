@@ -27,7 +27,6 @@
 }
 
 .bottom-modal {
-    --local-max-height: 60vh;
     position: fixed;
     bottom: 0;
     transform: translateY(100%);
@@ -35,7 +34,6 @@
     width: 100%;
     height: min-content;
     min-height: 20vh;
-    max-height: var(--local-max-height);
     padding: 2em 2em 3em 2em;
     background-color: var(--color-bottom-modal-card);
     box-sizing: border-box;

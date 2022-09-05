@@ -12,8 +12,9 @@ let userId = switch Dom.Storage2.getItem(Dom.Storage2.localStorage, "user.id") {
 }
 
 
+
 let instance = Phoenix.Socket.make(
-  "ws://localhost:4000/socket",
+  `ws://${Window.hostname}:4000/socket`,
   Some(
     Phoenix.Socket.options(
       ~params={"userId": userId},

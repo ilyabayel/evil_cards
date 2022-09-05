@@ -20,7 +20,7 @@ let sendAnswer = (answer, _) => {
   let _ = RoomApi.addAnswer(RoomContext.roomChan.contents, options)
 }
 
-let nextStage = (_) => {
+let nextStage = _ => {
   let _ = RoomApi.startStage(RoomContext.roomChan.contents)
 }
 
@@ -66,11 +66,9 @@ module LeaderView = {
           leader={room.round.leader}
         />
       </div>
-      <Button
-        label={`Продолжить`}
-        onClick={nextStage}
-        disabled={!isButtonEnabled}
-      />
+      <div className={styles["button-wrapper"]}>
+        <Button label={`Продолжить`} onClick={nextStage} disabled={!isButtonEnabled} />
+      </div>
     </div>
   }
 }
@@ -117,12 +115,19 @@ module PlayerView = {
       </div>
       {if !didPlayerSendAnswer {
         <>
-          <PlayStageOptionList selectedOption setSelectedOption options={Array.slice(options, ~offset=0, ~len=6)} />
-          <Button
-            label={`Продолжить`}
-            onClick={sendAnswer(questionBody)}
-            disabled={!didPlayerChooseAnswer}
-          />
+          <div className={styles["options-wrapper"]}>
+            <h4> {React.string(`Варианты ответов`)} </h4>
+            <PlayStageOptionList
+              selectedOption setSelectedOption options={Array.slice(options, ~offset=0, ~len=6)}
+            />
+          </div>
+          <div className={styles["button-wrapper"]}>
+            <Button
+              label={`Ответить`}
+              onClick={sendAnswer(questionBody)}
+              disabled={!didPlayerChooseAnswer}
+            />
+          </div>
         </>
       } else {
         <>
@@ -135,7 +140,9 @@ module PlayerView = {
               leader=room.round.leader
             />
           </div>
-          <h4 className={styles["wait-for-answeres"]}> {React.string(`Ожидаем участников...`)} </h4>
+          <h4 className={styles["wait-for-answeres"]}>
+            {React.string(`Ожидаем участников...`)}
+          </h4>
         </>
       }}
     </div>

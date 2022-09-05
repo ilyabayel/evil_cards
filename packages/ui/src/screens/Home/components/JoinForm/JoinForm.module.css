@@ -1,12 +1,13 @@
 .join-form {
-    display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     justify-items: center;
+    align-items: center;
     gap: 2rem;
+    height: 100%;
 }
 
 
 .join-form button {
-    justify-self: center;
     width: 20rem;
 }

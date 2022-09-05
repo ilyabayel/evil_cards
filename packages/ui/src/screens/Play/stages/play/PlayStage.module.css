@@ -1,11 +1,12 @@
 .play-stage {
     display: grid;
-    grid-template-rows: calc(40% - 6rem) 60% 6rem;
+    grid-template-rows: min-content auto;
     height: 100vh;
     width: 100vw;
     padding: 4rem 2rem;
     box-sizing: border-box;
     align-items: end;
+    gap: 3rem;
 }
 
 .question-wrapper {
@@ -28,6 +29,16 @@
     height: 100%;
 }
 
+.options-wrapper {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    height: 100%;
+    padding-bottom: 5rem;
+}
+
 .options {
     display: flex;
     flex-direction: column;
@@ -39,6 +50,23 @@
 }
 
 .wait-for-answeres {
+    position: fixed;
+    bottom: 3rem;
+    left: 0;
+    right: 0;
     width: 100%;
     text-align: center;
+}
+
+.button-wrapper {
+    position: fixed;
+    bottom: 3rem;
+    left: 2rem;
+    right: 2rem;
+    display: grid;
+    place-items: center;
+}
+
+.button-wrapper > button {
+    width: 100%;
 }

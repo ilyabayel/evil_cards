@@ -1,10 +1,11 @@
 .result-stage {
     display: grid;
-    grid-template-rows: calc(50% - 6rem) 50% 6rem;
+    grid-template-rows: min-content auto;
     height: 100vh;
     width: 100vw;
     padding: 4rem 2rem;
     align-items: end;
+    gap: 3rem;
 }
 
 .answer-wrapper {
@@ -16,7 +17,7 @@
     align-self: center;
     height: 100%;
     width: 100%;
-    gap: 3em;
+    gap: 2em;
 }
 
 .players {
@@ -24,8 +25,20 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     height: 100%;
     width: 100%;
     overflow: auto;
+}
+
+.button-wrapper {
+    position: fixed;
+    bottom: 3rem;
+    left: 2rem;
+    right: 2rem;
+    display: grid;
+    place-items: center;
+}
+
+.button-wrapper > button {
+    width: 100%;
 }

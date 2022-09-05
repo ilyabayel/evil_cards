@@ -4,3 +4,4 @@ external addEventListener: (string, Dom.event => string) => unit = "addEventList
 external removeEventListener: (string, Dom.event => string) => unit = "removeEventListener"
 @scope("window") @val
 external openPage: (string) => unit = "open"
+@scope(("window", "location")) @val external hostname: string = "hostname"

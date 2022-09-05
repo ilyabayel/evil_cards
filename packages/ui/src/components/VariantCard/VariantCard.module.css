@@ -19,7 +19,7 @@
 
 .option-text {
     display: inline;
-    word-break: break-all;
+    word-break: normal;
     padding: 0.25rem 0.4rem;
     background-color: rgba(255, 255, 255, 0.9);
     color: black;

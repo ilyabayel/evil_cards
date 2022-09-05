@@ -7,14 +7,23 @@ let make = () => {
   let (user, _setUser) = UserContext.useState()
   let isLeader = room.round.leader.id == user.id
   let (selectedAnswerPlayerId, setSelectedAnswerPlayerId) = React.useState(() => "")
-  let handleNext = (_) => {
+  let handleNext = _ => {
     let _ = RoomApi.setWinner(RoomContext.roomChan.contents, ~playerId=selectedAnswerPlayerId)
-    ()
   }
 
   <div className={styles["vote-stage"]}>
     <div className={styles["heading"]}>
       <h2> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h2>
+      {switch isLeader {
+      | true =>
+        <h4>
+          {React.string(`Выберите понравившийся вариант ответа`)}
+        </h4>
+      | false =>
+        <h4>
+          {React.string(`Подождите, пока лидер определит победителя`)}
+        </h4>
+      }}
     </div>
     <div className={styles["answers"]}>
       {Array.map(room.round.answers, answer => {
@@ -23,17 +32,21 @@ let make = () => {
           key=answer.question.id
           title={answer.question.title}
           isSelected={selectedAnswerPlayerId == answer.player.id}
-          onClick={_ => setSelectedAnswerPlayerId((_) => answer.player.id)}
+          onClick={_ => setSelectedAnswerPlayerId(_ => answer.player.id)}
           disabled={!isLeader}
         />
       })->React.array}
     </div>
-    {if isLeader {
+    {switch isLeader {
+    | true =>
       <div className={styles["button-wrapper"]}>
-        <Button label=`Продолжить` onClick={handleNext} disabled={selectedAnswerPlayerId==""}/>
+        <Button
+          label={`Продолжить`}
+          onClick={handleNext}
+          disabled={selectedAnswerPlayerId == ""}
+        />
       </div>
-    } else {
-      <></>
+    | _ => <> </>
     }}
   </div>
 }

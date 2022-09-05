@@ -2,6 +2,7 @@
     display: grid;
     grid-template-rows: calc(50% - 6rem) 50% 6rem;
     height: 100vh;
+    height: 100dvh;
     width: 100vw;
     padding: 4rem 2rem;
     align-items: end;

@@ -2,7 +2,7 @@
     width: 100%;
     display: grid;
     grid-template-rows: 1fr 1fr auto;
-    gap: 3rem;
+    gap: 2rem;
 }
 
 .create-form button {
