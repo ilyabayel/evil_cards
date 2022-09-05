@@ -1,0 +1,7 @@
+#!/bin/bash
+
+docker run --rm --interactive --tty \
+    --volume "$PWD":/ui \
+    -p 80:5173 \
+    -w /ui \
+    node:16 yarn "$@"
