@@ -104,7 +104,7 @@ defmodule CoreWeb.RoomTest do
     round =
       Map.put(state.room.round, :winner, %Game.Answer{
         question: %Game.Question{},
-        option: %Game.Option{},
+        options: [%Game.Option{}],
         player: %Game.User{
           id: "test",
           name: "test_name"
@@ -187,17 +187,17 @@ defmodule CoreWeb.RoomTest do
       |> Game.Room.start_stage()
       |> Game.Room.add_answer(%Game.Answer{
         question: room.round.question,
-        option: Enum.at(state.questionnaire.options, 0),
+        options: [Enum.at(state.questionnaire.options, 0)],
         player: Enum.at(room.players, 0)
       })
       |> Game.Room.add_answer(%Game.Answer{
         question: room.round.question,
-        option: Enum.at(state.questionnaire.options, 1),
+        options: [Enum.at(state.questionnaire.options, 1)],
         player: Enum.at(room.players, 1)
       })
       |> Game.Room.add_answer(%Game.Answer{
         question: room.round.question,
-        option: Enum.at(state.questionnaire.options, 2),
+        options: [Enum.at(state.questionnaire.options, 2)],
         player: Enum.at(room.players, 2)
       })
       |> Game.Room.finish_stage()

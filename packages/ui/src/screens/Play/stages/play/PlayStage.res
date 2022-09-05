@@ -117,7 +117,7 @@ module PlayerView = {
       </div>
       {if !didPlayerSendAnswer {
         <>
-          <PlayStageOptionList selectedOption setSelectedOption options />
+          <PlayStageOptionList selectedOption setSelectedOption options={Array.slice(options, ~offset=0, ~len=6)} />
           <Button
             label={`Продолжить`}
             onClick={sendAnswer(questionBody)}

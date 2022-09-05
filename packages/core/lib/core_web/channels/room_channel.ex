@@ -112,6 +112,7 @@ defmodule CoreWeb.RoomChannel do
     }
 
     Session.add_answer(room_id, options, player)
+    Session.remove_options(room_id, socket.assigns.user_id, Enum.map(options, fn %{id: id} -> id end))
     room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)

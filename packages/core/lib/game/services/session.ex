@@ -67,6 +67,10 @@ defmodule Game.Services.Session do
     GenServer.cast(SessionRegistry.via(room_id), {:remove_answer, player_id})
   end
 
+  def remove_options(room_id, player_id, option_ids) do
+    GenServer.cast(SessionRegistry.via(room_id), {:remove_options, player_id, option_ids})
+  end
+
   def set_winner(room_id, player_id) do
     GenServer.cast(SessionRegistry.via(room_id), {:set_winner, player_id})
   end
@@ -139,6 +143,14 @@ defmodule Game.Services.Session do
   @impl GenServer
   def handle_cast({:remove_answer, player_id}, room) do
     {:noreply, Room.remove_answer(room, player_id)}
+  end
+
+  @impl GenServer
+  def handle_cast({:remove_options, player_id, option_ids}, room) do
+    IO.inspect(option_ids)
+    updated_room = Room.remove_options(room, player_id, option_ids)
+    IO.inspect(updated_room)
+    {:noreply, updated_room}
   end
 
   @impl GenServer

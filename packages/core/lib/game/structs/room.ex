@@ -35,6 +35,7 @@ defmodule Game.Room do
   @spec set_options(t(), list(Game.Option.t())) :: t()
   @spec add_answer(t(), Game.Answer.t()) :: t()
   @spec remove_answer(t(), String.t()) :: t()
+  @spec remove_options(t(), String.t(), list(String.t())) :: t()
   @spec start_game(t(), Game.Questionnaire.t()) :: t()
   @spec finish_game(t()) :: t()
   @spec start_round(t()) :: t()
@@ -193,6 +194,33 @@ defmodule Game.Room do
   end
 
   @doc """
+      Remove option after giving answer
+
+      ## Examples
+
+        iex> room = %Game.Room{
+        ...>   options: %{
+        ...>     "user" => [%{id: "option_id", text: "text"}, %{id: "option_id_2", text: "text"}]
+        ...>   }
+        ...> }
+        iex> room = Game.Room.remove_options(room, "user", ["option_id"])
+        iex> room.options["user"]
+        [%{id: "option_id_2", text: "text"}]
+  """
+  def remove_options(%Game.Room{} = room, player_id, used_options_ids) do
+    not_used_option? = fn %{id: available_option_id} ->
+      used_options_ids
+      |> Enum.map(fn used_option_id -> available_option_id == used_option_id end)
+      |> Enum.any?
+      |> Kernel.not
+    end
+
+    unused_options = Enum.filter(Map.get(room.options, player_id, []), not_used_option?)
+
+    put_in(room.options[player_id], unused_options)
+  end
+
+  @doc """
       Set winner
 
       ## Examples
@@ -247,7 +275,7 @@ defmodule Game.Room do
       ...> }
       iex> room = Game.Room.start_game(room, questionnaire)
       iex> room.round.current_stage
-      "play"
+      "prepare"
   """
   def start_game(%Game.Room{} = room, %Game.Questionnaire{} = questionnaire) do
     room
