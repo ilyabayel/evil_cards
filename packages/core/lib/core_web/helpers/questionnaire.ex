@@ -22,17 +22,20 @@ defmodule CoreWeb.QuestionnaireHelper do
   @spec get_options_map([Game.Option.t()], [Game.User.t()], integer()) :: map()
   def get_options_map(options, players, rounds_per_player) do
     options_length = length(options)
-    required = (length(players) + 3) * rounds_per_player
+    start_cards = 6
+    cards_to_be_used_by_player = (length(players) - 1) * rounds_per_player
+    required_cards_per_player = start_cards + cards_to_be_used_by_player
+    required_cards = length(players) * required_cards_per_player
 
-    options = expand_options(options, options_length, required)
+    options = expand_options(options, options_length, required_cards)
 
     {map, _} =
       Enum.reduce(
         players,
         {%{}, options},
         &{
-          Map.put(elem(&2, 0), &1.id, Enum.take(elem(&2, 1), rounds_per_player + 3)),
-          Enum.drop(elem(&2, 1), rounds_per_player + 3)
+          Map.put(elem(&2, 0), &1.id, Enum.take(elem(&2, 1), required_cards_per_player)),
+          Enum.drop(elem(&2, 1), required_cards_per_player)
         }
       )
 
