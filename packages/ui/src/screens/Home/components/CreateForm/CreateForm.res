@@ -44,7 +44,7 @@ let make = (~onChange: (createForm) => unit, ~value: createForm, ~onSubmit) => {
         type_="text"
         value={value.name}
         onChange={onNameChange}
-        name="Name"
+        name="createForm.name"
         placeholder=`Введите ваше имя`
       />
     </div>
@@ -56,14 +56,14 @@ let make = (~onChange: (createForm) => unit, ~value: createForm, ~onSubmit) => {
           type_="number"
           value={Int.toString(value.round_duration)}
           onChange={onRoundDurationChange}
-          name="Round Duration"
+          name="createForm.roundDuration"
           placeholder=`Длительность раунда (60 сек)`
         />
         <Input
           type_="number"
           value={Int.toString(value.rounds_per_player)}
           onChange={onRoundsPerPlayerChange}
-          name="Rounds per Player"
+          name="createForm.roundsPerPlayer"
           placeholder=`Раундов на игрока (3)`
         />
       </div>

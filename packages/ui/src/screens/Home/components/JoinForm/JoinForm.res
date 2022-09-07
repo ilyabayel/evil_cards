@@ -32,14 +32,14 @@ let make = (~onChange: (joinForm) => unit, ~value: joinForm, ~onSubmit) => {
       type_="text"
       value={value.name}
       onChange={onNameChange}
-      name="name"
+      name="joinForm.name"
       placeholder=`Ваше имя`
     />
     <Input
       type_="text"
       value={value.room_code}
       onChange={onRoomCodeChange}
-      name="room_code"
+      name="joinForm.roomCode"
       placeholder=`Код комнаты`
     />
     <Button type_="submit" onClick={_ => ()} label=`Присоединиться` /> 
