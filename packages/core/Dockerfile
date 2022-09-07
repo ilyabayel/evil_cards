@@ -10,7 +10,7 @@ WORKDIR /app
 RUN mix local.hex --force
 RUN mix local.rebar --force
 RUN mix deps.get
-RUN mix phx
+RUN mix deps.compile
 
 # Compile the project
 CMD mix phx.server
