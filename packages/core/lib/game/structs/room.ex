@@ -278,8 +278,13 @@ defmodule Game.Room do
       "prepare"
   """
   def start_game(%Game.Room{} = room, %Game.Questionnaire{} = questionnaire) do
+    questions =
+      questionnaire.questions
+      |> Enum.slice(Range.new(0, room.rounds_per_player * length(room.players) - 1))
+      |> Enum.shuffle
+
     room
-    |> Game.Room.set_questions(Enum.shuffle(questionnaire.questions))
+    |> Game.Room.set_questions(questions)
     |> Game.Room.set_options(questionnaire.options)
     |> Game.Room.init_leaderboard()
     |> Game.Room.start_round()
@@ -380,21 +385,10 @@ defmodule Game.Room do
   end
 
   defp get_leader(%Game.Room{} = room) do
-    count = length(room.players)
-
-    currentLeaderIdx =
-      Enum.find_index(
-        room.players,
-        &(&1.id == room.round.leader.id)
-      )
-
     Enum.at(
       room.players,
-      get_next_leader_idx(count, currentLeaderIdx),
+      rem(room.round.number, length(room.players)),
       %Game.User{}
     )
   end
-
-  defp get_next_leader_idx(total, currentIdx) when currentIdx + 1 < total, do: currentIdx + 1
-  defp get_next_leader_idx(_, _), do: 0
 end

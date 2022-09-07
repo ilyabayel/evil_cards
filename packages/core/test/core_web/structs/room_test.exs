@@ -34,20 +34,14 @@ defmodule CoreWeb.RoomTest do
       id: "id",
       name: "name",
       author: "author",
-      questions: [
-        %Game.Question{
-          id: "q1",
-          text: "quest 1"
-        },
-        %Game.Question{
-          id: "q2",
-          text: "quest 2"
-        },
-        %Game.Question{
-          id: "q3",
-          text: "quest 3"
-        }
-      ],
+      questions:
+        Enum.to_list(1..12)
+        |> Enum.map(fn i ->
+          %Game.Question{
+            id: "q#{i}",
+            text: "quest #{i}"
+          }
+        end),
       options: [
         %Game.Option{
           id: "o1",
@@ -82,7 +76,7 @@ defmodule CoreWeb.RoomTest do
   test "should generate right round on start_game", state do
     room = Game.Room.start_game(state.room, state.questionnaire)
 
-    assert length(room.questions) == 2
+    assert length(room.questions) == room.rounds_per_player * length(room.players)
     assert room.round.number == 1
     assert room.round.current_stage == Game.Stages.prepare()
     assert room.round.leader == Enum.at(state.room.players, 0)
@@ -166,12 +160,13 @@ defmodule CoreWeb.RoomTest do
   end
 
   test "game process", state do
-
     # Init room
     room =
       %Game.Room{
         id: "test",
-        host: %Game.User{id: "test1", name: "test1"}
+        host: %Game.User{id: "test1", name: "test1"},
+        round_duration: 60,
+        rounds_per_player: 3
       }
       |> Game.Room.add_player(%Game.User{id: "test1", name: "test1"})
       |> Game.Room.add_player(%Game.User{id: "test2", name: "test2"})
@@ -180,59 +175,85 @@ defmodule CoreWeb.RoomTest do
 
     assert room.round.current_stage == Game.Stages.prepare()
     assert room.round.leader == Enum.at(room.players, 0)
+    assert length(room.questions) == room.rounds_per_player * length(room.players) - 1
 
-    # Start play stage, add answers to question and finish stage
-    room =
+    Range.new(1, room.rounds_per_player * length(room.players))
+    |> Enum.to_list()
+    |> Enum.reduce(room, fn round_number, room ->
+      # Start play stage, add answers to question and finish stage
+      room =
+        room
+        |> Game.Room.start_stage()
+        |> Game.Room.add_answer(%Game.Answer{
+          question: room.round.question,
+          options: [Enum.at(state.questionnaire.options, 0)],
+          player: Enum.at(room.players, 0)
+        })
+        |> Game.Room.add_answer(%Game.Answer{
+          question: room.round.question,
+          options: [Enum.at(state.questionnaire.options, 1)],
+          player: Enum.at(room.players, 1)
+        })
+        |> Game.Room.add_answer(%Game.Answer{
+          question: room.round.question,
+          options: [Enum.at(state.questionnaire.options, 2)],
+          player: Enum.at(room.players, 2)
+        })
+        |> Game.Room.finish_stage()
+
+      assert length(room.round.answers) == 3
+      assert room.round.current_stage == Game.Stages.play()
+
+      winner_id = rem(round_number, length(room.players)) - 1
+
+      # Start vote stage, set winner and finish stage
+      room =
+        room
+        |> Game.Room.start_stage()
+        |> Game.Room.set_winner(Enum.at(room.round.answers, winner_id).player.id)
+        |> Game.Room.finish_stage()
+
+      assert room.round.winner == Enum.at(room.round.answers, winner_id)
+      assert room.round.current_stage == Game.Stages.vote()
+
+      # Start result stage, finish stage, finish round
+      # Check score table
+      room =
+        room
+        |> Game.Room.start_stage()
+        |> Game.Room.finish_stage()
+        |> Game.Room.finish_round()
+
+      assert room.leaderboard[Enum.at(room.round.answers, 0).player.id] ==
+               div(2 + 1 * round_number, 3)
+
+      assert room.leaderboard[Enum.at(room.round.answers, 1).player.id] ==
+               div(1 + 1 * round_number, 3)
+
+      assert room.leaderboard[Enum.at(room.round.answers, 2).player.id] ==
+               div(0 + 1 * round_number, 3)
+
+      # Start round, check that round leader is player #2
+
+      room =
+        room
+        |> Game.Room.start_round()
+
+      case room.status do
+        "play" ->
+          expected_leader = Enum.at(room.players, rem(round_number, length(room.players)))
+          assert room.round.leader == expected_leader
+
+          assert room.round.number == round_number + 1
+
+        "finished" ->
+          expected_leader = Enum.at(room.players, rem(round_number - 1, length(room.players)))
+          assert room.round.leader == expected_leader
+
+          assert room.round.number == round_number
+      end
+
       room
-      |> Game.Room.start_stage()
-      |> Game.Room.add_answer(%Game.Answer{
-        question: room.round.question,
-        options: [Enum.at(state.questionnaire.options, 0)],
-        player: Enum.at(room.players, 0)
-      })
-      |> Game.Room.add_answer(%Game.Answer{
-        question: room.round.question,
-        options: [Enum.at(state.questionnaire.options, 1)],
-        player: Enum.at(room.players, 1)
-      })
-      |> Game.Room.add_answer(%Game.Answer{
-        question: room.round.question,
-        options: [Enum.at(state.questionnaire.options, 2)],
-        player: Enum.at(room.players, 2)
-      })
-      |> Game.Room.finish_stage()
-
-    assert length(room.round.answers) == 3
-    assert room.round.current_stage == Game.Stages.play()
-
-    # Start vote stage, set winner and finish stage
-    room =
-      room
-      |> Game.Room.start_stage()
-      |> Game.Room.set_winner(Enum.at(room.round.answers, 0).player.id)
-      |> Game.Room.finish_stage()
-
-    assert room.round.winner == Enum.at(room.round.answers, 0)
-    assert room.round.current_stage == Game.Stages.vote()
-
-    # Start result stage, finish stage, finish round
-    # Check score table
-    room =
-      room
-      |> Game.Room.start_stage()
-      |> Game.Room.finish_stage()
-      |> Game.Room.finish_round()
-
-    assert room.leaderboard[Enum.at(room.round.answers, 0).player.id] == 1
-    assert room.leaderboard[Enum.at(room.round.answers, 1).player.id] == 0
-    assert room.leaderboard[Enum.at(room.round.answers, 2).player.id] == 0
-
-    # Start round, check that round leader is player #2
-
-    room =
-      room
-      |> Game.Room.start_round()
-
-    assert room.round.leader == Enum.at(room.players, 1)
+    end)
   end
 end

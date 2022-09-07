@@ -147,9 +147,7 @@ defmodule Game.Services.Session do
 
   @impl GenServer
   def handle_cast({:remove_options, player_id, option_ids}, room) do
-    IO.inspect(option_ids)
     updated_room = Room.remove_options(room, player_id, option_ids)
-    IO.inspect(updated_room)
     {:noreply, updated_room}
   end
 
