@@ -28,7 +28,9 @@ defmodule CoreWeb.RoomChannel do
     "room:" <> room_id = socket.topic
     Session.leave(room_id, socket.assigns.user_id)
 
-    broadcast!(socket, "room_update", Session.get(room_id))
+    room = Session.get(room_id)
+
+    broadcast!(socket, "room_update", room)
     {:noreply, socket}
   end
 
@@ -112,7 +114,13 @@ defmodule CoreWeb.RoomChannel do
     }
 
     Session.add_answer(room_id, options, player)
-    Session.remove_options(room_id, socket.assigns.user_id, Enum.map(options, fn %{id: id} -> id end))
+
+    Session.remove_options(
+      room_id,
+      socket.assigns.user_id,
+      Enum.map(options, fn %{id: id} -> id end)
+    )
+
     room = Session.get(room_id)
 
     broadcast!(socket, "room_update", room)

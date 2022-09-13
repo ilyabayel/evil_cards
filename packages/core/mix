@@ -1,0 +1,8 @@
+#!/bin/bash
+
+docker run --rm --interactive --tty \
+    --volume "$PWD":/core \
+    -p 4000:4000 \
+    -p 5000:5000 \
+    -w /core \
+    elixir:1.14 mix "$@"
