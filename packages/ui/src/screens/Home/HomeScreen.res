@@ -45,6 +45,12 @@ let make = () => {
     )
   }
 
+  let handleJoinForm = _ => {
+    let _ = LobbyApi.getRoomByCode(~code=joinFormValue.room_code, ~onRecieve=id => {
+      connect(id)
+    })
+  }
+
   <Frame>
     <div className={styles["home-screen"]}>
       <div className={styles["title"]}>
@@ -52,8 +58,8 @@ let make = () => {
         <h3> {React.string(`Хорошая игра для плохих людей`)} </h3>
       </div>
       <div className={styles["buttons"]}>
-        <Button label=`Создать игру` onClick={showCreateForm} />
-        <Button label=`Подключится к игре` onClick={showJoinForm} />
+        <Button label={`Создать игру`} onClick={showCreateForm} />
+        <Button label={`Подключится к игре`} onClick={showJoinForm} />
       </div>
       <BottomModal visible={isCreateFormVisible} onClose={_ => setIsCreateFormVisible(_ => false)}>
         <CreateForm
@@ -70,12 +76,8 @@ let make = () => {
           onChange={v => {
             setUserState({id: userState.id, name: v.name})
             setJoinFormValue(_ => v)
-            }}
-          onSubmit={_ => {
-            let _ = LobbyApi.getRoomByCode(~code=joinFormValue.room_code, ~onRecieve=id => {
-              connect(id)
-            })
           }}
+          onSubmit={handleJoinForm}
           value={joinFormValue}
         />
       </BottomModal>

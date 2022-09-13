@@ -12,44 +12,47 @@ let join = channel => {
 }
 
 let leave = channel => {
-  let _ = Phoenix.Channel.push(channel, ~event="leave", ~timeout=1000, ())
-  Phoenix.Channel.leave(channel, ~timeout=1000, ())
+  let _ = Phoenix.Channel.push(channel, ~event="leave", ~timeout=1000, ~payload=None, ())
+  -> Phoenix.Push.receive(~status="ok", ~callback=_=> {
+    RescriptReactRouter.push("/")
+  })
+  // let _ = Phoenix.Channel.leave(channel, ~timeout=1000, ())->Phoenix.Push.receive(
+  //   ~status="ok",
+  //   ~callback=_ => {
+  //     RescriptReactRouter.push("/")
+  //   },
+  // )
 }
 
-let startGame = (channel) => {
+let startGame = channel => {
   Phoenix.Channel.push(channel, ~event="start_game", ~payload=None, ())
 }
 
-let finishGame = (channel) => {
+let finishGame = channel => {
   Phoenix.Channel.push(channel, ~event="finish_game", ~payload=None, ())
 }
 
-let startRound = (channel) => {
+let startRound = channel => {
   Phoenix.Channel.push(channel, ~event="start_round", ~payload=None, ())
 }
 
-let finishRound = (channel) => {
+let finishRound = channel => {
   Phoenix.Channel.push(channel, ~event="finish_round", ~payload=None, ())
 }
 
-let startStage = (channel) => {
+let startStage = channel => {
   Phoenix.Channel.push(channel, ~event="start_stage", ~payload=None, ())
 }
 
-let finishStage = (channel) => {
+let finishStage = channel => {
   Phoenix.Channel.push(channel, ~event="finish_stage", ~payload=None, ())
 }
 
 let addAnswer = (channel, options) => {
-  Phoenix.Channel.push(
-    channel,
-    ~event="add_answer",
-    ~payload={"options": options},
-    (),
-  )
+  Phoenix.Channel.push(channel, ~event="add_answer", ~payload={"options": options}, ())
 }
 
-let removeAnswer = (channel) => {
+let removeAnswer = channel => {
   Phoenix.Channel.push(channel, ~event="remove_answer", ())
 }
 

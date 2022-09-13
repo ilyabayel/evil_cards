@@ -18,6 +18,7 @@ let make = () => {
   let (user, _setUser) = UserContext.useState()
 
   <div className={styles["prepare-stage"]}>
+    <ExitButton/>
     <div className={styles["room-code"]}>
       <h2> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h2>
       <RoundLeader leader={room.round.leader} userId={user.id} />

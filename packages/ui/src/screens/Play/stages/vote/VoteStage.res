@@ -12,6 +12,7 @@ let make = () => {
   }
 
   <div className={styles["vote-stage"]}>
+    <ExitButton/>
     <div className={styles["heading"]}>
       <h2> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h2>
       {switch isLeader {

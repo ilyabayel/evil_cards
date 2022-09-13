@@ -5,6 +5,7 @@
     padding: 2rem;
     border-radius: 1.4rem;
     border: none;
+    cursor: pointer;
 }
 
 .variant-text-box {

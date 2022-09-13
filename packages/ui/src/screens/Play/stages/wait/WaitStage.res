@@ -22,6 +22,7 @@ let make = () => {
   let (user, _setUser) = UserContext.useState()
 
   <div className={styles["wait-stage"]}>
+    <ExitButton/>
     <div className={styles["room-code"]}>
       <h2> {React.string(`Код комнаты`)} </h2>
       <h1> {React.string(Int.toString(room.code))} </h1>

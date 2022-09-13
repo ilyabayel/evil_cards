@@ -1,0 +1,29 @@
+.exit-button {
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    color: var(--color-font-primary);
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 1.2rem;
+    height: 3.4rem;
+    padding: 0.2rem;
+    margin: 0;
+    border-radius: 0.4rem;
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.exit-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.exit-button svg {
+    height: 100%;
+    width: 100%;
+    fill: var(--color-font-primary);
+}

@@ -45,6 +45,7 @@ let make = () => {
   let isUserRoundLeader = user.id == room.round.leader.id
 
   <div className={styles["result-stage"]}>
+    <ExitButton/>
     <div className={styles["answer-wrapper"]}>
       <h3> {React.string(`Раунд ${Int.toString(room.round.number)}`)} </h3>
       <QuestionCard

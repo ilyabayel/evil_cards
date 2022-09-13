@@ -35,7 +35,7 @@ let useConnect = () => {
         ->updateRoom
         ->RoomApi.join
         ->Phoenix.Push.receive(~status="ok", ~callback=_ => {
-          Dom.Storage2.setItem(Dom.Storage2.localStorage, "room.id", roomId)
+          Dom.Storage2.setItem(Dom.Storage2.localStorage, LocalstorageConstants.roomId, roomId)
           RescriptReactRouter.push("play")
         })
         ->Phoenix.Push.receive(~status="error", ~callback=_ => {
@@ -50,13 +50,13 @@ let useConnect = () => {
 
 /**
  * Simplifies reconnection to room.
- * It will only work, if you'd set "room.id" in localStorage
+ * It will only work, if you'd set LocalstorageConstants.roomId in localStorage
  *
  * RoomContext.useReconnect()
  */
 let useReconnect = () => {
   let connect = useConnect()
-  let _ = switch Dom.Storage2.getItem(Dom.Storage2.localStorage, "room.id") {
+  let _ = switch Dom.Storage2.getItem(Dom.Storage2.localStorage, LocalstorageConstants.roomId) {
   | Some(roomId) => connect(roomId)
   | None => ()
   }
@@ -70,7 +70,7 @@ module Provider = {
     let (roomState, setRoomState) = React.useState(() => Room.empty)
 
     let setRoomState = (room: Room.t) => {
-      Dom.Storage2.setItem(Dom.Storage2.localStorage, "room.id", room.id)
+      Dom.Storage2.setItem(Dom.Storage2.localStorage, LocalstorageConstants.roomId, room.id)
       setRoomState(_ => room)
     }
 
