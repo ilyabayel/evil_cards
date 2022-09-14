@@ -5,6 +5,7 @@ services:
     ports:
       - "4000:4000"
       - "5000:5000"
+    command: mix phx.server
   ui:
     build: ./packages/ui
     ports:

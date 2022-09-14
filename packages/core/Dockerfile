@@ -12,6 +12,3 @@ RUN mix local.rebar --force
 RUN mix deps.get
 RUN mix deps.compile
 
-# Compile the project
-CMD mix phx.server
-
