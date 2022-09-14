@@ -4,7 +4,7 @@ COPY ./ ./
 
 RUN cd ./ && yarn && yarn build
 
-FROM nginx:1.23.1-alpine as deploy
+FROM nginx:1.23.1-alpine
 
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder ./dist /usr/share/nginx/

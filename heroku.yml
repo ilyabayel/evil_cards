@@ -1,6 +1,6 @@
 build:
   docker:
-    core: packages/core/Dockerfile
-    ui: packages/ui/Dockerfile
+    core: ./packages/core/Dockerfile
+    ui: ./packages/ui/Dockerfile
 run:
   core: mix phx.server
